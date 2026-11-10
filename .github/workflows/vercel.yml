@@ -1,0 +1,23 @@
+# Publishes the app to Vercel on every push.
+# Needs one repository secret: VERCEL_TOKEN (create it at https://vercel.com/account/tokens).
+name: Deploy to Vercel
+on:
+  push:
+    branches: [main, claude/awesome-goldberg-8ji8zs]
+  workflow_dispatch:
+concurrency: vercel-production
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the token is set
+        env: { VERCEL_TOKEN: "${{ secrets.VERCEL_TOKEN }}" }
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "::error::Add a repository secret named VERCEL_TOKEN (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+      - name: Deploy
+        env: { VERCEL_TOKEN: "${{ secrets.VERCEL_TOKEN }}" }
+        run: npx --yes vercel@latest deploy --prod --yes --name rasl-estate --token "$VERCEL_TOKEN"
