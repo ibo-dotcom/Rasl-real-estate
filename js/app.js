@@ -294,6 +294,8 @@
 
     mapZoom: d => { const m = ui.map; m.z = Math.max(3, Math.min(18, m.z + (+d.d))); RE.mapDraw(); },
     mapFitAll: () => RE.mapFit(),
+    mapStyle: d => RE.glSetStyle(d.k),
+    map3d: () => RE.glToggle3d(),
     mapCity: (d, el) => { ui.mapCity = el.value; ui.map = null; ui.mapSel = null; RE.render(); },
     mapPick: d => { ui.mapSel = d.id; RE.render(); },
     placeProp: d => { ui.placing = d.id; RE.render(); },
@@ -374,7 +376,7 @@
   RE.load();
   applyTheme();
   window.addEventListener('hashchange', () => go(location.hash.slice(1) || 'dashboard'));
-  window.addEventListener('resize', () => { if (ui.route === 'map') RE.mapDraw(); });
+  window.addEventListener('resize', () => { if (ui.route === 'map' && !(RE.gl && RE.glOn())) RE.mapDraw(); });
   try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => RE.render()); } catch (e) { /* older browsers */ }
   ui.route = ROUTES.indexOf(location.hash.slice(1)) >= 0 ? location.hash.slice(1) : 'dashboard';
   RE.render();

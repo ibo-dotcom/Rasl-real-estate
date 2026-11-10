@@ -234,10 +234,113 @@
     }).join('');
   }
   RE.mapDraw = draw;
-  RE.mapFit = () => { RE.ui.map = null; draw(); };
+  RE.mapFit = () => { RE.ui.map = null; if (RE.gl && RE.glOn()) RE.render(); else draw(); };
+
+
+  /* ---------- real map: MapLibre vector tiles, satellite imagery, extruded 3D buildings ---------- */
+  const OFM = 'https://tiles.openfreemap.org';
+  const glOn = () => !!window.maplibregl && !RE.glFailed;
+  function glStyle(kind) {
+    if (kind !== 'sat') return OFM + '/styles/liberty';
+    const name = ['coalesce', ['get', 'name:en'], ['get', 'name:latin'], ['get', 'name']];
+    const txt = { 'text-color': '#ffffff', 'text-halo-color': 'rgba(0,0,0,.75)', 'text-halo-width': 1.4 };
+    return {
+      version: 8, glyphs: OFM + '/fonts/{fontstack}/{range}.pbf',
+      sources: {
+        sat: { type: 'raster', tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize: 256, maxzoom: 19, attribution: 'Imagery © Esri, Maxar, Earthstar Geographics' },
+        openmaptiles: { type: 'vector', url: OFM + '/planet' }
+      },
+      layers: [
+        { id: 'sat', type: 'raster', source: 'sat' },
+        { id: 're-roads', type: 'symbol', source: 'openmaptiles', 'source-layer': 'transportation_name', minzoom: 13, layout: { 'symbol-placement': 'line', 'text-field': name, 'text-font': ['Noto Sans Regular'], 'text-size': 12 }, paint: txt },
+        { id: 're-places', type: 'symbol', source: 'openmaptiles', 'source-layer': 'place', layout: { 'text-field': name, 'text-font': ['Noto Sans Bold'], 'text-size': 14 }, paint: txt }
+      ]
+    };
+  }
+  // Every style gets one building layer of our own, extruded to the height recorded in OpenStreetMap.
+  function add3d(map) {
+    const st = map.getStyle();
+    if (!st || !st.sources.openmaptiles) return;
+    st.layers.filter(l => l.type === 'fill-extrusion' || l.id === 're-3d').forEach(l => map.removeLayer(l.id));
+    const sym = st.layers.find(l => l.type === 'symbol');
+    map.addLayer({
+      id: 're-3d', type: 'fill-extrusion', source: 'openmaptiles', 'source-layer': 'building', minzoom: 13,
+      paint: {
+        'fill-extrusion-color': ['interpolate', ['linear'], ['coalesce', ['get', 'render_height'], 6], 0, '#E4DFD3', 40, '#C9C2B2', 150, '#A9A294'],
+        'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 6],
+        'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
+        'fill-extrusion-opacity': 0.9
+      }
+    }, sym && sym.id);
+  }
+  function glFit(map) {
+    const pts = located();
+    if (!pts.length) { map.jumpTo({ center: [44.01, 36.19], zoom: 12 }); return; }
+    if (pts.length === 1) { map.jumpTo({ center: [pts[0].lng, pts[0].lat], zoom: 16 }); return; }
+    const b = new maplibregl.LngLatBounds();
+    pts.forEach(p => b.extend([p.lng, p.lat]));
+    map.fitBounds(b, { padding: 70, maxZoom: 16, pitch: RE.ui.map3d === false ? 0 : 55, bearing: RE.ui.map3d === false ? 0 : -15, duration: 0 });
+  }
+  function glFail() {
+    if (RE.gl) { try { RE.gl.map.remove(); } catch (e) { /* already gone */ } }
+    RE.gl = null; RE.glFailed = true; RE.ui.map = null;
+    if (RE.ui.route === 'map') RE.render();
+  }
+  function glMap(el) {
+    const ui = RE.ui;
+    el.classList.add('gl');
+    if (!RE.gl) {
+      const box = document.createElement('div'); box.className = 'glbox'; el.prepend(box);
+      let map;
+      try {
+        map = new maplibregl.Map({ container: box, style: glStyle(ui.mapStyle), center: [44.01, 36.19], zoom: 12, pitch: 55, bearing: -15, maxPitch: 75, attributionControl: { compact: true } });
+      } catch (e) { box.remove(); el.classList.remove('gl'); RE.glFailed = true; return false; }
+      let ready = false;
+      map.on('load', () => { ready = true; });
+      map.on('style.load', () => add3d(map));
+      map.on('error', () => { if (!ready) glFail(); });
+      map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), RE.dir() === 'rtl' ? 'top-left' : 'top-right');
+      map.on('click', e => {
+        if (!ui.placing) return;
+        const p = RE.get('properties', ui.placing);
+        if (p) { RE.put('properties', { id: p.id, lat: +e.lngLat.lat.toFixed(5), lng: +e.lngLat.lng.toFixed(5) }); ui.mapSel = p.id; RE.toast(RE.t('{p} is now on the map', { p: p.title })); }
+        ui.placing = null; RE.render();
+      });
+      try { if (maplibregl.getRTLTextPluginStatus() === 'unavailable') maplibregl.setRTLTextPlugin(new URL('vendor/mapbox-gl-rtl-text.min.js', location.href).href, true); } catch (e) { /* labels stay unshaped */ }
+      RE.gl = { map, box, markers: [], style: ui.mapStyle || 'streets' };
+    } else {
+      el.prepend(RE.gl.box);
+      RE.gl.map.resize();
+    }
+    const g = RE.gl, map = g.map;
+    map.getCanvas().style.cursor = ui.placing ? 'crosshair' : '';
+    g.markers.forEach(m => m.remove());
+    g.markers = located().map(p => {
+      const b = document.createElement('button');
+      b.className = 'gpin st-' + p.status + (ui.mapSel === p.id ? ' on' : '');
+      b.dataset.act = 'mapPick'; b.dataset.id = p.id; b.title = p.title; b.textContent = RE.moneyShort(p.price);
+      return new maplibregl.Marker({ element: b, anchor: 'bottom' }).setLngLat([p.lng, p.lat]).addTo(map);
+    });
+    if (!ui.map) { glFit(map); ui.map = { gl: true }; }
+    else if (!ui.map.gl) { map.flyTo({ center: [ui.map.lng, ui.map.lat], zoom: 17, pitch: 60, bearing: -20, duration: 900 }); ui.map = { gl: true }; }
+    return true;
+  }
+  RE.glSetStyle = function (kind) {
+    RE.ui.mapStyle = kind;
+    if (RE.gl && RE.gl.style !== kind) { RE.gl.style = kind; RE.gl.map.setStyle(glStyle(kind)); }
+    RE.render();
+  };
+  RE.glToggle3d = function () {
+    const on = RE.ui.map3d === false; RE.ui.map3d = on;
+    if (RE.gl) RE.gl.map.easeTo({ pitch: on ? 60 : 0, bearing: on ? -15 : 0, duration: 600 });
+    RE.render();
+  };
+  RE.glOn = glOn;
 
   RE.after.map = function () {
     const el = document.getElementById('mapc'); if (!el) return;
+    if (glOn() && glMap(el)) return;
+    if (RE.ui.map && RE.ui.map.gl) RE.ui.map = null;
     draw();
     let drag = null;
     el.onpointerdown = e => { if (e.target.closest('.pin,.map-ctl')) return; drag = { x: e.clientX, y: e.clientY, moved: 0, c: proj(RE.ui.map.lat, RE.ui.map.lng, RE.ui.map.z) }; el.setPointerCapture(e.pointerId); };
@@ -272,6 +375,8 @@
     const sel = ui.mapSel && RE.get('properties', ui.mapSel), placing = ui.placing && RE.get('properties', ui.placing);
     return `<div class="toolbar">
       <select id="mapCity" data-change="mapCity" aria-label="${t('City')}">${RE.opts([['', t('All cities')]].concat(cities.map(c => [c, c])), ui.mapCity)}</select>
+      ${glOn() ? `<div class="seg text" role="group"><button class="${ui.mapStyle === 'sat' ? '' : 'on'}" data-act="mapStyle" data-k="streets">${t('Streets')}</button><button class="${ui.mapStyle === 'sat' ? 'on' : ''}" data-act="mapStyle" data-k="sat">${t('Satellite')}</button></div>
+      <button class="btn ghost${ui.map3d === false ? '' : ' pressed'}" data-act="map3d" aria-pressed="${ui.map3d !== false}">${t('3D buildings')}</button><button class="btn ghost" data-act="mapFitAll">${RE.icon('fit')}${t('Show all')}</button>` : ''}
       <span class="legend"><i class="lg st-available"></i>${L('status', 'available')}<i class="lg st-reserved"></i>${L('status', 'reserved')}<i class="lg st-sold"></i>${t('Sold or rented')}</span></div>
     ${placing ? `<div class="notice"><span>${t('Tap the map where {p} stands.', { p: placing.title })}</span><button class="btn small ghost" data-act="cancelPlace">${t('Cancel')}</button></div>` : ''}
     <div class="mapwrap">

@@ -24,4 +24,4 @@ Records are kept in the browser (`localStorage`) on the device. Use **Office →
     js/app.js         routing and actions
     tools/build-artifact.mjs   bundles everything into one HTML file
 
-Map tiles come from OpenStreetMap; without a connection the map falls back to a plain grid and pins still work.
+The map uses MapLibre GL (in `vendor/`) with OpenFreeMap vector tiles for streets and 3D buildings, and Esri World Imagery for the satellite view. It needs an internet connection and WebGL; without them it falls back to a plain grid and pins still work.

@@ -338,6 +338,16 @@ tr.click:hover td, td.click:hover, li.click:hover { background: var(--surface-2)
 .side-img { aspect-ratio: 16 / 9; border-radius: var(--r-s); overflow: hidden; }
 .side-img > * { width: 100%; height: 100%; object-fit: cover; display: block; }
 
+.glbox { position: absolute; inset: 0; }
+.mapc.gl { cursor: default; touch-action: auto; }
+.mapc.gl > .map-tiles, .mapc.gl > .map-pins, .mapc.gl > .map-ctl, .mapc.gl > .map-att { display: none; }
+.gpin { padding: 4px 8px; border: 1.5px solid var(--surface); border-radius: 3px; background: var(--brand); color: var(--on-brand); font: 600 12px/1.1 var(--f-mono); white-space: nowrap; box-shadow: 0 2px 6px rgba(0, 0, 0, .35); direction: ltr; margin-bottom: 7px; }
+.gpin::after { content: ""; position: absolute; left: 50%; top: 100%; width: 2px; height: 7px; margin-left: -1px; background: #14211C; box-shadow: 0 0 0 1px rgba(255, 255, 255, .6); }
+.gpin.st-reserved { background: var(--ochre-mark); color: #1B1405; } .gpin.st-sold, .gpin.st-rented { background: var(--ink-3); color: var(--surface); }
+.gpin.on { z-index: 3; outline: 3px solid var(--ink); }
+.seg.text button { width: auto; padding: 0 12px; font-size: 13.5px; font-weight: 500; }
+.btn.pressed { background: var(--brand-soft); color: var(--brand-ink); border-color: var(--brand); }
+
 /* ---------- dialogs, forms ---------- */
 .dlg { width: min(640px, calc(100vw - 24px)); max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); overflow-y: auto; }
 .dlg.wide { width: min(760px, calc(100vw - 24px)); }
@@ -370,3 +380,8 @@ tr.click:hover td, td.click:hover, li.click:hover { background: var(--surface-2)
   .side, .tabbar, .top-a, .toolbar, #toast, .iconbtn { display: none !important; }
   .app { display: block; } body { background: #fff; } .panel, .kpis { break-inside: avoid; }
 }
+
+/* map zoom buttons: drawn as text so they never depend on the library's icon images */
+.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon, .maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon { background-image: none !important; display: grid; place-items: center; font: 500 20px/1 var(--f-body); color: #14211C; }
+.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon::before { content: "+"; }
+.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon::before { content: "\2212"; }
