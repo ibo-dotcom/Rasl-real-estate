@@ -21,7 +21,7 @@ create index members_user_idx on public.members (user_id);
 
 create table public.records (
   office_id uuid not null references public.offices (id) on delete cascade,
-  coll text not null check (coll in ('agents','properties','leads','deals','appointments','campaigns','donations','referrals','settings')),
+  coll text not null check (coll in ('agents','properties','leads','deals','appointments','campaigns','donations','referrals','projects','settings')),
   id text not null check (char_length(id) between 1 and 64),
   data jsonb not null,
   deleted boolean not null default false,          -- tombstone, so deletions reach teammates through the live feed

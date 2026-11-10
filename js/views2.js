@@ -196,6 +196,7 @@
         <form id="officeForm" class="fgrid">
           ${f('o-office', t('Office name'), `<input id="o-office" name="office" value="${esc(st.office)}" required>`)}
           ${RE.cloud.office ? '' : f('o-me', t('Your name'), `<input id="o-me" name="me" value="${esc(st.me)}">`)}
+          ${f('o-phone', t('Office phone (WhatsApp)'), `<input id="o-phone" name="phone" type="tel" placeholder="+964" value="${esc(st.phone || '')}">`, t('Shown on project ads and the office display.'))}
           ${f('o-currency', t('Currency'), `<select id="o-currency" name="currency">${RE.opts([['USD', 'US dollar ($)'], ['IQD', 'Iraqi dinar (IQD)']], st.currency)}</select>`, t('Changes the label only. Amounts are not converted.'))}
           ${f('o-goal', t('Yearly commission goal'), `<input id="o-goal" name="goal" type="number" min="0" step="any" value="${esc(st.goal)}">`)}
           ${f('o-com', t('Usual commission, %'), `<input id="o-com" name="commissionPct" type="number" min="0" max="100" step="any" value="${esc(st.commissionPct)}">`, t('Pre-fills the commission when you close a deal.'))}

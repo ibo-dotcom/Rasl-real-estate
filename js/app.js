@@ -1,9 +1,17 @@
 /* Rasl Estate — routing, actions, forms */
 (function (RE) {
   const t = (s, v) => RE.t(s, v), esc = s => RE.esc(s), L = (g, k) => RE.label(g, k);
-  const ROUTES = ['dashboard', 'leads', 'property', 'map', 'rewards', 'join', 'team', 'market', 'ads', 'reports', 'office'];
-  const TITLES = { dashboard: 'Dashboard', leads: 'Leads', property: 'Property', map: 'Map', rewards: 'Rewards', join: 'Join & Charity', team: 'Team', market: 'Market', ads: 'Ads', reports: 'Reports', office: 'Office' };
-  RE.ui = { route: 'dashboard', period: 'year', leadView: 'board', leadStage: 'active', repRange: 'year' };
+  const ROUTES = ['home', 'projects', 'dashboard', 'leads', 'property', 'map', 'rewards', 'join', 'team', 'market', 'ads', 'reports', 'office'];
+  // Sections live in folders, grouped by the work they belong to. Each folder is one button.
+  const GROUPS = [
+    { id: 'sales', name: 'Sales', icon: 'folder', routes: ['dashboard', 'leads', 'property', 'map'] },
+    { id: 'marketing', name: 'Marketing', icon: 'folder', routes: ['projects', 'ads', 'market'] },
+    { id: 'people', name: 'Team', icon: 'folder', routes: ['team', 'rewards', 'join'] },
+    { id: 'admin', name: 'Office', icon: 'folder', routes: ['reports', 'office'] }
+  ];
+  const groupOf = r => GROUPS.find(g => g.routes.indexOf(r) >= 0);
+  const TITLES = { home: 'Projects showcase', projects: 'Residential projects', dashboard: 'Dashboard', leads: 'Leads', property: 'Property', map: 'Map', rewards: 'Rewards', join: 'Join & Charity', team: 'Team', market: 'Market', ads: 'Ads', reports: 'Reports', office: 'Office' };
+  RE.ui = { route: 'home', open: {}, period: 'year', leadView: 'board', leadStage: 'active', repRange: 'year' };
   const S = () => RE.state, ui = RE.ui;
   const agentOpts = () => [['', t('Unassigned')]].concat(S().agents.map(a => [a.id, a.name]));
   const o = (list, group) => list.map(k => [k, L(group, k)]);
@@ -21,11 +29,16 @@
     document.documentElement.dir = RE.dir();
     document.title = st.office || 'Rasl Estate';
     const link = (r, cls) => `<a href="#${r}" class="${cls || ''}${ui.route === r ? ' on' : ''}" ${ui.route === r ? 'aria-current="page"' : ''}>${RE.icon(r)}<span>${t(TITLES[r])}</span>${r === 'leads' && due ? `<i class="badge">${due}</i>` : ''}</a>`;
-    document.getElementById('side-nav').innerHTML = ROUTES.slice(0, 10).map(r => link(r)).join('') + '<hr>' + link('office');
+    const cur = groupOf(ui.route);
+    document.getElementById('side-nav').innerHTML = link('home') + GROUPS.map(g => {
+      const open = !!ui.open[g.id] || (cur === g && ui.open[g.id] !== false), n = g.routes.indexOf('leads') >= 0 ? due : 0;
+      return `<div class="nav-group${open ? ' open' : ''}${cur === g ? ' has-on' : ''}"><button class="nav-folder" data-act="toggleGroup" data-g="${g.id}" aria-expanded="${open}">${RE.icon(open ? 'folderOpen' : 'folder')}<span>${t(g.name)}</span>${n && !open ? `<i class="badge">${n}</i>` : ''}<em class="count">${g.routes.length}</em></button>
+        <div class="nav-items"${open ? '' : ' hidden'}>${g.routes.map(r => link(r)).join('')}</div></div>`;
+    }).join('');
     document.getElementById('brand-name').textContent = st.office || 'Rasl Estate';
     document.querySelector('.wordmark small').textContent = t('Real estate office');
     document.querySelectorAll('.logo').forEach(el => { if (!el.firstChild) el.innerHTML = RE.logo(); });
-    document.getElementById('tabbar').innerHTML = ROUTES.slice(0, 4).map(r => link(r)).join('') + `<button data-act="more" class="${ROUTES.indexOf(ui.route) > 3 ? 'on' : ''}">${RE.icon('more')}<span>${t('More')}</span></button>`;
+    document.getElementById('tabbar').innerHTML = `<a href="#home" class="${ui.route === 'home' ? 'on' : ''}">${RE.icon('home')}<span>${t('Home')}</span></a>` + GROUPS.map(g => `<button data-act="groupSheet" data-g="${g.id}" class="${cur === g ? 'on' : ''}">${RE.icon('folder')}<span>${t(g.name)}</span>${g.routes.indexOf('leads') >= 0 && due ? `<i class="badge">${due}</i>` : ''}</button>`).join('');
     document.getElementById('page-title').textContent = t(TITLES[ui.route]);
     document.getElementById('page-date').textContent = RE.date(RE.today(), { weekday: 'long', day: 'numeric', month: 'long' });
     document.getElementById('top-actions').innerHTML = `${syncChip()}
@@ -54,7 +67,7 @@
   };
 
   function go(r) {
-    if (ROUTES.indexOf(r) < 0) r = 'dashboard';
+    if (ROUTES.indexOf(r) < 0) r = 'home';
     const changed = ui.route !== r; ui.route = r;
     if (location.hash.slice(1) !== r) { try { history.replaceState(null, '', '#' + r); } catch (e) { location.hash = r; } }
     RE.render();
@@ -279,6 +292,21 @@
     closeDlg: () => RE.closeDlg(),
     toggleTheme: () => { S().settings.theme = isDark() ? 'light' : 'dark'; RE.persist(); applyTheme(); RE.render(); },
     setLang: (d, el) => { S().settings.lang = el.value; RE.persist(); RE.render(); },
+    toggleGroup: d => {
+      const g = GROUPS.find(x => x.id === d.g), cur = groupOf(ui.route);
+      const open = !!ui.open[g.id] || (cur === g && ui.open[g.id] !== false);
+      ui.open[g.id] = !open;
+      try { localStorage.setItem('rasl-nav-open', JSON.stringify(ui.open)); } catch (e) { /* not remembered */ }
+      shell();
+    },
+    groupSheet: d => {
+      const g = GROUPS.find(x => x.id === d.g), due = RE.dueLeads().length;
+      RE.modal(`${RE.dlgHead(t(g.name))}<nav class="morenav">${g.routes.map(r => `<a href="#${r}" data-act="closeDlg" class="${ui.route === r ? 'on' : ''}">${RE.icon(r)}<span>${t(TITLES[r])}</span>${r === 'leads' && due ? `<i class="badge">${due}</i>` : ''}</a>`).join('')}</nav>`, 'sheet');
+    },
+    kiosk: () => RE.kioskOpen(),
+    slide: d => { const n = RE.showcaseList().length; ui.slide = ((ui.slide || 0) + (+d.d) * (RE.dir() === 'rtl' ? -1 : 1) + n) % n; RE.render(); },
+    slideTo: d => { ui.slide = +d.i; RE.render(); },
+    addProject: () => RE.projectForm(), editProject: d => RE.projectForm(RE.get('projects', d.id)), viewProject: d => RE.projectView(RE.get('projects', d.id)),
     more: () => RE.modal(`${RE.dlgHead(t('More'))}<nav class="morenav">${ROUTES.slice(4).map(r => `<a href="#${r}" data-act="closeDlg">${RE.icon(r)}<span>${t(TITLES[r])}</span></a>`).join('')}</nav>`, 'sheet'),
     newMenu: () => RE.modal(`${RE.dlgHead(t('New'))}<nav class="morenav">${[['addLead', 'leads', 'Lead'], ['addProp', 'property', 'Property'], ['addAppt', 'clock', 'Appointment'], ['addCampaign', 'ads', 'Campaign'], ['addAgent', 'team', 'Team member']].map(x => `<button data-act="${x[0]}">${RE.icon(x[1])}<span>${t(x[2])}</span></button>`).join('')}</nav>`, 'sheet'),
 
@@ -398,7 +426,7 @@
     if (e.target.id !== 'officeForm') return;
     e.preventDefault();
     const st = S().settings;
-    st.office = f.office.value.trim() || st.office; if (f.me) st.me = f.me.value.trim(); st.currency = f.currency.value;
+    st.office = f.office.value.trim() || st.office; if (f.me) st.me = f.me.value.trim(); st.phone = f.phone.value.trim(); st.currency = f.currency.value;
     ['goal', 'commissionPct', 'charityPct'].forEach(k => { st[k] = Math.max(0, +f[k].value || 0); });
     RE.persist(); RE.cloud.renameOffice(st.office); RE.render(); RE.toast(t('Office details saved'));
   });
@@ -426,7 +454,8 @@
   window.addEventListener('hashchange', () => go(location.hash.slice(1) || 'dashboard'));
   window.addEventListener('resize', () => { if (ui.route === 'map' && !(RE.gl && RE.glOn())) RE.mapDraw(); });
   try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => RE.render()); } catch (e) { /* older browsers */ }
-  ui.route = ROUTES.indexOf(location.hash.slice(1)) >= 0 ? location.hash.slice(1) : 'dashboard';
+  ui.route = ROUTES.indexOf(location.hash.slice(1)) >= 0 ? location.hash.slice(1) : 'home';
+  try { ui.open = JSON.parse(localStorage.getItem('rasl-nav-open')) || {}; } catch (e) { ui.open = {}; }
   RE.render();
   RE.cloud.init();
 })(window.RE);

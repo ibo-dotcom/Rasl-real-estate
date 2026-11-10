@@ -1,6 +1,6 @@
 # Rasl Estate
 
-Office system for a real-estate brokerage: leads (CRM), listings, map, appointments, deals and commission, team rewards, referrals and charity pledge, market figures, ad campaigns and reports. English, Arabic and Kurdish (Sorani), light and dark.
+Office system for a real-estate brokerage. The start screen is a showcase of the residential projects the office sells, with a full-screen mode for a TV in the office (rotating ads with a WhatsApp QR code). The other sections sit in four folders: Sales (dashboard, leads, property, map), Marketing (projects, ads, market), Team (team, rewards, join & charity) and Office (reports, settings). It covers leads (CRM), listings, map, appointments, deals and commission, team rewards, referrals and charity pledge, market figures, ad campaigns and reports. English, Arabic and Kurdish (Sorani), light and dark.
 
 ## Run
 
@@ -30,6 +30,7 @@ Signed in, records live in the office database (Supabase project `uejkzdpyvlaxjz
     js/ui.js          formatting, icons, dialogs, forms, charts
     js/views1.js      dashboard, leads, property, map
     js/views2.js      rewards, join & charity, team, market, ads, reports, office
+    js/views3.js      residential projects showcase and office display
     js/app.js         routing and actions
     js/cloud.js       sign-in, offices, sync with the database
     js/config.js      database address and public key

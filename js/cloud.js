@@ -5,7 +5,7 @@
   const t = (s, v) => RE.t(s, v);
   const C = RE.cloud = { status: 'off', user: null, office: null, role: '', members: [], msg: '', mode: 'signin' };
   const MKEY = 'rasl-estate-sync';
-  const SHARED = ['office', 'currency', 'goal', 'commissionPct', 'charityPct', 'agentCode', 'codeIsSample'];
+  const SHARED = ['office', 'phone', 'currency', 'goal', 'commissionPct', 'charityPct', 'agentCode', 'codeIsSample'];
   const DEVICE = ['lang', 'theme', 'me'];
   let meta = { officeId: null, synced: {} }, timer = null, busy = false, again = false, channel = null, renderT = null;
 

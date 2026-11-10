@@ -5,7 +5,7 @@ window.RE = window.RE || {};
   const pad = n => String(n).padStart(2, '0');
   const iso = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
   const uid = () => Date.now().toString(36).slice(-4) + Math.random().toString(36).slice(2, 8);
-  const COLLS = ['agents', 'properties', 'leads', 'deals', 'appointments', 'campaigns', 'donations', 'referrals'];
+  const COLLS = ['agents', 'properties', 'leads', 'deals', 'appointments', 'campaigns', 'donations', 'referrals', 'projects'];
 
   RE.uid = uid;
   RE.iso = iso;
@@ -18,6 +18,8 @@ window.RE = window.RE || {};
   RE.SOURCES = ['facebook', 'instagram', 'tiktok', 'snapchat', 'walkin', 'referral', 'signboard', 'website'];
   RE.CHANNELS = ['facebook', 'instagram', 'tiktok', 'snapchat', 'signboard', 'website'];
   RE.ROLES = ['manager', 'agent', 'assistant'];
+  RE.PTYPES = ['villas', 'apartments', 'mixed'];
+  RE.PSTATUS = ['selling', 'upcoming', 'soldout'];
   RE.COLORS = ['#2F7D62', '#B7791F', '#3F6FA8', '#9A4F7C', '#6B6FB5', '#A8552B'];
   RE.POINTS = { deal: 100, visit: 15, lead: 5, referral: 50 };
   RE.TIERS = [['Bronze', 0], ['Silver', 300], ['Gold', 800], ['Platinum', 1500]];
@@ -25,7 +27,7 @@ window.RE = window.RE || {};
   function blank() {
     const s = {
       v: 1,
-      settings: { office: 'Rasl Estate', me: '', currency: 'USD', goal: 100000, commissionPct: 2, charityPct: 5, lang: 'en', theme: 'system', agentCode: '' },
+      settings: { office: 'Rasl Estate', me: '', phone: '', currency: 'USD', goal: 100000, commissionPct: 2, charityPct: 5, lang: 'en', theme: 'system', agentCode: '' },
       seeded: false
     };
     COLLS.forEach(c => { s[c] = []; });
@@ -45,6 +47,7 @@ window.RE = window.RE || {};
       s.settings = Object.assign(b.settings, s.settings);
       COLLS.forEach(c => { if (!Array.isArray(s[c])) s[c] = []; });
       RE.state = s;
+      if (!s.projectsSeeded && !s.projects.length && COLLS.some(c => s[c].some(x => x.sample))) { RE.seedProjects(); RE.persist(); }
     }
   };
 
@@ -186,9 +189,26 @@ window.RE = window.RE || {};
       mk({ name: 'Rawa Properties', phone: '+9647505550144', date: D(-9), agentId: ag[1].id, status: 'joined' }),
       mk({ name: 'Nashwan Qadir', phone: '+9647705550187', date: D(-2), agentId: ag[0].id, status: 'invited' })
     );
+    RE.seedProjects();
     S.settings.agentCode = S.settings.agentCode || 'RE26334228';
     S.settings.codeIsSample = S.settings.agentCode === 'RE26334228';
     S.seeded = true;
+  };
+
+  // Residential projects shown on the home screen. Names and developers are invented examples.
+  RE.seedProjects = function () {
+    const S = RE.state, td = RE.today();
+    [
+      ['Zagros Gardens', 'Hawraman Developments', 'villas', 'selling', 'Erbil', 'Kasnazan', 240, 38, 185000, 420000, 250, 450, 'Q4 2027', '20% down, the rest over 5 years', 'Gated community of two-storey villas around a central park, with a school, clinic and mosque inside the walls.', true, 36.153, 44.110],
+      ['Tigris Bay Towers', 'Rafidain Build', 'apartments', 'selling', 'Baghdad', 'Jadriya', 520, 146, 95000, 260000, 110, 240, 'Q2 2027', '10% down, monthly payments over 4 years', 'Four 24-floor towers on the river with underground parking, a gym and a rooftop pool.', true, 33.282, 44.384],
+      ['Shaqlawa Hills Residence', 'Safeen Living', 'mixed', 'upcoming', 'Shaqlawa', 'North slope', 180, 180, 120000, 380000, 140, 400, 'Q3 2028', 'Reservations open with $5,000', 'Mountain-view apartments and villas, thirty minutes from Erbil. Summer and year-round homes.', true, 36.404, 44.317],
+      ['Ankawa Palm Residences', 'Hawraman Developments', 'apartments', 'soldout', 'Erbil', 'Ankawa', 96, 0, 140000, 210000, 130, 190, 'Handed over 2025', 'Sold out. Resale units through our office.', 'Mid-rise apartments in central Ankawa. All units sold; ask us about resale.', false, 36.231, 43.997]
+    ].forEach((r, i) => S.projects.push({
+      id: RE.uid(), sample: true, name: r[0], developer: r[1], ptype: r[2], status: r[3], city: r[4], district: r[5],
+      unitsTotal: r[6], unitsAvailable: r[7], priceFrom: r[8], priceTo: r[9], areaFrom: r[10], areaTo: r[11], handover: r[12],
+      payment: r[13], description: r[14], featured: r[15] ? 'yes' : 'no', lat: r[16], lng: r[17], phone: '', photos: [], order: i, createdAt: td
+    }));
+    S.projectsSeeded = true;
   };
 
   RE.hasSamples = () => RE.COLLS.some(c => RE.state[c].some(x => x.sample));

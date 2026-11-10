@@ -35,7 +35,7 @@
   /* ---------- icons (24px stroke set) ---------- */
   const IC = {
     dashboard: '<path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-3H4zM14 7h6V4h-6z"/>',
-    leads: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.200a3.2 3.2 0 010 5.600M17.5 14.300c2.1.800 3.5 2.9 3.5 5.7"/>',
+    leads: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5.200a3.2 3.2 0 010 5.600M17.5 14.300c2.1.8 3.5 2.9 3.5 5.7"/>',
     property: '<path d="M4 20V9l8-5 8 5v11M9 20v-6h6v6M2 20h20"/>',
     map: '<path d="M12 21s-6.5-6.1-6.5-11A6.5 6.5 0 0118.5 10c0 4.9-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
     rewards: '<circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.500L7 21l5-2.5 5 2.5-1.5-7.5"/>',
@@ -68,6 +68,12 @@
   };
   /* The Rasl Estate mark: a gabled roof that turns into the bowl of an R, with one lit window. */
   RE.logo = cls => `<svg class="logo-svg ${cls || ''}" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" class="lg-tile"/><path d="M15 36V19.5L24 12l9 7.5v3.7c0 4.3-3.4 7.6-7.7 7.6H15M25.3 30.8L33.5 36" fill="none" class="lg-ink" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="21.9" y="19.4" width="4.2" height="4.2" rx=".8" class="lg-win"/></svg>`;
+  IC.home = '<path d="M4 11l8-7 8 7M6 9.500V20h12V9.500M10 20v-5h4v5"/>';
+  IC.projects = '<path d="M3 20h18M5 20V9l5-3v14M10 20V4l9 4v12M13 9h3M13 12.500h3M13 16h3"/>';
+  IC.folder = '<path d="M3.5 6.500A1.5 1.5 0 015 5h4.500l2 2.500H19a1.5 1.5 0 011.5 1.500v8.500A1.5 1.5 0 0119 19H5a1.5 1.5 0 01-1.5-1.500z"/>';
+  IC.folderOpen = '<path d="M3.5 17.500V6.500A1.5 1.5 0 015 5h4.500l2 2.500H18a1.5 1.5 0 011.5 1.500V10M3.5 17.500L6 11h15.500L19 17.500a1.5 1.5 0 01-1.4 1H5a1.5 1.5 0 01-1.5-1z"/>';
+  IC.screen = '<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/>';
+  IC.prev = '<path d="M15 5l-7 7 7 7"/>'; IC.next = '<path d="M9 5l7 7-7 7"/>';
   IC.cloud = '<path d="M7 18.5h10.5a4 4 0 00.6-7.95A6 6 0 006.6 9.8 4.4 4.4 0 007 18.5z"/>';
   IC.logout = '<path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/>';
   RE.icon = (n, cls) => `<svg class="ic ${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;
