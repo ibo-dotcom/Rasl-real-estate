@@ -23,13 +23,23 @@
     const link = (r, cls) => `<a href="#${r}" class="${cls || ''}${ui.route === r ? ' on' : ''}" ${ui.route === r ? 'aria-current="page"' : ''}>${RE.icon(r)}<span>${t(TITLES[r])}</span>${r === 'leads' && due ? `<i class="badge">${due}</i>` : ''}</a>`;
     document.getElementById('side-nav').innerHTML = ROUTES.slice(0, 10).map(r => link(r)).join('') + '<hr>' + link('office');
     document.getElementById('brand-name').textContent = st.office || 'Rasl Estate';
+    document.querySelector('.wordmark small').textContent = t('Real estate office');
+    document.querySelectorAll('.logo').forEach(el => { if (!el.firstChild) el.innerHTML = RE.logo(); });
     document.getElementById('tabbar').innerHTML = ROUTES.slice(0, 4).map(r => link(r)).join('') + `<button data-act="more" class="${ROUTES.indexOf(ui.route) > 3 ? 'on' : ''}">${RE.icon('more')}<span>${t('More')}</span></button>`;
     document.getElementById('page-title').textContent = t(TITLES[ui.route]);
     document.getElementById('page-date').textContent = RE.date(RE.today(), { weekday: 'long', day: 'numeric', month: 'long' });
-    document.getElementById('top-actions').innerHTML = `
+    document.getElementById('top-actions').innerHTML = `${syncChip()}
       <select id="lang" data-change="setLang" aria-label="${t('Language')}">${RE.opts([['en', 'English'], ['ar', 'العربية'], ['ku', 'کوردی']], st.lang)}</select>
       <button class="iconbtn" data-act="toggleTheme" aria-label="${isDark() ? t('Switch to light') : t('Switch to dark')}">${RE.icon(isDark() ? 'sun' : 'moon')}</button>
       <button class="btn" data-act="newMenu">${RE.icon('plus')}<span>${t('New')}</span></button>`;
+  }
+
+  function syncChip() {
+    const C = RE.cloud, s = C.status;
+    if (s === 'off') return '';
+    const label = { signedout: t('Sign in'), nooffice: t('Set up office'), saving: t('Saving'), synced: t('Saved'), offline: t('Not saved yet') }[s] || '';
+    const title = C.office ? C.office.name : t('Office database');
+    return `<button class="sync s-${s}" data-act="nav" data-to="office" title="${esc(title)}">${s === 'signedout' || s === 'nooffice' ? RE.icon('cloud') : '<i></i>'}<span>${esc(label)}</span></button>`;
   }
 
   RE.render = function () {
@@ -318,10 +328,19 @@
 
     removeSamples: () => RE.confirm(t('Remove every sample record? Records you added yourself stay.'), t('Remove samples'), () => { RE.removeSamples(); ui.mapSel = null; ui.map = null; RE.render(); RE.toast(t('Samples removed')); }, true),
     loadSamples: () => { RE.seed(); RE.persist(); ui.map = null; RE.render(); RE.toast(t('Sample records loaded')); },
-    eraseAll: () => RE.confirm(t('Erase every record and setting in this browser? Save a backup first if you may need them.'), t('Erase everything'), () => { const keep = { lang: S().settings.lang, theme: S().settings.theme }; RE.state = RE.blank(); Object.assign(RE.state.settings, keep); RE.persist(); ui.map = null; ui.mapSel = null; RE.render(); RE.toast(t('Everything erased')); }, true),
+    eraseAll: () => RE.confirm(RE.cloud.office ? t('Erase every record in {o} for the whole team? Save a backup first if you may need them.', { o: RE.cloud.office.name }) : t('Erase every record and setting in this browser? Save a backup first if you may need them.'), t('Erase everything'), () => { const keep = { lang: S().settings.lang, theme: S().settings.theme }; RE.state = RE.blank(); Object.assign(RE.state.settings, keep); RE.persist(); ui.map = null; ui.mapSel = null; RE.render(); RE.toast(t('Everything erased')); }, true),
     exportBackup: () => RE.fileOut('rasl-estate-backup-' + RE.today() + '.json', JSON.stringify(RE.state), 'application/json'),
     exportCsv: d => RE.fileOut('rasl-' + d.k + '-' + RE.today() + '.csv', RE.csv(CSV[d.k]()), 'text/csv'),
-    print: () => window.print()
+    print: () => window.print(),
+    authMode: d => { RE.cloud.mode = d.m; RE.cloud.msg = ''; RE.render(); },
+    signOut: () => RE.confirm(t('Sign out? The office records are removed from this device and stay safe in the database.'), t('Sign out'), async () => { await RE.cloud.signOut(); RE.toast(t('Signed out')); }),
+    copyTeamCode: () => RE.copy(RE.cloud.office.code, t('Team code copied')),
+    shareTeamCode: () => {
+      const o = RE.cloud.office, text = t('Join {o} on Rasl Estate. Open {u} and use team code {c}', { o: o.name, u: location.origin + location.pathname, c: o.code });
+      RE.modal(`${RE.dlgHead(t('Team code'))}<div class="dlg-b center"><p class="eyebrow">${esc(o.name)}</p><p class="bigcode sel">${esc(o.code)}</p><p class="sub">${t('Teammates sign in, choose Join an office and enter this code.')}</p></div>
+        <footer class="dlg-f wrap"><button class="btn ghost" data-act="copyTeamCode">${RE.icon('copy')}${t('Copy')}</button><span class="grow"></span><a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(text)}">${RE.icon('chat')}${t('Send on WhatsApp')}</a></footer>`);
+    },
+    retrySync: () => RE.cloud.retry()
   };
 
   /* ---------- events ---------- */
@@ -346,13 +365,42 @@
   };
   document.addEventListener('input', bind);
   document.addEventListener('change', bind);
-  document.addEventListener('submit', e => {
+  document.addEventListener('submit', async e => {
+    const C = RE.cloud, f = e.target.elements;
+    const run = async (fn) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]'); if (btn) btn.disabled = true;
+      C.msg = '';
+      let msg;
+      try { msg = await fn(); } catch (err) { msg = String(err && err.message || err); }
+      if (btn) btn.disabled = false;
+      if (msg) { C.msg = msg; }
+      RE.render();
+    };
+    if (e.target.id === 'cloudAuth') return run(() => C.mode === 'signup'
+      ? (f.name.value.trim() ? C.signUp(f.email.value.trim(), f.password.value, f.name.value.trim()) : t('Fill in: {f}', { f: t('Your name') }))
+      : C.signIn(f.email.value.trim(), f.password.value));
+    if (e.target.id === 'cloudCreate') return run(async () => {
+      const name = f.oname.value.trim(); if (!name) return t('Fill in: {f}', { f: t('Office name') });
+      const r = await C.createOffice(name, f.bring && f.bring.checked);
+      if (!r) RE.toast(t('{o} is ready. Share the team code with your agents.', { o: name }));
+      return r;
+    });
+    if (e.target.id === 'cloudJoin') {
+      e.preventDefault();
+      const code = f.code.value.trim(); if (!code) { C.msg = t('Fill in: {f}', { f: t('Team code') }); RE.render(); return; }
+      const go = () => run(async () => { const r = await C.joinOffice(code); if (!r) RE.toast(t('You joined {o}', { o: C.office.name })); return r; });
+      const own = RE.COLLS.some(c => RE.state[c].some(x => !x.sample));
+      if (own) RE.confirm(t('Joining replaces the records on this device with the office records. Save a backup first if you need them.'), t('Join office'), go, true); else go();
+      return;
+    }
+    if (e.target.id === 'cloudName') return run(async () => { RE.state.settings.me = f.mname.value.trim(); RE.persist(); await C.rename(RE.state.settings.me); RE.toast(t('Saved')); });
     if (e.target.id !== 'officeForm') return;
     e.preventDefault();
-    const f = e.target.elements, st = S().settings;
-    st.office = f.office.value.trim() || st.office; st.me = f.me.value.trim(); st.currency = f.currency.value;
+    const st = S().settings;
+    st.office = f.office.value.trim() || st.office; if (f.me) st.me = f.me.value.trim(); st.currency = f.currency.value;
     ['goal', 'commissionPct', 'charityPct'].forEach(k => { st[k] = Math.max(0, +f[k].value || 0); });
-    RE.persist(); RE.render(); RE.toast(t('Office details saved'));
+    RE.persist(); RE.cloud.renameOffice(st.office); RE.render(); RE.toast(t('Office details saved'));
   });
   document.addEventListener('click', e => { if (e.target.tagName === 'DIALOG' && e.target.id === 'dlg' && !e.target.querySelector('form')) RE.closeDlg(); });
 
@@ -380,4 +428,5 @@
   try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => RE.render()); } catch (e) { /* older browsers */ }
   ui.route = ROUTES.indexOf(location.hash.slice(1)) >= 0 ? location.hash.slice(1) : 'dashboard';
   RE.render();
+  RE.cloud.init();
 })(window.RE);

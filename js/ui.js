@@ -66,6 +66,10 @@
     fit: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
     clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5.500l3.5 2"/>'
   };
+  /* The Rasl Estate mark: a gabled roof that turns into the bowl of an R, with one lit window. */
+  RE.logo = cls => `<svg class="logo-svg ${cls || ''}" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" class="lg-tile"/><path d="M15 36V19.5L24 12l9 7.5v3.7c0 4.3-3.4 7.6-7.7 7.6H15M25.3 30.8L33.5 36" fill="none" class="lg-ink" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="21.9" y="19.4" width="4.2" height="4.2" rx=".8" class="lg-win"/></svg>`;
+  IC.cloud = '<path d="M7 18.5h10.5a4 4 0 00.6-7.95A6 6 0 006.6 9.8 4.4 4.4 0 007 18.5z"/>';
+  IC.logout = '<path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/>';
   RE.icon = (n, cls) => `<svg class="ic ${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;
 
   /* ---------- small components ---------- */

@@ -10,7 +10,16 @@ No build step. Open `index.html`, or serve the folder with any static host:
 
 ## Data
 
-Records are kept in the browser (`localStorage`) on the device. Use **Office → Save a backup** to export everything as a JSON file and **Restore from a backup** to load it on another device. Sample records load on first run and can be removed in one step.
+Without signing in, records stay in the browser on that device.
+
+Signed in, records live in the office database (Supabase project `uejkzdpyvlaxjziknzuy`, schema in `supabase/schema.sql`):
+
+- The owner signs in on **Office**, chooses **Create an office** and gets a team code.
+- Agents create an account, choose **Join an office** and enter the code.
+- Changes save automatically and appear on teammates' screens within a second or two. The device keeps a copy, so the app opens instantly and works offline; changes made offline upload when the connection returns.
+- Access is enforced in the database with row-level security: a person can only read and write the records of offices they belong to.
+
+**Office → Save a backup** still exports everything as a JSON file.
 
 ## Layout
 
@@ -22,6 +31,10 @@ Records are kept in the browser (`localStorage`) on the device. Use **Office →
     js/views1.js      dashboard, leads, property, map
     js/views2.js      rewards, join & charity, team, market, ads, reports, office
     js/app.js         routing and actions
+    js/cloud.js       sign-in, offices, sync with the database
+    js/config.js      database address and public key
+    assets/           logo, favicon and app icons
+    supabase/         database schema
     tools/build-artifact.mjs   bundles everything into one HTML file
 
 The map uses MapLibre GL (in `vendor/`) with OpenFreeMap vector tiles for streets and 3D buildings, and Esri World Imagery for the satellite view. It needs an internet connection and WebGL; without them it falls back to a plain grid and pins still work.

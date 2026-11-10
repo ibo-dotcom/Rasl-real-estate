@@ -59,6 +59,7 @@
       ${kpi(t('Deals closed'), dealsY.length, t('this year, {m} in sales', { m: RE.moneyShort(RE.sum(dealsY, 'amount')) }))}
       ${kpi(t('Listings available'), avail.length, t('{n} reserved', { n: S.properties.filter(p => p.status === 'reserved').length }))}
     </div>
+    ${RE.cloud.status === 'signedout' || RE.cloud.status === 'nooffice' ? `<div class="notice db"><span>${RE.icon('cloud')}${t('These records are only on this device. Connect the office database to share them with your team and keep them safe.')}</span><button class="btn small" data-act="nav" data-to="office">${RE.cloud.status === 'signedout' ? t('Sign in') : t('Set up office')}</button></div>` : ''}
     ${RE.codeStrip()}
     ${RE.hasSamples() ? `<div class="notice"><span>${t('You are looking at sample records. Remove them when you are ready to enter your own.')}</span><button class="btn small" data-act="removeSamples">${t('Remove samples')}</button></div>` : ''}
     <div class="grid">

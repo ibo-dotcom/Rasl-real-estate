@@ -145,15 +145,57 @@
     </div>`;
   };
 
+  /* ---------------- office database panel ---------------- */
+  function cloudPanel() {
+    const C = RE.cloud, st = RE.state.settings, err = C.msg ? `<p class="${C.status === 'signedout' && /confirm|Check/i.test(C.msg) ? 'okmsg' : 'ferr'}" role="status">${esc(C.msg)}</p>` : '';
+    if (C.status === 'off') return '';
+    if (C.status === 'signedout') {
+      const up = C.mode === 'signup';
+      return `<section class="panel auth"><div class="auth-intro">${RE.logo('big')}<div><h2>${t('Office database')}</h2><p class="sub">${t('Sign in to keep your records in the office database and work on them with your team from any device.')}</p></div></div>
+        <div class="seg text" role="tablist"><button class="${up ? '' : 'on'}" data-act="authMode" data-m="signin" role="tab" aria-selected="${!up}">${t('Sign in')}</button><button class="${up ? 'on' : ''}" data-act="authMode" data-m="signup" role="tab" aria-selected="${up}">${t('Create account')}</button></div>
+        <form id="cloudAuth" class="fgrid" novalidate>
+          ${up ? `<div class="fld wide"><label for="c-name">${t('Your name')}</label><input id="c-name" name="name" autocomplete="name" value="${esc(st.me)}"></div>` : ''}
+          <div class="fld"><label for="c-email">${t('Email')}</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="fld"><label for="c-pass">${t('Password')}</label><input id="c-pass" name="password" type="password" autocomplete="${up ? 'new-password' : 'current-password'}" minlength="6" required>${up ? `<small>${t('At least 6 characters')}</small>` : ''}</div>
+          <div class="fld wide">${err}<button class="btn" type="submit">${up ? t('Create account') : t('Sign in')}</button></div>
+        </form></section>`;
+    }
+    const who = `<p class="sub">${t('Signed in as {e}', { e: esc(C.user ? C.user.email : '') })}</p>`;
+    if (C.status === 'nooffice') {
+      const n = RE.COLLS.reduce((a, c) => a + RE.state[c].length, 0);
+      return `<section class="panel"><header class="ph"><div><h2>${t('Set up your office')}</h2>${who}</div><button class="btn ghost small" data-act="signOut">${RE.icon('logout')}${t('Sign out')}</button></header>
+        ${err}<div class="grid tight">
+          <form id="cloudCreate" class="span6 choice"><h3>${t('Create an office')}</h3><p class="sub">${t('For the owner or manager. You get a team code to give your agents.')}</p>
+            <div class="fld"><label for="c-oname">${t('Office name')}</label><input id="c-oname" name="oname" value="${esc(st.office && st.office !== 'Rasl Estate' ? st.office : '')}" placeholder="Rasl Estate"></div>
+            ${n ? `<label class="check"><input type="checkbox" id="c-bring" name="bring" checked> ${t('Bring the {n} records on this device', { n })}</label>` : ''}
+            <button class="btn" type="submit">${t('Create office')}</button></form>
+          <form id="cloudJoin" class="span6 choice"><h3>${t('Join an office')}</h3><p class="sub">${t('For agents. Ask the office owner for the team code.')}</p>
+            <div class="fld"><label for="c-code">${t('Team code')}</label><input id="c-code" name="code" placeholder="RE12345678" autocomplete="off" style="text-transform:uppercase"></div>
+            <button class="btn" type="submit">${t('Join office')}</button></form>
+        </div></section>`;
+    }
+    const o = C.office || {}, pend = C.pending();
+    const state = { saving: t('Saving changes…'), synced: t('All changes saved to the database'), offline: t('{n} changes are waiting to be saved', { n: pend }) }[C.status] || '';
+    return `<section class="panel"><header class="ph"><div class="row">${RE.logo('mid')}<div><h2>${esc(o.name || '')}</h2>${who}</div></div><button class="btn ghost small" data-act="signOut">${RE.icon('logout')}${t('Sign out')}</button></header>
+      <div class="dbbar s-${C.status}"><i></i><span class="grow">${state}${C.status === 'offline' && C.msg ? ` <small>${esc(C.msg)}</small>` : ''}</span>${C.status === 'offline' ? `<button class="btn ghost small" data-act="retrySync">${t('Try again')}</button>` : ''}</div>
+      <div class="grid tight">
+        <div class="span6 stack tight"><span class="eyebrow">${t('Team code')}</span><div class="row wrap"><strong class="code">${esc(o.code || '')}</strong><span class="grow"></span><button class="btn ghost small" data-act="copyTeamCode">${RE.icon('copy')}${t('Copy')}</button><button class="btn ghost small" data-act="shareTeamCode">${RE.icon('share')}${t('Share')}</button></div>
+          <p class="sub">${t('Teammates sign in, choose Join an office and enter this code.')}</p>
+          <form id="cloudName" class="row wrap"><div class="fld grow"><label for="c-mname">${t('Your name in this office')}</label><input id="c-mname" name="mname" value="${esc(st.me)}"></div><button class="btn ghost" type="submit">${t('Save')}</button></form></div>
+        <div class="span6"><span class="eyebrow">${t('People with access')} · ${C.members.length}</span>
+          <ul class="rows">${C.members.map(m => `<li>${RE.avatar(m.name || '?', RE.COLORS[(m.name || '').length % 6], 'sm')}<span class="grow"><b>${esc(m.name || t('No name yet'))}${C.user && m.user_id === C.user.id ? ' · ' + t('you') : ''}</b></span><span class="chip">${m.role === 'owner' ? t('Owner') : t('Agent')}</span></li>`).join('')}</ul></div>
+      </div></section>`;
+  }
+
   /* ---------------- office (settings) ---------------- */
   V.office = function () {
     const st = RE.state.settings, n = RE.COLLS.reduce((a, c) => a + RE.state[c].length, 0);
     const f = (id, label, input, hint) => `<div class="fld"><label for="${id}">${label}</label>${input}${hint ? `<small>${hint}</small>` : ''}</div>`;
-    return `<div class="grid">
+    return `${cloudPanel()}<div class="grid">
       <section class="panel span8"><header class="ph"><h2>${t('Office details')}</h2></header>
         <form id="officeForm" class="fgrid">
           ${f('o-office', t('Office name'), `<input id="o-office" name="office" value="${esc(st.office)}" required>`)}
-          ${f('o-me', t('Your name'), `<input id="o-me" name="me" value="${esc(st.me)}">`)}
+          ${RE.cloud.office ? '' : f('o-me', t('Your name'), `<input id="o-me" name="me" value="${esc(st.me)}">`)}
           ${f('o-currency', t('Currency'), `<select id="o-currency" name="currency">${RE.opts([['USD', 'US dollar ($)'], ['IQD', 'Iraqi dinar (IQD)']], st.currency)}</select>`, t('Changes the label only. Amounts are not converted.'))}
           ${f('o-goal', t('Yearly commission goal'), `<input id="o-goal" name="goal" type="number" min="0" step="any" value="${esc(st.goal)}">`)}
           ${f('o-com', t('Usual commission, %'), `<input id="o-com" name="commissionPct" type="number" min="0" max="100" step="any" value="${esc(st.commissionPct)}">`, t('Pre-fills the commission when you close a deal.'))}
@@ -162,7 +204,7 @@
         </form>
       </section>
       <section class="panel span4"><header class="ph"><h2>${t('Your records')}</h2></header>
-        <p class="sub">${t('{n} records are kept in this browser on this device. Save a backup file regularly, and use it to move to another device.', { n })}</p>
+        <p class="sub">${RE.cloud.office ? t('{n} records, kept in the office database with a copy on this device for offline use.', { n }) : t('{n} records are kept in this browser on this device. Save a backup file regularly, and use it to move to another device.', { n })}</p>
         <div class="stack tight">
           <button class="btn ghost" data-act="exportBackup">${RE.icon('download')}${t('Save a backup')}</button>
           <label class="btn ghost filebtn">${RE.icon('upload')}${t('Restore from a backup')}<input type="file" id="o-import" accept="application/json,.json" data-import="1"></label>

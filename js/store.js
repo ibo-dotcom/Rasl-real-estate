@@ -49,8 +49,11 @@ window.RE = window.RE || {};
   };
 
   RE.persist = function () {
-    try { localStorage.setItem(KEY, JSON.stringify(RE.state)); return true; }
-    catch (e) { RE.storageFailed = true; return false; }
+    let ok = true;
+    try { localStorage.setItem(KEY, JSON.stringify(RE.state)); }
+    catch (e) { ok = false; if (!(RE.cloud && RE.cloud.office)) RE.storageFailed = true; }
+    if (RE.cloudChanged) RE.cloudChanged();
+    return ok;
   };
 
   RE.get = (coll, id) => RE.state[coll].find(x => x.id === id);
