@@ -18,11 +18,14 @@
 
   /* ---------- shell ---------- */
   // The office's own green look is the default; light is the alternative.
+  // Light grey and navy is the default look (the office wall colours); navy-dark is the alternative.
   function applyTheme() {
-    if (S().settings.theme !== 'light') S().settings.theme = 'dark';
-    document.documentElement.setAttribute('data-theme', S().settings.theme);
+    const st = S().settings;
+    if (st.themeV !== 3) { st.theme = 'light'; st.themeV = 3; RE.persist(); }
+    if (st.theme !== 'dark') st.theme = 'light';
+    document.documentElement.setAttribute('data-theme', st.theme);
   }
-  const isDark = () => S().settings.theme !== 'light';
+  const isDark = () => S().settings.theme === 'dark';
 
   function shell() {
     const st = S().settings, due = RE.dueLeads().length;
@@ -296,7 +299,7 @@
   const A = RE.act = {
     nav: d => go(d.to),
     closeDlg: () => RE.closeDlg(),
-    toggleTheme: () => { S().settings.theme = isDark() ? 'light' : 'dark'; RE.persist(); applyTheme(); RE.render(); },
+    toggleTheme: () => { S().settings.theme = isDark() ? 'light' : 'dark'; S().settings.themeV = 3; RE.persist(); applyTheme(); RE.render(); },
     setLang: (d, el) => { S().settings.lang = el.value; RE.persist(); RE.render(); },
     toggleGroup: d => {
       const g = GROUPS.find(x => x.id === d.g), cur = groupOf(ui.route);

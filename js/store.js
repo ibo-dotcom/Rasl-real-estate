@@ -27,7 +27,7 @@ window.RE = window.RE || {};
   function blank() {
     const s = {
       v: 1,
-      settings: { office: 'Rasl Estate', me: '', phone: '', currency: 'USD', goal: 100000, commissionPct: 2, charityPct: 5, lang: 'en', theme: 'dark', agentCode: '' },
+      settings: { office: 'Rasl Estate', me: '', phone: '', currency: 'USD', goal: 100000, commissionPct: 2, charityPct: 5, lang: 'en', theme: 'light', themeV: 3, agentCode: '' },
       seeded: false
     };
     COLLS.forEach(c => { s[c] = []; });

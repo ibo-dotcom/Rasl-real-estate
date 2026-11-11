@@ -6,7 +6,7 @@
   const C = RE.cloud = { status: 'off', user: null, office: null, role: '', members: [], msg: '', mode: 'signin' };
   const MKEY = 'rasl-estate-sync';
   const SHARED = ['office', 'phone', 'currency', 'goal', 'commissionPct', 'charityPct', 'agentCode', 'codeIsSample'];
-  const DEVICE = ['lang', 'theme', 'me'];
+  const DEVICE = ['lang', 'theme', 'themeV', 'me'];
   let meta = { officeId: null, synced: {} }, timer = null, busy = false, again = false, channel = null, renderT = null;
 
   try { meta = Object.assign(meta, JSON.parse(localStorage.getItem(MKEY)) || {}); } catch (e) { /* first run */ }

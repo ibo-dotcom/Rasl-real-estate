@@ -3,8 +3,8 @@
   "short_name": "Rasl Estate",
   "start_url": "./#home",
   "display": "standalone",
-  "background_color": "#121B17",
-  "theme_color": "#121B17",
+  "background_color": "#1F2B6E",
+  "theme_color": "#1F2B6E",
   "icons": [
     { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
