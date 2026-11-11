@@ -19,7 +19,7 @@
 
   /* ---------- shell ---------- */
   // The office's own green look is the default; light is the alternative.
-  // Light grey and navy is the default look (the office wall colours); navy-dark is the alternative.
+  // Pale blue-grey with steel blue is the default look (the office wall colours); deep blue is the alternative.
   function applyTheme() {
     const st = S().settings;
     if (st.themeV !== 3) { st.theme = 'light'; st.themeV = 3; RE.persist(); }
