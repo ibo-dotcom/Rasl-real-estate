@@ -78,6 +78,9 @@
   IC.play = '<circle cx="12" cy="12" r="8.5"/><path d="M10 8.5l5 3.5-5 3.5z"/>';
   IC.plan = '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>';
   IC.project = '<path d="M3 20h18M5 20V9l5-3v14M10 20V4l9 4v12"/>';
+  IC.pause = '<path d="M9 5v14M15 5v14"/>';
+  IC.muted = '<path d="M4 10v4h3l5 4V6L7 10zM16 9.5l5 5M21 9.5l-5 5"/>';
+  IC.sound = '<path d="M4 10v4h3l5 4V6L7 10zM16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11"/>';
   IC.cloud = '<path d="M7 18.5h10.5a4 4 0 00.6-7.95A6 6 0 006.6 9.8 4.4 4.4 0 007 18.5z"/>';
   IC.logout = '<path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/>';
   RE.icon = (n, cls) => `<svg class="ic ${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;
@@ -174,8 +177,24 @@
     });
   }
 
+  function toBlob(file, max, q) {
+    return new Promise((res, rej) => {
+      const url = URL.createObjectURL(file), img = new Image();
+      img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('image')); };
+      img.onload = () => {
+        const k = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement('canvas');
+        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+        c.toBlob(b => b ? res(b) : rej(new Error('image')), 'image/jpeg', q);
+      };
+      img.src = url;
+    });
+  }
+  let uploading = 0;
+  RE.formBusy = () => uploading > 0;
+
   RE.form = function (cfg) {
-    const photos = {};
+    const photos = {}, videos = {};
     const field = f => {
       const id = 'f-' + f.name, v = f.value == null ? '' : f.value, req = f.required ? ' required' : '';
       let c;
@@ -184,8 +203,11 @@
       else if (f.type === 'photos') {
         photos[f.name] = (f.value || []).slice();
         c = `<div class="photos" id="${id}-list"></div><label class="btn ghost filebtn">${RE.icon('upload')}${esc(t('Add photos'))}<input type="file" id="${id}" accept="image/*" multiple data-photos="${f.name}"></label>`;
+      } else if (f.type === 'videos') {
+        videos[f.name] = (f.value || []).slice();
+        c = `<div class="photos" id="${id}-list"></div>${RE.canUpload() ? `<label class="btn ghost filebtn">${RE.icon('upload')}${esc(t('Add videos'))}<input type="file" id="${id}" accept="video/mp4,video/webm,video/quicktime" multiple></label>` : ''}`;
       } else c = `<input id="${id}" name="${f.name}" type="${f.type || 'text'}" value="${esc(v)}"${req}${f.type === 'number' ? ' step="any" inputmode="decimal"' : ''}${f.placeholder ? ` placeholder="${esc(f.placeholder)}"` : ''} autocomplete="off">`;
-      return `<div class="fld ${f.wide || f.type === 'textarea' || f.type === 'photos' ? 'wide' : ''}"><label for="${id}">${esc(f.label)}${f.required ? ' <i>*</i>' : ''}</label>${c}${f.hint ? `<small>${esc(f.hint)}</small>` : ''}</div>`;
+      return `<div class="fld ${f.wide || f.type === 'textarea' || f.type === 'photos' || f.type === 'videos' ? 'wide' : ''}"><label for="${id}">${esc(f.label)}${f.required ? ' <i>*</i>' : ''}</label>${c}${f.hint ? `<small>${esc(f.hint)}</small>` : ''}</div>`;
     };
     RE.modal(`<form id="frm" novalidate>${RE.dlgHead(cfg.title)}
       <div class="dlg-b"><div class="fgrid">${cfg.fields.map(field).join('')}</div><p class="ferr" id="ferr" hidden></p></div>
@@ -202,10 +224,41 @@
         photos[name].splice(+b.dataset.rm, 1); drawPhotos(name);
       };
       document.getElementById('f-' + name).onchange = async e => {
-        for (const file of Array.from(e.target.files).slice(0, 8)) {
-          try { photos[name].push(await shrink(file)); } catch (err) { RE.toast(t('That file could not be read as an image.')); }
+        const fld = cfg.fields.find(x => x.name === name), list = document.getElementById('f-' + name + '-list');
+        for (const file of Array.from(e.target.files).slice(0, 12)) {
+          if (RE.canUpload && RE.canUpload()) {
+            // connected: store a sharp copy in the office media storage and keep only its address
+            uploading++; list.insertAdjacentHTML('beforeend', '<span class="ph up" aria-label="…"><i></i></span>');
+            try { photos[name].push(await RE.uploadMedia(await toBlob(file, 1800, 0.82), fld.folder || 'misc', 'jpg', 'image/jpeg')); }
+            catch (err) { RE.toast(t('A photo could not be uploaded. Check the connection and try again.')); }
+            uploading--;
+          } else {
+            try { photos[name].push(await shrink(file)); } catch (err) { RE.toast(t('That file could not be read as an image.')); }
+          }
+          drawPhotos(name);
         }
         e.target.value = ''; drawPhotos(name);
+      };
+    });
+    const drawVideos = name => {
+      document.getElementById('f-' + name + '-list').innerHTML = videos[name].map((v, i) => `<span class="ph vid"><video src="${esc(v.url || v)}" muted preload="metadata"></video><button type="button" data-rm="${i}" aria-label="${esc(t('Remove'))}">${RE.icon('x')}</button></span>`).join('');
+    };
+    Object.keys(videos).forEach(name => {
+      drawVideos(name);
+      const list = document.getElementById('f-' + name + '-list'), input = document.getElementById('f-' + name), fld = cfg.fields.find(x => x.name === name);
+      list.onclick = e => { const b = e.target.closest('[data-rm]'); if (!b) return; videos[name].splice(+b.dataset.rm, 1); drawVideos(name); };
+      if (!input) return;
+      input.onchange = async e => {
+        for (const file of Array.from(e.target.files).slice(0, 6)) {
+          if (file.size > 50 * 1024 * 1024) { RE.toast(t('{f} is larger than 50 MB. Shorten or compress it, then try again.', { f: file.name })); continue; }
+          const ext = (file.name.split('.').pop() || 'mp4').toLowerCase().replace(/[^a-z0-9]/g, '') || 'mp4';
+          uploading++;
+          list.insertAdjacentHTML('beforeend', `<span class="ph up wide-up"><i></i><small>${esc(t('Uploading {f}…', { f: file.name }))}</small></span>`);
+          try { videos[name].push({ url: await RE.uploadMedia(file, fld.folder || 'misc', ext, file.type || 'video/mp4'), name: file.name }); RE.toast(t('{f} uploaded', { f: file.name })); }
+          catch (err) { RE.toast(t('{f} could not be uploaded. Check the connection and try again.', { f: file.name })); }
+          uploading--; drawVideos(name);
+        }
+        e.target.value = '';
       };
     });
     if (cfg.onDelete) document.getElementById('f-del').onclick = cfg.onDelete;
@@ -215,6 +268,7 @@
       let bad = null;
       cfg.fields.forEach(f => {
         if (f.type === 'photos') { out[f.name] = photos[f.name]; return; }
+        if (f.type === 'videos') { out[f.name] = videos[f.name]; return; }
         const el = frm.elements[f.name]; let v = el.value.trim();
         el.classList.remove('bad');
         if (f.required && !v) { bad = bad || f; el.classList.add('bad'); }

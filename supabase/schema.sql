@@ -72,3 +72,6 @@ alter publication supabase_realtime add table public.records;
 --   get_public_project(office uuid, pid text) -> jsonb   client-facing fields only, for projects with data.public = 'yes'
 --   submit_interest(office, pid, full_name, phone, note, campaign) -> boolean   adds a lead tied to the project and campaign
 -- Both are security definer and executable by anon.
+
+-- Storage bucket "project-media" (public read, 50 MB per file, images and mp4/webm/mov):
+-- office members may upload, replace and delete files under "<office_id>/...". See migration "project_media_storage".

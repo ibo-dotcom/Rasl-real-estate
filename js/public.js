@@ -51,7 +51,7 @@
           ${p.payment ? `<p class="pay">${esc(p.payment)}</p>` : ''}
           <div class="row wrap">${waHref ? `<a class="btn" href="${waHref}" target="_blank" rel="noopener">${t('Ask on WhatsApp')}</a>` : ''}<a class="btn ghost" href="#interest">${t('Register your interest')}</a></div>
         </div></section>
-      ${p.videoUrl || p.vrUrl ? `<section class="pub-media">${embed(p.videoUrl, t('Video'))}${embed(p.vrUrl, t('VR tour'))}</section>` : ''}
+      ${(p.videos || []).length || p.videoUrl || p.vrUrl ? `<section class="pub-media">${(p.videos || []).map(v => `<figure class="media"><video src="${esc(v.url || v)}" controls playsinline preload="metadata"></video></figure>`).join('')}${embed(p.videoUrl, t('Video'))}${embed(p.vrUrl, t('VR tour'))}</section>` : ''}
       ${p.description ? `<section class="pub-desc"><p>${esc(p.description)}</p></section>` : ''}
       ${typeof p.lat === 'number' ? `<p><a class="btn ghost" href="https://www.google.com/maps?q=${p.lat},${p.lng}" target="_blank" rel="noopener">${t('Google Maps')}</a></p>` : ''}
       <section class="panel pub-form" id="interest"><h2>${t('Register your interest')}</h2><p class="sub">${t('Leave your name and number and an agent will call you about {p}.', { p: esc(p.name) })}</p>

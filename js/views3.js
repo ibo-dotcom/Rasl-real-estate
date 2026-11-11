@@ -69,44 +69,18 @@
   const stat = (label, val) => val ? `<div><dt>${label}</dt><dd>${val}</dd></div>` : '';
   RE.projStats = p => `<dl class="pstats">${stat(t('Price'), priceRange(p))}${stat(t('Sizes'), areaRange(p))}${stat(t('Availability'), unitsLeft(p))}${stat(t('Handover'), p.handover ? `<bdi>${esc(p.handover)}</bdi>` : '')}</dl>`;
 
-  /* ---------- home: the showcase ---------- */
+  /* ---------- home: the ad screen on top, then every project ---------- */
   V.home = function () {
-    const S = RE.state, list = featured(), all = live(), ui = RE.ui;
-    const bar = `<div class="toolbar"><p class="sub grow">${t('Residential projects you are selling. This screen is made to be shown to clients.')}</p>
-      ${all.length ? `<button class="btn ghost" data-act="kiosk">${RE.icon('screen')}${t('Show on a screen')}</button>` : ''}<button class="btn" data-act="addProject">${RE.icon('plus')}${t('Project')}</button></div>`;
-    if (!all.length) return bar + RE.empty(t('No projects yet. Add the first residential project you are selling and it becomes the main ad on this screen.'), 'addProject', t('Add a project'));
-    if (ui.slide == null || ui.slide >= list.length) ui.slide = 0;
-    const p = list[ui.slide];
-    const hero = p ? `<section class="hero" aria-roledescription="carousel" aria-label="${t('Featured projects')}">
-        <div class="hero-art">${RE.projectArt(p)}${RE.tag(p.status === 'upcoming' ? 'reserved' : 'available', L('pstatus', p.status))}</div>
-        <div class="hero-txt">
-          <span class="eyebrow">${esc(L('ptype', p.ptype))} · ${esc(where(p))}</span>
-          <h2>${esc(p.name)}</h2>
-          ${p.developer ? `<p class="sub">${t('By {d}', { d: esc(p.developer) })}</p>` : ''}
-          ${RE.projStats(p)}
-          ${p.payment ? `<p class="pay">${esc(p.payment)}</p>` : ''}
-          <div class="row wrap">${RE.waLink(p) ? `<a class="btn" target="_blank" rel="noopener" href="${RE.waLink(p)}">${RE.icon('chat')}${t('Ask on WhatsApp')}</a>` : ''}<button class="btn ghost" data-act="viewProject" data-id="${p.id}">${t('Details')}</button></div>
-          ${list.length > 1 ? `<div class="hero-nav"><button class="iconbtn" data-act="slide" data-d="-1" aria-label="${t('Previous')}">${RE.icon('prev')}</button>
-            ${list.map((x, i) => `<button class="dot${i === ui.slide ? ' on' : ''}" data-act="slideTo" data-i="${i}" aria-label="${esc(x.name)}"></button>`).join('')}
-            <button class="iconbtn" data-act="slide" data-d="1" aria-label="${t('Next')}">${RE.icon('next')}</button></div>` : ''}
-        </div></section>` : '';
-    return bar + hero + `<h2 class="h-sec">${t('All projects')} <span class="count">${all.length}</span></h2>
-      <div class="pgrid">${all.map(x => `<article class="pcard proj${x.status === 'soldout' ? ' out' : ''}"><button class="pcard-img" data-act="viewProject" data-id="${x.id}" aria-label="${esc(x.name)}">${RE.projectArt(x)}${RE.tag(x.status === 'soldout' ? 'sold' : x.status === 'upcoming' ? 'reserved' : 'available', L('pstatus', x.status))}</button>
+    const all = live();
+    if (!all.length) return RE.empty(t('No projects yet. Add the first residential project you are selling and it becomes the main ad on this screen.'), 'addProject', t('Add a project'));
+    const noMedia = featured().filter(p => !(p.photos || []).length && !(p.videos || []).length && !p.videoUrl);
+    return `<div id="adslot" class="adslot"></div>
+      ${noMedia.length ? `<div class="notice"><span>${t('{n} featured projects have no photos or videos yet, so the screen shows a drawing for them.', { n: noMedia.length })}</span><button class="btn small" data-act="editProject" data-id="${noMedia[0].id}">${RE.icon('upload')}${t('Add photos and videos')}</button></div>` : ''}
+      <div class="toolbar"><h2 class="h-sec grow">${t('All projects')} <span class="count">${all.length}</span></h2>
+        <button class="btn ghost" data-act="kiosk">${RE.icon('screen')}${t('Show on a screen')}</button><button class="btn" data-act="addProject">${RE.icon('plus')}${t('Project')}</button></div>
+      <div class="pgrid">${all.map(x => `<article class="pcard proj${x.status === 'soldout' ? ' out' : ''}"><button class="pcard-img" data-act="viewProject" data-id="${x.id}" aria-label="${esc(x.name)}">${RE.projectArt(x)}${RE.tag(x.status === 'soldout' ? 'sold' : x.status === 'upcoming' ? 'reserved' : 'available', L('pstatus', x.status))}${(x.videos || []).length || x.videoUrl ? `<span class="has-video">${RE.icon('play')}</span>` : ''}</button>
         <div class="pcard-b"><h3>${esc(x.name)}</h3><p class="sub">${esc(L('ptype', x.ptype))} · ${esc(where(x))}</p>
         <div class="row"><strong class="price">${priceRange(x)}</strong><span class="grow"></span><span class="chip">${unitsLeft(x)}</span></div></div></article>`).join('')}</div>`;
-  };
-
-  let slideT = null;
-  RE.after.home = function () {
-    clearInterval(slideT);
-    const n = featured().length;
-    if (n < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const hero = document.querySelector('.hero'); let paused = false;
-    if (hero) { hero.onmouseenter = () => { paused = true; }; hero.onmouseleave = () => { paused = false; }; hero.onfocusin = () => { paused = true; }; }
-    slideT = setInterval(() => {
-      if (paused || RE.ui.route !== 'home' || document.querySelector('dialog[open]')) return;
-      RE.ui.slide = (RE.ui.slide + 1) % featured().length; RE.render();
-    }, 7000);
   };
 
   /* ---------- projects: the list you manage ---------- */
@@ -125,6 +99,7 @@
     const wa = RE.waLink(p), ph = p.photos || [];
     RE.modal(`${RE.dlgHead(p.name)}<div class="dlg-b">
       <div class="gallery ${ph.length > 1 ? 'multi' : ''}"><div class="g-main">${RE.projectArt(p)}</div>${ph.slice(1, 4).map((s, i) => `<div><img src="${s}" alt="${esc(p.name)} ${i + 2}"></div>`).join('')}</div>
+      ${(p.videos || []).map(v => `<video class="dlg-video" src="${esc(v.url || v)}" controls playsinline preload="metadata"></video>`).join('')}
       <div class="row wrap">${RE.tag(p.status === 'soldout' ? 'sold' : p.status === 'upcoming' ? 'reserved' : 'available', L('pstatus', p.status))}<span class="chip">${esc(L('ptype', p.ptype))} · ${esc(where(p))}</span></div>
       ${p.developer ? `<p class="sub">${t('By {d}', { d: esc(p.developer) })}</p>` : ''}
       ${RE.projStats(p)}
@@ -161,11 +136,13 @@
         { name: 'phone', label: t('WhatsApp number'), type: 'tel', value: p.phone, placeholder: '+964', hint: t('Leave empty to use the office number') },
         { name: 'lat', label: t('Latitude'), type: 'number', value: p.lat },
         { name: 'lng', label: t('Longitude'), type: 'number', value: p.lng },
-        { name: 'photos', label: t('Photos'), type: 'photos', value: p.photos, hint: t('The first photo is the main picture on the ad') },
+        { name: 'photos', label: t('Photos'), type: 'photos', value: p.photos, hint: t('The first photo is the main picture on the ad'), folder: p.id || 'new' },
+        { name: 'videos', label: t('Videos'), type: 'videos', value: p.videos, folder: p.id || 'new', hint: RE.canUpload() ? t('MP4 or MOV up to 50 MB each. They play on the ad screen with the sound off.') : t('Connect the office database to upload videos. Until then, use a video link below.') },
         { name: 'description', label: t('Description'), type: 'textarea', value: p.description }
       ],
       onSubmit: v => {
         if (v.unitsTotal != null && v.unitsAvailable != null && v.unitsAvailable > v.unitsTotal) return t('Units still available cannot be more than units in total.');
+        if (RE.formBusy && RE.formBusy()) return t('Wait until the uploads finish, then save.');
         if (v.videoUrl && !RE.embedUrl(v.videoUrl)) return t('The video link is not a web address. It should start with https://');
         if (v.vrUrl && !RE.embedUrl(v.vrUrl)) return t('The VR link is not a web address. It should start with https://');
         if (p.id) v.id = p.id; else { v.createdAt = RE.today(); v.order = RE.state.projects.length; v.agentIds = []; }
@@ -176,50 +153,4 @@
     });
   };
 
-  /* ---------- full-screen display for a TV in the office ---------- */
-  let kT = null, kIdle = null;
-  function qr(text) {
-    if (!window.qrcode || !text) return '';
-    try { const q = window.qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 4, margin: 2, scalable: true }); } catch (e) { return ''; }
-  }
-  function kioskSlide() {
-    const list = featured(), el = document.getElementById('kiosk'); if (!el || !list.length) return;
-    const i = RE.ui.kslide % list.length, p = list[i], wa = RE.waLink(p), st = RE.state.settings;
-    el.querySelector('.k-stage').innerHTML = `<div class="k-art">${RE.projectArt(p)}</div>
-      <div class="k-txt"><div class="k-brand">${RE.logo()}<span>${esc(st.office || 'Rasl Estate')}</span></div>
-        <span class="eyebrow">${esc(L('pstatus', p.status))} · ${esc(L('ptype', p.ptype))} · ${esc(where(p))}</span>
-        <h2>${esc(p.name)}</h2>${p.developer ? `<p class="k-dev">${t('By {d}', { d: esc(p.developer) })}</p>` : ''}
-        ${RE.projStats(p)}${p.payment ? `<p class="pay">${esc(p.payment)}</p>` : ''}
-        ${wa ? `<div class="k-qr"><div class="qr">${qr(wa)}</div><p>${t('Scan to ask about this project on WhatsApp')}<b class="num">${esc(phoneOf(p))}</b></p></div>` : (phoneOf(p) ? `<p class="k-phone num">${esc(phoneOf(p))}</p>` : '')}
-      </div>`;
-    el.querySelector('.k-bar i').style.animation = 'none'; void el.offsetWidth; el.querySelector('.k-bar i').style.animation = '';
-    el.querySelector('.k-count').textContent = `${i + 1} / ${list.length}`;
-  }
-  RE.kioskOpen = function () {
-    if (!featured().length) { RE.toast(t('Mark at least one project as featured first.')); return; }
-    RE.ui.kslide = 0;
-    const el = document.createElement('div'); el.id = 'kiosk'; el.className = 'kiosk';
-    el.innerHTML = `<div class="k-stage"></div><div class="k-bar"><i></i></div><span class="k-count"></span>
-      <div class="k-ctl"><button class="iconbtn" data-k="-1" aria-label="${t('Previous')}">${RE.icon('prev')}</button><button class="iconbtn" data-k="1" aria-label="${t('Next')}">${RE.icon('next')}</button><button class="btn small" data-k="x">${t('Close display')}</button></div>`;
-    document.body.appendChild(el);
-    try { if (el.requestFullscreen) el.requestFullscreen().catch(() => {}); } catch (e) { /* stays as an overlay */ }
-    const step = d => { RE.ui.kslide = (RE.ui.kslide + d + featured().length) % featured().length; kioskSlide(); restart(); };
-    const restart = () => { clearInterval(kT); if (featured().length > 1) kT = setInterval(() => step(1), 9000); };
-    const wake = () => { el.classList.add('awake'); clearTimeout(kIdle); kIdle = setTimeout(() => el.classList.remove('awake'), 2500); };
-    el.addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (!b) { wake(); return; } if (b.dataset.k === 'x') RE.kioskClose(); else step(+b.dataset.k); });
-    el.addEventListener('mousemove', wake);
-    el._key = e => { if (e.key === 'Escape') RE.kioskClose(); if (e.key === 'ArrowRight') step(RE.dir() === 'rtl' ? -1 : 1); if (e.key === 'ArrowLeft') step(RE.dir() === 'rtl' ? 1 : -1); };
-    document.addEventListener('keydown', el._key);
-    el._fs = () => { if (!document.fullscreenElement && document.getElementById('kiosk') && el._wasFs) RE.kioskClose(); el._wasFs = !!document.fullscreenElement; };
-    document.addEventListener('fullscreenchange', el._fs);
-    try { navigator.wakeLock && navigator.wakeLock.request('screen').then(l => { el._lock = l; }).catch(() => {}); } catch (e) { /* screen may sleep */ }
-    kioskSlide(); restart(); wake();
-  };
-  RE.kioskClose = function () {
-    const el = document.getElementById('kiosk'); if (!el) return;
-    clearInterval(kT); document.removeEventListener('keydown', el._key); document.removeEventListener('fullscreenchange', el._fs);
-    if (el._lock) try { el._lock.release(); } catch (e) { /* already released */ }
-    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
-    el.remove();
-  };
 })(window.RE);

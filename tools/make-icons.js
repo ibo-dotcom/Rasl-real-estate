@@ -9,7 +9,7 @@ const fs = require('fs'), path = require('path');
     // Home-screen icons are full-bleed squares; the OS rounds the corners itself.
     const inner = svg.replace('rx="12"', 'rx="0"');
     const html = maskable
-      ? `<body style="margin:0;background:#1D5B43"><div style="width:${size}px;height:${size}px;display:grid;place-items:center">${inner.replace('<svg ', `<svg width="${size * 0.8}" height="${size * 0.8}" `)}</div></body>`
+      ? `<body style="margin:0;background:#2E8B57"><div style="width:${size}px;height:${size}px;display:grid;place-items:center">${inner.replace('<svg ', `<svg width="${size * 0.8}" height="${size * 0.8}" `)}</div></body>`
       : `<body style="margin:0">${inner.replace('<svg ', `<svg width="${size}" height="${size}" `)}</body>`;
     await p.setViewportSize({ width: size, height: size }); await p.setContent(html);
     await p.screenshot({ path: path.join(dir, file), omitBackground: false });

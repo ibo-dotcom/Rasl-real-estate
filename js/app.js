@@ -17,11 +17,12 @@
   const o = (list, group) => list.map(k => [k, L(group, k)]);
 
   /* ---------- shell ---------- */
+  // The office's own green look is the default; light is the alternative.
   function applyTheme() {
-    const th = S().settings.theme, root = document.documentElement;
-    if (th === 'light' || th === 'dark') root.setAttribute('data-theme', th); else root.removeAttribute('data-theme');
+    if (S().settings.theme !== 'light') S().settings.theme = 'dark';
+    document.documentElement.setAttribute('data-theme', S().settings.theme);
   }
-  const isDark = () => { const th = S().settings.theme; return th === 'dark' || (th !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches); };
+  const isDark = () => S().settings.theme !== 'light';
 
   function shell() {
     const st = S().settings, due = RE.dueLeads().length;
@@ -309,8 +310,6 @@
       RE.modal(`${RE.dlgHead(t(g.name))}<nav class="morenav">${g.routes.map(r => `<a href="#${r}" data-act="closeDlg" class="${ui.route === r ? 'on' : ''}">${RE.icon(r)}<span>${t(TITLES[r])}</span>${r === 'leads' && due ? `<i class="badge">${due}</i>` : ''}</a>`).join('')}</nav>`, 'sheet');
     },
     kiosk: () => RE.kioskOpen(),
-    slide: d => { const n = RE.showcaseList().length; ui.slide = ((ui.slide || 0) + (+d.d) * (RE.dir() === 'rtl' ? -1 : 1) + n) % n; RE.render(); },
-    slideTo: d => { ui.slide = +d.i; RE.render(); },
     openProject: d => { ui.projectId = d.id; try { sessionStorage.setItem('rasl-project', d.id); } catch (e) { /* not remembered */ } RE.closeDlg(); go('project'); },
     projectSale: d => RE.projectSaleForm(RE.get('projects', d.id)),
     projectTeam: d => RE.projectTeamForm(RE.get('projects', d.id)),
@@ -466,7 +465,6 @@
   applyTheme();
   window.addEventListener('hashchange', () => go(location.hash.slice(1) || 'dashboard'));
   window.addEventListener('resize', () => { if (ui.route === 'map' && !(RE.gl && RE.glOn())) RE.mapDraw(); });
-  try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => RE.render()); } catch (e) { /* older browsers */ }
   ui.route = ROUTES.indexOf(location.hash.slice(1)) >= 0 ? location.hash.slice(1) : 'home';
   try { ui.projectId = sessionStorage.getItem('rasl-project'); } catch (e) { ui.projectId = null; }
   try { ui.open = JSON.parse(localStorage.getItem('rasl-nav-open')) || {}; } catch (e) { ui.open = {}; }
