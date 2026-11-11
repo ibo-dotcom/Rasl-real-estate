@@ -8,6 +8,10 @@ No build step. Open `index.html`, or serve the folder with any static host:
 
     npx serve .
 
+## On the screen
+
+The start screen carries a strip that puts the app on the phone or computer screen with its own icon: one tap where the browser offers an install prompt (Chrome and Edge), and the two-step instructions for the device otherwise (Safari on iPhone: Share, then Add to Home Screen). The logo is `assets/logo.svg`; `node tools/make-icons.js` redraws the PNG icons from it.
+
 ## Projects
 
 Each residential project has its own price range and commission rate. Its project file ties together:
@@ -60,6 +64,7 @@ Signed in, records live in the office database (Supabase project `uejkzdpyvlaxjz
     js/adscreen.js    ad screen player, office TV display, photo and video uploads
     js/public.js      public project page (project.html) where clients register interest
     js/trip.js        my location, road and distance to a place
+    js/install.js     strip that puts the app on the screen
     js/app.js         routing and actions
     js/ask.js         ask box: plot numbers, places, sections and voice
     js/cloud.js       sign-in, offices, sync with the database

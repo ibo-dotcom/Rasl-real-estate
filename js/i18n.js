@@ -370,7 +370,21 @@ window.RE = window.RE || {};
     ['in a straight line; no road was found', 'بخط مستقيم؛ لم يُعثر على طريق', 'بە هێڵی ڕاست؛ هیچ ڕێگایەک نەدۆزرایەوە'],
     ['by car', 'بالسيارة', 'بە ئۆتۆمبێل'],
     ['Start in Google Maps', 'ابدأ في خرائط Google', 'لە Google Maps دەست پێبکە'],
-    ['Way and distance', 'الطريق والمسافة', 'ڕێگا و دووری']
+    ['Way and distance', 'الطريق والمسافة', 'ڕێگا و دووری'],
+    // put the app on the screen
+    ['Put Rasl on your screen', 'ضع راسل على شاشتك', 'ڕاسڵ بخە سەر شاشەکەت'],
+    ['It opens like an app, full screen, from its own icon.', 'يفتح كتطبيق، بملء الشاشة، من أيقونته الخاصة.', 'وەک ئەپ دەکرێتەوە، بە پڕی شاشە، لە ئایکۆنی خۆیەوە.'],
+    ['Add to screen', 'أضف إلى الشاشة', 'زیادکردن بۆ سەر شاشە'],
+    ['Not now', 'ليس الآن', 'ئێستا نا'],
+    ['Copy the link', 'انسخ الرابط', 'لینکەکە کۆپی بکە'],
+    ['Open this page in Safari.', 'افتح هذه الصفحة في Safari.', 'ئەم پەڕەیە لە Safari بکەوە.'],
+    ['Press the Share button (the square with an arrow).', 'اضغط على زر المشاركة (المربع مع السهم).', 'پەنجە بە دوگمەی هاوبەشکردندا بنێ (چوارگۆشەکە لەگەڵ تیرێک).'],
+    ['Choose “Add to Home Screen”, then “Add”.', 'اختر «إضافة إلى الشاشة الرئيسية» ثم «إضافة».', '«Add to Home Screen» هەڵبژێرە، پاشان «Add».'],
+    ['Press the ⋮ menu at the top of Chrome.', 'اضغط على قائمة ⋮ أعلى Chrome.', 'پەنجە بە لیستی ⋮ لە سەرەوەی Chrome دا بنێ.'],
+    ['Choose “Add to Home screen” or “Install app”.', 'اختر «إضافة إلى الشاشة الرئيسية» أو «تثبيت التطبيق».', '«Add to Home screen» یان «Install app» هەڵبژێرە.'],
+    ['Press “Install”.', 'اضغط «تثبيت».', 'پەنجە بە «Install» دا بنێ.'],
+    ['In Chrome or Edge, press the install icon at the end of the address bar.', 'في Chrome أو Edge، اضغط على أيقونة التثبيت في نهاية شريط العنوان.', 'لە Chrome یان Edge، پەنجە بە ئایکۆنی دامەزراندن لە کۆتایی شریتی ناونیشاندا بنێ.'],
+    ['Or open the browser menu and choose “Install Rasl Estate”.', 'أو افتح قائمة المتصفح واختر «تثبيت Rasl Estate».', 'یان لیستی وێبگەڕەکە بکەوە و «Install Rasl Estate» هەڵبژێرە.']
   ];
   const D = { ar: {}, ku: {} };
   ROWS.forEach(r => { D.ar[r[0]] = r[1]; D.ku[r[0]] = r[2]; });

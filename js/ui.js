@@ -66,8 +66,9 @@
     fit: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
     clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5.500l3.5 2"/>'
   };
-  /* The Rasl Estate mark: a gabled roof that turns into the bowl of an R, with one lit window. */
-  RE.logo = cls => `<svg class="logo-svg ${cls || ''}" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" class="lg-tile"/><path d="M15 36V19.5L24 12l9 7.5v3.7c0 4.3-3.4 7.6-7.7 7.6H15M25.3 30.8L33.5 36" fill="none" class="lg-ink" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="21.9" y="19.4" width="4.2" height="4.2" rx=".8" class="lg-win"/></svg>`;
+  /* The Rasl Estate mark: a gabled roof that turns into the bowl of an R, with one lit window,
+     on a tile cut into the blue facets and white lines of the office wall. */
+  RE.logo = cls => `<svg class="logo-svg ${cls || ''}" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" class="lg-tile"/><path d="M0 0H31L0 27Z" class="lg-f1"/><path d="M48 48H15L48 19Z" class="lg-f2"/><path d="M48 0V15L35 0Z" class="lg-f3"/><path d="M31 0L0 27M15 48L48 19M35 0L48 15" fill="none" class="lg-rule" stroke-width="1"/><path d="M15 36V19.5L24 12l9 7.5v3.7c0 4.3-3.4 7.6-7.7 7.6H15M25.3 30.8L33.5 36" fill="none" class="lg-ink" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="21.9" y="19.4" width="4.2" height="4.2" rx=".8" class="lg-win"/></svg>`;
   IC.home = '<path d="M4 11l8-7 8 7M6 9.500V20h12V9.500M10 20v-5h4v5"/>';
   IC.projects = '<path d="M3 20h18M5 20V9l5-3v14M10 20V4l9 4v12M13 9h3M13 12.500h3M13 16h3"/>';
   IC.folder = '<path d="M3.5 6.500A1.5 1.5 0 015 5h4.500l2 2.500H19a1.5 1.5 0 011.5 1.500v8.500A1.5 1.5 0 0119 19H5a1.5 1.5 0 01-1.5-1.500z"/>';

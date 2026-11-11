@@ -65,7 +65,7 @@
     document.getElementById('pub-lang').onchange = e => { lang = e.target.value; RE.state.settings.lang = lang; render(); };
     document.getElementById('lead').onsubmit = submit;
   }
-  function logo() { return '<svg class="logo-svg" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="12" class="lg-tile"/><path d="M15 36V19.5L24 12l9 7.5v3.7c0 4.3-3.4 7.6-7.7 7.6H15M25.3 30.8L33.5 36" fill="none" class="lg-ink" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="21.9" y="19.4" width="4.2" height="4.2" rx=".8" class="lg-win"/></svg>'; }
+  function logo() { return '<svg class="logo-svg" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" class="lg-tile"/><path d="M0 0H31L0 27Z" class="lg-f1"/><path d="M48 48H15L48 19Z" class="lg-f2"/><path d="M48 0V15L35 0Z" class="lg-f3"/><path d="M31 0L0 27M15 48L48 19M35 0L48 15" fill="none" class="lg-rule" stroke-width="1"/><path d="M15 36V19.5L24 12l9 7.5v3.7c0 4.3-3.4 7.6-7.7 7.6H15M25.3 30.8L33.5 36" fill="none" class="lg-ink" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="21.9" y="19.4" width="4.2" height="4.2" rx=".8" class="lg-win"/></svg>'; }
 
   async function submit(e) {
     e.preventDefault();
