@@ -115,7 +115,7 @@
     const bar = `<div class="toolbar"><p class="sub grow">${t('Featured projects rotate on the home screen and on the office display.')}</p><button class="btn" data-act="addProject">${RE.icon('plus')}${t('Project')}</button></div>`;
     if (!all.length) return bar + RE.empty(t('No projects yet. Add the first residential project you are selling and it becomes the main ad on this screen.'), 'addProject', t('Add a project'));
     return bar + `<section class="panel flush"><div class="tscroll"><table class="tbl"><thead><tr><th>${t('Project')}</th><th>${t('Type')}</th><th class="n">${t('Price')}</th><th>${t('Availability')}</th><th>${t('Handover')}</th><th>${t('On display')}</th><th>${t('Status')}</th></tr></thead><tbody>
-      ${all.map(p => `<tr class="click" data-act="editProject" data-id="${p.id}" tabindex="0"><td><span class="row"><span class="mini-img">${RE.projectArt(p)}</span><span><b>${esc(p.name)}</b><small>${esc(where(p))}${p.developer ? ' · ' + esc(p.developer) : ''}</small></span></span></td>
+      ${all.map(p => `<tr class="click" data-act="openProject" data-id="${p.id}" tabindex="0"><td><span class="row"><span class="mini-img">${RE.projectArt(p)}</span><span><b>${esc(p.name)}</b><small>${esc(where(p))}${p.developer ? ' · ' + esc(p.developer) : ''}</small></span></span></td>
         <td>${esc(L('ptype', p.ptype))}</td><td class="n">${p.priceFrom ? RE.moneyShort(p.priceFrom) + '+' : '-'}</td><td>${p.status === 'soldout' ? t('Sold out') : `${RE.hbar(p.unitsAvailable || 0, p.unitsTotal || 0)}<small>${unitsLeft(p)}</small>`}</td>
         <td>${esc(p.handover || '')}</td><td>${p.featured === 'yes' && p.status !== 'soldout' ? RE.tag('available', t('Featured')) : `<span class="chip">${t('In the list only')}</span>`}</td><td>${RE.tag(p.status === 'soldout' ? 'sold' : p.status === 'upcoming' ? 'reserved' : 'available', L('pstatus', p.status))}</td></tr>`).join('')}
     </tbody></table></div></section>`;
@@ -131,7 +131,7 @@
       ${p.payment ? `<p class="pay">${esc(p.payment)}</p>` : ''}
       ${p.description ? `<p class="note">${esc(p.description)}</p>` : ''}
     </div><footer class="dlg-f wrap">${wa ? `<a class="btn ghost" target="_blank" rel="noopener" href="${wa}">${RE.icon('chat')}WhatsApp</a>` : ''}${typeof p.lat === 'number' ? `<a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps?q=${p.lat},${p.lng}">${RE.icon('map')}${t('Google Maps')}</a>` : ''}
-      <span class="grow"></span><button class="btn" data-act="editProject" data-id="${p.id}">${RE.icon('edit')}${t('Edit')}</button></footer>`, 'wide');
+      <span class="grow"></span><button class="btn" data-act="openProject" data-id="${p.id}">${t('Open project file')}</button></footer>`, 'wide');
   };
 
   RE.projectForm = function (p) {
@@ -153,7 +153,11 @@
         { name: 'unitsAvailable', label: t('Units still available'), type: 'number', value: p.unitsAvailable },
         { name: 'handover', label: t('Handover'), value: p.handover, placeholder: 'Q4 2027' },
         { name: 'featured', label: t('On the home screen and display'), type: 'select', options: [['yes', t('Featured')], ['no', t('In the list only')]], value: p.featured },
+        { name: 'commissionPct', label: t('Commission on this project, %'), type: 'number', value: p.commissionPct != null ? p.commissionPct : RE.state.settings.commissionPct, required: true },
+        { name: 'public', label: t('Public project page'), type: 'select', options: [['yes', t('On: anyone with the link can see it')], ['no', t('Off: only your team')]], value: p.public || 'yes' },
         { name: 'payment', label: t('Payment plan'), wide: true, value: p.payment, placeholder: t('20% down, the rest over 5 years') },
+        { name: 'videoUrl', label: t('Video link'), type: 'url', wide: true, value: p.videoUrl, placeholder: 'https://youtube.com/watch?v=…', hint: t('YouTube, Vimeo or a direct video file') },
+        { name: 'vrUrl', label: t('VR tour link'), type: 'url', wide: true, value: p.vrUrl, placeholder: 'https://kuula.co/share/…', hint: t('Matterport, Kuula, Momento360 or any 360° tour link') },
         { name: 'phone', label: t('WhatsApp number'), type: 'tel', value: p.phone, placeholder: '+964', hint: t('Leave empty to use the office number') },
         { name: 'lat', label: t('Latitude'), type: 'number', value: p.lat },
         { name: 'lng', label: t('Longitude'), type: 'number', value: p.lng },
@@ -162,7 +166,10 @@
       ],
       onSubmit: v => {
         if (v.unitsTotal != null && v.unitsAvailable != null && v.unitsAvailable > v.unitsTotal) return t('Units still available cannot be more than units in total.');
-        if (p.id) v.id = p.id; else { v.createdAt = RE.today(); v.order = RE.state.projects.length; }
+        if (v.videoUrl && !RE.embedUrl(v.videoUrl)) return t('The video link is not a web address. It should start with https://');
+        if (v.vrUrl && !RE.embedUrl(v.vrUrl)) return t('The VR link is not a web address. It should start with https://');
+        if (p.id) v.id = p.id; else { v.createdAt = RE.today(); v.order = RE.state.projects.length; v.agentIds = []; }
+        v.contact = (v.phone || RE.state.settings.phone || '').trim();   // the number shown on the public page
         RE.put('projects', v); RE.toast(p.id ? t('Project updated') : t('Project added'));
       },
       onDelete: p.id ? () => RE.confirm(t('Delete {n}? This cannot be undone.', { n: p.name }), t('Delete'), () => { RE.del('projects', p.id); RE.closeDlg(); RE.render(); RE.toast(t('Deleted')); }, true) : null

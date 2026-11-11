@@ -8,6 +8,18 @@ No build step. Open `index.html`, or serve the folder with any static host:
 
     npx serve .
 
+## Projects
+
+Each residential project has its own price range and commission rate. Its project file ties together:
+
+- **Media**: photos, a video link (YouTube, Vimeo or a video file) and a VR tour link (Matterport, Kuula, Momento360…).
+- **Sales**: recording a sale uses the project's commission rate and takes a unit off what is available.
+- **Ads**: each campaign gets its own link; visitors who register through it are counted for that campaign.
+- **Team**: the agents assigned to the project, with their sales and buyers.
+- **Business plan**: units, commission and ad budget targets against actual results and pace.
+
+The project link opens `project.html`, a public page with the photos, video, VR and prices. Visitors who register their interest arrive in the CRM as new leads within a second. Commission, targets and team never reach the public page.
+
 ## Data
 
 Without signing in, records stay in the browser on that device.
@@ -31,6 +43,8 @@ Signed in, records live in the office database (Supabase project `uejkzdpyvlaxjz
     js/views1.js      dashboard, leads, property, map
     js/views2.js      rewards, join & charity, team, market, ads, reports, office
     js/views3.js      residential projects showcase and office display
+    js/views4.js      project file (media, sales, ads, team, plan) and business plan
+    js/public.js      public project page (project.html) where clients register interest
     js/app.js         routing and actions
     js/cloud.js       sign-in, offices, sync with the database
     js/config.js      database address and public key

@@ -67,3 +67,8 @@ grant select, update on public.offices to authenticated;
 grant select, update, delete on public.members to authenticated;
 grant select, insert, update, delete on public.records to authenticated;
 alter publication supabase_realtime add table public.records;
+
+-- Public project pages (see migration "public_project_pages"):
+--   get_public_project(office uuid, pid text) -> jsonb   client-facing fields only, for projects with data.public = 'yes'
+--   submit_interest(office, pid, full_name, phone, note, campaign) -> boolean   adds a lead tied to the project and campaign
+-- Both are security definer and executable by anon.

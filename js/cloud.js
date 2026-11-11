@@ -12,13 +12,17 @@
   try { meta = Object.assign(meta, JSON.parse(localStorage.getItem(MKEY)) || {}); } catch (e) { /* first run */ }
   const saveMeta = () => { try { localStorage.setItem(MKEY, JSON.stringify(meta)); } catch (e) { /* quota */ } };
   const hash = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36) + s.length.toString(36); };
+  // The database stores object keys in its own order, so compare records in a fixed key order.
+  const canon = v => Array.isArray(v) ? '[' + v.map(canon).join(',') + ']'
+    : v && typeof v === 'object' ? '{' + Object.keys(v).filter(k => v[k] !== undefined).sort().map(k => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}'
+    : JSON.stringify(v === undefined ? null : v);
   const pick = (o, keys) => { const r = {}; keys.forEach(k => { if (o[k] !== undefined) r[k] = o[k]; }); return r; };
 
   function localMap() {
     const m = {};
     RE.COLLS.forEach(c => RE.state[c].forEach(x => { m[c + '/' + x.id] = { coll: c, id: x.id, data: x }; }));
     m['settings/office'] = { coll: 'settings', id: 'office', data: pick(RE.state.settings, SHARED) };
-    Object.keys(m).forEach(k => { m[k].h = hash(JSON.stringify(m[k].data)); });
+    Object.keys(m).forEach(k => { m[k].h = hash(canon(m[k].data)); });
     return m;
   }
   function applyRow(state, coll, id, data) {
@@ -84,7 +88,7 @@
   async function pull() {
     const office = C.office.id, remote = {}, rows = [];
     for (let from = 0; ; from += 1000) {
-      const { data, error } = await C.client.from('records').select('coll,id,data,deleted').eq('office_id', office).range(from, from + 999);
+      const { data, error } = await C.client.from('records').select('coll,id,data,deleted,updated_at').eq('office_id', office).order('updated_at').range(from, from + 999);
       if (error) throw error;
       rows.push(...data);
       if (data.length < 1000) break;
@@ -94,34 +98,58 @@
     const gone = same ? Object.keys(meta.synced).filter(k => meta.synced[k] !== 'x' && !local[k]) : [];
     const s = freshState();
     rows.forEach(r => {
+      if (!meta.since || r.updated_at > meta.since) meta.since = r.updated_at;
       const k = r.coll + '/' + r.id;
       if (r.deleted) { remote[k] = 'x'; return; }
-      remote[k] = hash(JSON.stringify(r.data));
+      remote[k] = hash(canon(r.data));
       applyRow(s, r.coll, r.id, r.data);
     });
     dirty.forEach(k => applyRow(s, local[k].coll, local[k].id, local[k].data));
     gone.forEach(k => { const i = k.indexOf('/'); removeRow(s, k.slice(0, i), k.slice(i + 1)); });
+    if (!same) meta.since = rows.length ? rows[rows.length - 1].updated_at : null;
     meta.officeId = office; meta.synced = remote; saveMeta();
     C.applying = true; RE.state = s; RE.persist(); C.applying = false;
     RE.ui.map = null;
   }
 
+  // A change made by someone else (or by a client on a public project page) arrives here.
+  function applyRemote(r) {
+    if (!r || !r.coll || !C.office || r.office_id && r.office_id !== C.office.id) return false;
+    if (r.updated_at && (!meta.since || r.updated_at > meta.since)) meta.since = r.updated_at;
+    const k = r.coll + '/' + r.id, h = r.deleted ? 'x' : hash(canon(r.data));
+    if (meta.synced[k] === h) return false;
+    meta.synced[k] = h;
+    C.applying = true;
+    if (r.deleted) removeRow(RE.state, r.coll, r.id); else applyRow(RE.state, r.coll, r.id, r.data);
+    RE.persist(); C.applying = false;
+    return true;
+  }
   function subscribe() {
     if (channel) C.client.removeChannel(channel);
     const office = C.office.id;
     channel = C.client.channel('office-' + office)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'records', filter: 'office_id=eq.' + office }, p => {
-        const r = p.new; if (!r || !r.coll || r.office_id !== office) return;
-        const k = r.coll + '/' + r.id, h = r.deleted ? 'x' : hash(JSON.stringify(r.data));
-        if (meta.synced[k] === h) return;
-        meta.synced[k] = h; saveMeta();
-        C.applying = true;
-        if (r.deleted) removeRow(RE.state, r.coll, r.id); else applyRow(RE.state, r.coll, r.id, r.data);
-        RE.persist(); C.applying = false;
-        softRender();
+        if (applyRemote(p.new)) { saveMeta(); softRender(); }
       })
-      .subscribe(st => { if (st === 'CHANNEL_ERROR' || st === 'TIMED_OUT') setStatus('offline'); });
+      .subscribe(st => {
+        if (st === 'SUBSCRIBED') catchUp();
+        if (st === 'CHANNEL_ERROR' || st === 'TIMED_OUT' || st === 'CLOSED') setTimeout(() => { if (C.office) subscribe(); }, 5000);
+      });
   }
+  // Safety net for anything the live feed missed: fetch rows changed since the newest one we have.
+  let catching = false;
+  async function catchUp() {
+    if (!C.office || catching || !meta.since) return;
+    catching = true;
+    try {
+      const { data, error } = await C.client.from('records').select('office_id,coll,id,data,deleted,updated_at')
+        .eq('office_id', C.office.id).gt('updated_at', meta.since).order('updated_at').limit(1000);
+      if (!error && data.length) { let changed = false; data.forEach(r => { changed = applyRemote(r) || changed; }); saveMeta(); if (changed) softRender(); }
+    } finally { catching = false; }
+  }
+  C.catchUp = catchUp;
+  setInterval(() => { if (C.office && document.visibilityState === 'visible') catchUp(); }, 30000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && C.office) catchUp(); });
 
   async function loadMembers() {
     const { data } = await C.client.from('members').select('user_id,name,role,joined_at').eq('office_id', C.office.id).order('joined_at');

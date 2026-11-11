@@ -74,6 +74,10 @@
   IC.folderOpen = '<path d="M3.5 17.500V6.500A1.5 1.5 0 015 5h4.500l2 2.500H18a1.5 1.5 0 011.5 1.500V10M3.5 17.500L6 11h15.500L19 17.500a1.5 1.5 0 01-1.4 1H5a1.5 1.5 0 01-1.5-1z"/>';
   IC.screen = '<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/>';
   IC.prev = '<path d="M15 5l-7 7 7 7"/>'; IC.next = '<path d="M9 5l7 7-7 7"/>';
+  IC.vr = '<path d="M3 8.5A1.5 1.5 0 014.5 7h15A1.5 1.5 0 0121 8.5v7a1.5 1.5 0 01-1.5 1.5h-4l-2-2.5h-3L8.5 17h-4A1.5 1.5 0 013 15.5z"/><circle cx="8" cy="11.5" r="1.6"/><circle cx="16" cy="11.5" r="1.6"/>';
+  IC.play = '<circle cx="12" cy="12" r="8.5"/><path d="M10 8.5l5 3.5-5 3.5z"/>';
+  IC.plan = '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>';
+  IC.project = '<path d="M3 20h18M5 20V9l5-3v14M10 20V4l9 4v12"/>';
   IC.cloud = '<path d="M7 18.5h10.5a4 4 0 00.6-7.95A6 6 0 006.6 9.8 4.4 4.4 0 007 18.5z"/>';
   IC.logout = '<path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/>';
   RE.icon = (n, cls) => `<svg class="ic ${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;

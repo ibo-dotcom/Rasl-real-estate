@@ -114,6 +114,29 @@ window.RE = window.RE || {};
       deals: deals.length, volume: RE.sum(deals, 'amount'), commission: RE.sum(deals, 'commission'), points: RE.points(id)
     };
   };
+  /* Everything tied to one residential project: sales, leads, ads, team and its business plan. */
+  RE.projectFile = function (pid) {
+    const S = RE.state, p = RE.get('projects', pid); if (!p) return null;
+    const deals = S.deals.filter(d => d.projectId === pid);
+    const leads = S.leads.filter(l => l.projectId === pid);
+    const camps = S.campaigns.filter(c => c.projectId === pid);
+    const crmByCamp = id => S.leads.filter(l => l.campaignId === id).length;
+    const avgPrice = p.priceTo && p.priceFrom ? (p.priceFrom + p.priceTo) / 2 : (p.priceFrom || 0);
+    const rate = p.commissionPct != null ? +p.commissionPct : +S.settings.commissionPct || 0;
+    const sold = deals.length, revenue = RE.sum(deals, 'amount'), commission = RE.sum(deals, 'commission');
+    const spent = RE.sum(camps, 'spent'), adLeads = camps.reduce((a, c) => a + Math.max(+c.leads || 0, crmByCamp(c.id)), 0);
+    const target = +p.targetUnits || 0;
+    const planRevenue = target * avgPrice, planCommission = planRevenue * rate / 100;
+    const agents = (p.agentIds || []).map(id => RE.get('agents', id)).filter(Boolean);
+    let pace = null;
+    if (target && p.planStart && p.planEnd && p.planEnd > p.planStart) {
+      const span = new Date(p.planEnd) - new Date(p.planStart), gone = Math.min(1, Math.max(0, (new Date(RE.today()) - new Date(p.planStart)) / span));
+      pace = { expected: Math.round(target * gone), gone };
+    }
+    return { p, deals, leads, active: leads.filter(RE.isActive), camps, crmByCamp, rate, avgPrice, sold, revenue, commission, spent, adLeads,
+      cpl: adLeads ? spent / adLeads : null, net: commission - spent, target, planRevenue, planCommission, budget: +p.adBudget || 0, agents, pace };
+  };
+
   RE.newCode = () => 'RE' + String(Math.floor(10000000 + Math.random() * 89999999));
 
   /* ---------- sample data (dated relative to today so reminders are live) ---------- */
@@ -204,10 +227,26 @@ window.RE = window.RE || {};
       ['Shaqlawa Hills Residence', 'Safeen Living', 'mixed', 'upcoming', 'Shaqlawa', 'North slope', 180, 180, 120000, 380000, 140, 400, 'Q3 2028', 'Reservations open with $5,000', 'Mountain-view apartments and villas, thirty minutes from Erbil. Summer and year-round homes.', true, 36.404, 44.317],
       ['Ankawa Palm Residences', 'Hawraman Developments', 'apartments', 'soldout', 'Erbil', 'Ankawa', 96, 0, 140000, 210000, 130, 190, 'Handed over 2025', 'Sold out. Resale units through our office.', 'Mid-rise apartments in central Ankawa. All units sold; ask us about resale.', false, 36.231, 43.997]
     ].forEach((r, i) => S.projects.push({
+      commissionPct: [2.5, 2, 3, 2][i], targetUnits: [40, 90, 30, 0][i], adBudget: [6000, 9000, 4000, 0][i],
+      planStart: RE.addDays(td, -[60, 45, 10, 400][i]), planEnd: RE.addDays(td, [120, 200, 300, -30][i]),
+      agentIds: S.agents.length ? [S.agents[i % S.agents.length].id, S.agents[(i + 1) % S.agents.length].id] : [],
+      public: r[3] === 'soldout' ? 'no' : 'yes', videoUrl: '', vrUrl: '',
       id: RE.uid(), sample: true, name: r[0], developer: r[1], ptype: r[2], status: r[3], city: r[4], district: r[5],
       unitsTotal: r[6], unitsAvailable: r[7], priceFrom: r[8], priceTo: r[9], areaFrom: r[10], areaTo: r[11], handover: r[12],
       payment: r[13], description: r[14], featured: r[15] ? 'yes' : 'no', lat: r[16], lng: r[17], phone: '', photos: [], order: i, createdAt: td
     }));
+    // Sample sales and ads tied to the first two projects, so the project file shows real numbers.
+    if (S.agents.length) {
+      const [zg, tb] = S.projects.slice(-4), ag = S.agents;
+      [[zg, 'Kawa Mustafa', 'Villa A-07', 210000, -21, 0], [zg, 'Nasreen Hama', 'Villa B-14', 248000, -9, 1], [zg, 'Diyar Salah', 'Villa C-02', 395000, -3, 2], [tb, 'Mustafa Kareem', 'Tower 2, 1104', 118000, -12, 1], [tb, 'Rana Adel', 'Tower 1, 702', 96000, -4, 2]]
+        .forEach(d => { d[0].unitsAvailable = Math.max(0, d[0].unitsAvailable - 1); S.deals.push({ id: RE.uid(), sample: true, client: d[1], title: d[0].name + ', ' + d[2], amount: d[3], commission: Math.round(d[3] * d[0].commissionPct / 100), date: RE.addDays(td, d[4]), kind: 'sale', agentId: ag[d[5] % ag.length].id, projectId: d[0].id, leadId: '', propertyId: '' }); });
+      const c1 = { id: RE.uid(), sample: true, name: 'Zagros Gardens launch', channel: 'facebook', projectId: zg.id, propertyId: '', budget: 3000, spent: 2140, leads: 64, start: RE.addDays(td, -40), end: RE.addDays(td, 20), status: 'running' };
+      const c2 = { id: RE.uid(), sample: true, name: 'Tigris Bay reels', channel: 'instagram', projectId: tb.id, propertyId: '', budget: 2500, spent: 1320, leads: 41, start: RE.addDays(td, -30), end: RE.addDays(td, 30), status: 'running' };
+      S.campaigns.push(c1, c2);
+      [['Bryar Omar', '+9647504441201', zg, c1, 'new', 0], ['Sazan Jalal', '+9647504441355', zg, c1, 'visit', 1], ['Ali Hassan', '+9647804441876', tb, c2, 'contacted', 2]].forEach(l => S.leads.push({
+        id: RE.uid(), sample: true, name: l[0], phone: l[1], want: 'buy', type: l[2].ptype === 'apartments' ? 'apartment' : 'villa', budget: l[2].priceFrom, city: l[2].city, district: l[2].district,
+        stage: l[4], source: l[3].channel, agentId: ag[l[5] % ag.length].id, projectId: l[2].id, campaignId: l[3].id, createdAt: RE.addDays(td, -l[5] * 3 - 1), lastContact: '', nextFollowUp: RE.addDays(td, l[5]), notes: '' }));
+    }
     S.projectsSeeded = true;
   };
 

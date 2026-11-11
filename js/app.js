@@ -1,16 +1,16 @@
 /* Rasl Estate — routing, actions, forms */
 (function (RE) {
   const t = (s, v) => RE.t(s, v), esc = s => RE.esc(s), L = (g, k) => RE.label(g, k);
-  const ROUTES = ['home', 'projects', 'dashboard', 'leads', 'property', 'map', 'rewards', 'join', 'team', 'market', 'ads', 'reports', 'office'];
+  const ROUTES = ['home', 'projects', 'project', 'plan', 'dashboard', 'leads', 'property', 'map', 'rewards', 'join', 'team', 'market', 'ads', 'reports', 'office'];
   // Sections live in folders, grouped by the work they belong to. Each folder is one button.
   const GROUPS = [
     { id: 'sales', name: 'Sales', icon: 'folder', routes: ['dashboard', 'leads', 'property', 'map'] },
     { id: 'marketing', name: 'Marketing', icon: 'folder', routes: ['projects', 'ads', 'market'] },
     { id: 'people', name: 'Team', icon: 'folder', routes: ['team', 'rewards', 'join'] },
-    { id: 'admin', name: 'Office', icon: 'folder', routes: ['reports', 'office'] }
+    { id: 'admin', name: 'Office', icon: 'folder', routes: ['plan', 'reports', 'office'] }
   ];
-  const groupOf = r => GROUPS.find(g => g.routes.indexOf(r) >= 0);
-  const TITLES = { home: 'Projects showcase', projects: 'Residential projects', dashboard: 'Dashboard', leads: 'Leads', property: 'Property', map: 'Map', rewards: 'Rewards', join: 'Join & Charity', team: 'Team', market: 'Market', ads: 'Ads', reports: 'Reports', office: 'Office' };
+  const groupOf = r => GROUPS.find(g => g.routes.indexOf(r === 'project' ? 'projects' : r) >= 0);
+  const TITLES = { home: 'Projects showcase', projects: 'Residential projects', project: 'Project file', plan: 'Business plan', dashboard: 'Dashboard', leads: 'Leads', property: 'Property', map: 'Map', rewards: 'Rewards', join: 'Join & Charity', team: 'Team', market: 'Market', ads: 'Ads', reports: 'Reports', office: 'Office' };
   RE.ui = { route: 'home', open: {}, period: 'year', leadView: 'board', leadStage: 'active', repRange: 'year' };
   const S = () => RE.state, ui = RE.ui;
   const agentOpts = () => [['', t('Unassigned')]].concat(S().agents.map(a => [a.id, a.name]));
@@ -39,7 +39,8 @@
     document.querySelector('.wordmark small').textContent = t('Real estate office');
     document.querySelectorAll('.logo').forEach(el => { if (!el.firstChild) el.innerHTML = RE.logo(); });
     document.getElementById('tabbar').innerHTML = `<a href="#home" class="${ui.route === 'home' ? 'on' : ''}">${RE.icon('home')}<span>${t('Home')}</span></a>` + GROUPS.map(g => `<button data-act="groupSheet" data-g="${g.id}" class="${cur === g ? 'on' : ''}">${RE.icon('folder')}<span>${t(g.name)}</span>${g.routes.indexOf('leads') >= 0 && due ? `<i class="badge">${due}</i>` : ''}</button>`).join('');
-    document.getElementById('page-title').textContent = t(TITLES[ui.route]);
+    const pf = ui.route === 'project' && ui.projectId && RE.get('projects', ui.projectId);
+    document.getElementById('page-title').textContent = pf ? pf.name : t(TITLES[ui.route]);
     document.getElementById('page-date').textContent = RE.date(RE.today(), { weekday: 'long', day: 'numeric', month: 'long' });
     document.getElementById('top-actions').innerHTML = `${syncChip()}
       <select id="lang" data-change="setLang" aria-label="${t('Language')}">${RE.opts([['en', 'English'], ['ar', 'العربية'], ['ku', 'کوردی']], st.lang)}</select>
@@ -88,6 +89,7 @@
         { name: 'budget', label: t('Budget'), type: 'number', value: l.budget, hint: t('Per month if renting') },
         { name: 'city', label: t('City'), value: l.city },
         { name: 'district', label: t('District'), value: l.district },
+        { name: 'projectId', label: t('Interested in project'), type: 'select', options: [['', t('No project')]].concat(S().projects.map(p => [p.id, p.name])), value: l.projectId },
         { name: 'source', label: t('Came from'), type: 'select', options: o(RE.SOURCES, 'source'), value: l.source },
         { name: 'stage', label: t('Stage'), type: 'select', options: o(RE.STAGES, 'stage'), value: l.stage },
         { name: 'agentId', label: t('Agent'), type: 'select', options: agentOpts(), value: l.agentId },
@@ -141,6 +143,8 @@
 
   function dealForm(l) {
     const st = S().settings, fits = RE.propsFor(l), all = S().properties.filter(p => p.status === 'available' || p.status === 'reserved');
+    const proj = l.projectId && RE.projectFile(l.projectId);
+    if (proj) { RE.projectSaleForm(proj.p); const sel = document.getElementById('f-leadId'); if (sel) sel.value = l.id; return; }
     const first = fits[0], amount = first ? first.price : l.budget;
     RE.form({
       title: t('Close deal with {n}', { n: l.name }), submit: t('Record deal'),
@@ -240,11 +244,12 @@
       { name: 'phone', label: t('Phone'), type: 'tel', value: a && a.phone, placeholder: '+964' }
     ], fix: v => { if (!a) v.color = RE.COLORS[S().agents.length % RE.COLORS.length]; }
   });
-  const campaignForm = c => simpleForm('campaigns', c, {
+  const campaignForm = (c, projectId) => simpleForm('campaigns', c, {
     title: c ? t('Edit campaign') : t('New campaign'),
     fields: [
       { name: 'name', label: t('Campaign name'), required: true, wide: true, value: c && c.name },
       { name: 'channel', label: t('Channel'), type: 'select', options: o(RE.CHANNELS, 'source'), value: c && c.channel },
+      { name: 'projectId', label: t('Residential project'), type: 'select', options: [['', t('No project')]].concat(S().projects.map(p => [p.id, p.name])), value: c ? c.projectId : projectId },
       { name: 'propertyId', label: t('Property'), type: 'select', options: [['', t('The whole office')]].concat(S().properties.map(p => [p.id, p.title])), value: c && c.propertyId },
       { name: 'budget', label: t('Budget'), type: 'number', required: true, value: c && c.budget },
       { name: 'spent', label: t('Spent so far'), type: 'number', value: c ? c.spent : 0 },
@@ -306,6 +311,14 @@
     kiosk: () => RE.kioskOpen(),
     slide: d => { const n = RE.showcaseList().length; ui.slide = ((ui.slide || 0) + (+d.d) * (RE.dir() === 'rtl' ? -1 : 1) + n) % n; RE.render(); },
     slideTo: d => { ui.slide = +d.i; RE.render(); },
+    openProject: d => { ui.projectId = d.id; try { sessionStorage.setItem('rasl-project', d.id); } catch (e) { /* not remembered */ } RE.closeDlg(); go('project'); },
+    projectSale: d => RE.projectSaleForm(RE.get('projects', d.id)),
+    projectTeam: d => RE.projectTeamForm(RE.get('projects', d.id)),
+    projectPlan: d => RE.projectPlanForm(RE.get('projects', d.id)),
+    shareProject: d => RE.shareProject(RE.get('projects', d.id)),
+    copyAdLink: d => RE.shareProject(RE.get('projects', d.p), d.id),
+    addCampaignFor: d => campaignForm(null, d.id),
+    copyText: d => RE.copy(d.t, t('Copied')),
     addProject: () => RE.projectForm(), editProject: d => RE.projectForm(RE.get('projects', d.id)), viewProject: d => RE.projectView(RE.get('projects', d.id)),
     more: () => RE.modal(`${RE.dlgHead(t('More'))}<nav class="morenav">${ROUTES.slice(4).map(r => `<a href="#${r}" data-act="closeDlg">${RE.icon(r)}<span>${t(TITLES[r])}</span></a>`).join('')}</nav>`, 'sheet'),
     newMenu: () => RE.modal(`${RE.dlgHead(t('New'))}<nav class="morenav">${[['addLead', 'leads', 'Lead'], ['addProp', 'property', 'Property'], ['addAppt', 'clock', 'Appointment'], ['addCampaign', 'ads', 'Campaign'], ['addAgent', 'team', 'Team member']].map(x => `<button data-act="${x[0]}">${RE.icon(x[1])}<span>${t(x[2])}</span></button>`).join('')}</nav>`, 'sheet'),
@@ -455,6 +468,7 @@
   window.addEventListener('resize', () => { if (ui.route === 'map' && !(RE.gl && RE.glOn())) RE.mapDraw(); });
   try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => RE.render()); } catch (e) { /* older browsers */ }
   ui.route = ROUTES.indexOf(location.hash.slice(1)) >= 0 ? location.hash.slice(1) : 'home';
+  try { ui.projectId = sessionStorage.getItem('rasl-project'); } catch (e) { ui.projectId = null; }
   try { ui.open = JSON.parse(localStorage.getItem('rasl-nav-open')) || {}; } catch (e) { ui.open = {}; }
   RE.render();
   RE.cloud.init();
