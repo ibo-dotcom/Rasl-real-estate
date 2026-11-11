@@ -1,5 +1,0 @@
--- Pending: sponsor network (personal codes, sponsor tree, downline-only visibility, join by personal code).
--- Waiting for the owner's confirmation in Supabase before it is applied.
--- Includes: members.code / sponsor_id / phone / photo, private.downline(), private.is_owner(),
--- visibility policy "members see their own network", create_office(name, member_name, own_code),
--- join_office(code, member_name, member_phone), lookup_code(code).
