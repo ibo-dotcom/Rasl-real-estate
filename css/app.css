@@ -17,6 +17,8 @@
   --f-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --r: 14px; --r-s: 10px;
   --geo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400' preserveAspectRatio='none'%3E%3Cg stroke='%23F2F3F6' stroke-width='3' stroke-opacity='.55'%3E%3Cpath d='M0 0L90 110L0 210Z' fill='%23283682'/%3E%3Cpath d='M0 0H160L90 110Z' fill='%232A3576' fill-opacity='.0'/%3E%3Cpath d='M160 0H300V120Z' fill='%23384687'/%3E%3Cpath d='M90 110L160 0L300 120L150 240Z' fill='%23243174'/%3E%3Cpath d='M0 210L90 110L150 240L0 330Z' fill='%23303E86'/%3E%3Cpath d='M150 240L300 120V290Z' fill='%23283580'/%3E%3Cpath d='M0 330L150 240L110 400H0Z' fill='%232B3881'/%3E%3Cpath d='M110 400L150 240L300 290V400Z' fill='%23222E70'/%3E%3C/g%3E%3C/svg%3E");
+  --wall: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 420' preserveAspectRatio='xMidYMid slice'%3E%3Cg stroke='%23F4F4F2' stroke-width='5' stroke-linejoin='round'%3E%3Cpath d='M0 0H45L95 115L0 60Z' fill='%23AEB2B8'/%3E%3Cpath d='M45 0H88V122L95 115Z' fill='%23A3A8AE'/%3E%3Cpath d='M0 60L95 115L0 175Z' fill='%23243079'/%3E%3Cpath d='M88 0H165L245 95L88 300Z' fill='%23243079'/%3E%3Cpath d='M165 0H245V95Z' fill='%23B3B7BD'/%3E%3Cpath d='M245 0H300V40L245 95Z' fill='%23243079'/%3E%3Cpath d='M300 40V170L150 240L245 95Z' fill='%238F949B'/%3E%3Cpath d='M0 175L95 115L88 300L0 320Z' fill='%23979CA3'/%3E%3Cpath d='M150 240L300 170V200L300 210Z' fill='%23A8ADB3'/%3E%3Cpath d='M150 240L300 210V320L230 420Z' fill='%23243079'/%3E%3Cpath d='M88 300L150 240L140 420H120Z' fill='%23A9AEB4'/%3E%3Cpath d='M140 420L150 240L230 420Z' fill='%238C9198'/%3E%3Cpath d='M0 320L88 300L120 420H0Z' fill='%23243079'/%3E%3Cpath d='M230 420L300 320V420Z' fill='%23B0B4BA'/%3E%3C/g%3E%3C/svg%3E");
+  --frame: #F1F2F5;
   color-scheme: light;
 }
 :root[data-theme="dark"] {
@@ -28,6 +30,7 @@
   --bad: #F08A7E; --bad-soft: #3D2420; --mute-soft: #222A55;
   --side-bg: #0B1030; --side-ink: #E4E7F4; --side-ink-2: #8C94BA; --side-on: #1E2864; --side-line: #1C2458;
   --map-bg: #141A40; --map-grid: #222A55; --shadow: 0 18px 50px rgba(0, 0, 0, .55);
+  --frame: #0F1433;
   color-scheme: dark;
 }
 
@@ -55,7 +58,7 @@ img { max-width: 100%; }
 
 /* ---------- shell ---------- */
 .app { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
-.side { background: var(--side-bg) var(--geo) center bottom / 100% 42% no-repeat; color: var(--side-ink); padding: 20px 12px; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-inline-end: 1px solid var(--side-line); }
+.side { background: var(--side-bg) var(--wall) center bottom / 100% 40% no-repeat; color: var(--side-ink); padding: 20px 12px; position: sticky; top: 0; height: 100vh; overflow-y: auto; border-inline-end: 1px solid var(--side-line); }
 .brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 22px; text-decoration: none; font: 600 19px/1.1 var(--f-display); letter-spacing: -.01em; }
 .brand .logo { width: 38px; height: 38px; flex: none; }
 .wordmark { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
@@ -585,3 +588,21 @@ body.pub { background: var(--ground); }
 .k-close { position: absolute; top: 14px; inset-inline-start: 14px; z-index: 5; opacity: 0; transition: opacity .2s; }
 .kiosk.awake .k-close { opacity: 1; }
 @media (max-width: 640px) { .toolbar .h-sec { flex: 1 1 100%; } }
+
+
+/* ---------- the wall behind the app ---------- */
+/* The page itself is the navy-and-grey wall; the working area sits on it like a framed panel. */
+body { background: #8F949B var(--wall) center / cover fixed; }
+:root[data-theme="dark"] body { background-color: #0B1030; background-blend-mode: multiply; }
+.main { background: var(--frame); }
+@media (min-width: 900px) {
+  .app { padding: 26px 26px 26px 0; gap: 26px; background: transparent; }
+  [dir="rtl"] .app { padding: 26px 0 26px 26px; }
+  .side { border-radius: 0 var(--r) var(--r) 0; height: calc(100vh - 52px); top: 26px; box-shadow: 0 12px 40px rgba(21, 27, 63, .35); border: 0; }
+  [dir="rtl"] .side { border-radius: var(--r) 0 0 var(--r); }
+  .main { border-radius: var(--r); box-shadow: 0 12px 40px rgba(21, 27, 63, .25); border: 3px solid rgba(255, 255, 255, .85); min-height: calc(100vh - 52px); }
+}
+@media (max-width: 899px) {
+  .main { margin: 10px; border-radius: var(--r); border: 3px solid rgba(255, 255, 255, .85); padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); }
+}
+body.pub .pub-wrap { background: var(--frame); border-radius: var(--r); border: 3px solid rgba(255, 255, 255, .85); margin-block: 14px; }
