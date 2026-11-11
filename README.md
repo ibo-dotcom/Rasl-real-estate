@@ -20,6 +20,17 @@ Each residential project has its own price range and commission rate. Its projec
 
 The project link opens `project.html`, a public page with the photos, video, VR and prices. Visitors who register their interest arrive in the CRM as new leads within a second. Commission, targets and team never reach the public page.
 
+## Ask by typing or by voice
+
+The box at the top of every screen (or the `/` key) and the microphone beside it take one request and act on it:
+
+- **A plot number** (`E-1024`, `ژمارەی زەوی E 1024`) opens the map on that property. A plot with no pin yet asks you to tap where it stands; an unknown number offers to add it. Public maps do not carry land registry numbers, so a plot is found once it has been added here with its place.
+- **A country, city, address or coordinates** (`Dubai`, `36.19, 44.01`) flies the map there and drops a marker. The same search sits above the map. Place names are looked up with OpenStreetMap Nominatim, so the words typed there are sent to that service.
+- **A section name** (`ads`, `تیم`, `الخريطة`) opens it; **"new" plus a thing** (`new lead`, `کڕیاری نوێ`) opens that form.
+- **Any other name** lists matching properties, projects, leads and team members.
+
+It understands English, Arabic and Kurdish, including Kurdish typed on an Arabic keyboard. Voice uses the browser's own speech recognition (Chrome, Edge, Safari). Browsers do not recognise Kurdish speech yet, so in Kurdish the microphone falls back to Arabic; typing works in all three.
+
 ## Data
 
 Without signing in, records stay in the browser on that device.
@@ -47,6 +58,7 @@ Signed in, records live in the office database (Supabase project `uejkzdpyvlaxjz
     js/adscreen.js    ad screen player, office TV display, photo and video uploads
     js/public.js      public project page (project.html) where clients register interest
     js/app.js         routing and actions
+    js/ask.js         ask box: plot numbers, places, sections and voice
     js/cloud.js       sign-in, offices, sync with the database
     js/config.js      database address and public key
     assets/           logo, favicon and app icons

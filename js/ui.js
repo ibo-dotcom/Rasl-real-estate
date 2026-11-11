@@ -83,7 +83,12 @@
   IC.sound = '<path d="M4 10v4h3l5 4V6L7 10zM16 9a4 4 0 010 6M18.5 6.5a7.5 7.5 0 010 11"/>';
   IC.cloud = '<path d="M7 18.5h10.5a4 4 0 00.6-7.95A6 6 0 006.6 9.8 4.4 4.4 0 007 18.5z"/>';
   IC.logout = '<path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10"/>';
+  IC.search = '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.500 4.500"/>';
+  IC.mic = '<rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.500a6.500 6.500 0 0013 0M12 18v3"/>';
+  IC.pin = '<path d="M12 21s6.500-6 6.500-11a6.500 6.500 0 00-13 0c0 5 6.500 11 6.500 11z"/><circle cx="12" cy="10" r="2.300"/>';
   RE.icon = (n, cls) => `<svg class="ic ${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;
+
+  RE.micBtn = target => `<button type="button" class="iconbtn mic" data-act="askMic" data-for="${target}" aria-label="${esc(t('Speak'))}" title="${esc(t('Speak'))}">${RE.icon('mic')}</button>`;
 
   /* ---------- small components ---------- */
   const TAGC = { available: 'good', reserved: 'warn', sold: 'mute', rented: 'mute', new: 'info', contacted: 'info', followup: 'warn', visit: 'info', negotiation: 'warn', won: 'good', lost: 'mute', running: 'good', paused: 'warn', ended: 'mute', joined: 'good', invited: 'warn' };

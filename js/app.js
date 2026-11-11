@@ -11,6 +11,7 @@
   ];
   const groupOf = r => GROUPS.find(g => g.routes.indexOf(r === 'project' ? 'projects' : r) >= 0);
   const TITLES = { home: 'Projects showcase', projects: 'Residential projects', project: 'Project file', plan: 'Business plan', dashboard: 'Dashboard', leads: 'Leads', property: 'Property', map: 'Map', rewards: 'Rewards', join: 'Join & Charity', team: 'Team', market: 'Market', ads: 'Ads', reports: 'Reports', office: 'Office' };
+  RE.titleOf = r => TITLES[r];
   RE.ui = { route: 'home', open: {}, period: 'year', leadView: 'board', leadStage: 'active', repRange: 'year' };
   const S = () => RE.state, ui = RE.ui;
   const agentOpts = () => [['', t('Unassigned')]].concat(S().agents.map(a => [a.id, a.name]));
@@ -46,7 +47,8 @@
     const pf = ui.route === 'project' && ui.projectId && RE.get('projects', ui.projectId);
     document.getElementById('page-title').textContent = pf ? pf.name : t(TITLES[ui.route]);
     document.getElementById('page-date').textContent = RE.date(RE.today(), { weekday: 'long', day: 'numeric', month: 'long' });
-    document.getElementById('top-actions').innerHTML = `${syncChip()}
+    document.getElementById('top-actions').innerHTML = `<button class="askbtn" data-act="ask" title="${t('Ask Rasl')} ( / )">${RE.icon('search')}<span>${t('Type or say what you need')}</span></button>
+      <button class="iconbtn mic" data-act="askVoice" aria-label="${t('Speak')}" title="${t('Speak')}">${RE.icon('mic')}</button>${syncChip()}
       <select id="lang" data-change="setLang" aria-label="${t('Language')}">${RE.opts([['en', 'English'], ['ar', 'العربية'], ['ku', 'کوردی']], st.lang)}</select>
       <button class="iconbtn" data-act="toggleTheme" aria-label="${isDark() ? t('Switch to light') : t('Switch to dark')}">${RE.icon(isDark() ? 'sun' : 'moon')}</button>
       <button class="btn" data-act="newMenu">${RE.icon('plus')}<span>${t('New')}</span></button>`;
@@ -171,7 +173,7 @@
   }
 
   function propForm(p) {
-    p = p || { type: 'villa', purpose: 'sale', status: 'available', units: 1, city: 'Erbil', expiresAt: RE.addDays(RE.today(), 90), photos: [] };
+    p = p && p.id ? p : Object.assign({ type: 'villa', purpose: 'sale', status: 'available', units: 1, city: 'Erbil', expiresAt: RE.addDays(RE.today(), 90), photos: [] }, p);
     RE.form({
       title: p.id ? t('Edit property') : t('New property'),
       fields: [
@@ -333,7 +335,7 @@
       if (el.value === 'won') { el.value = l.stage; dealForm(l); return; }
       RE.put('leads', { id: l.id, stage: el.value }); RE.render(); RE.toast(t('{n} moved to {s}', { n: l.name, s: L('stage', el.value) }));
     },
-    addProp: () => propForm(), editProp: d => propForm(RE.get('properties', d.id)), viewProp: d => propView(RE.get('properties', d.id)),
+    addProp: d => propForm(d && d.plot ? { plot: d.plot, type: 'land' } : null), editProp: d => propForm(RE.get('properties', d.id)), viewProp: d => propView(RE.get('properties', d.id)),
     propStatus: (d, el) => { RE.put('properties', { id: d.id, status: el.value }); RE.render(); propView(RE.get('properties', d.id)); },
     showOnMap: d => { const p = RE.get('properties', d.id); RE.closeDlg(); ui.mapCity = ''; ui.mapSel = p.id; if (typeof p.lat === 'number') ui.map = { lat: p.lat, lng: p.lng, z: 15 }; else { ui.placing = p.id; ui.map = null; } go('map'); },
 
@@ -346,10 +348,10 @@
     delAppt: d => RE.confirm(t('Remove this appointment?'), t('Remove'), () => { RE.del('appointments', d.id); RE.render(); }, true),
 
     mapZoom: d => { const m = ui.map; m.z = Math.max(3, Math.min(18, m.z + (+d.d))); RE.mapDraw(); },
-    mapFitAll: () => RE.mapFit(),
+    mapFitAll: () => { ui.mapMark = null; ui.mapQ = ''; RE.mapFit(); },
     mapStyle: d => RE.glSetStyle(d.k),
     map3d: () => RE.glToggle3d(),
-    mapCity: (d, el) => { ui.mapCity = el.value; ui.map = null; ui.mapSel = null; RE.render(); },
+    mapCity: (d, el) => { ui.mapCity = el.value; ui.map = null; ui.mapSel = null; ui.mapMark = null; RE.render(); },
     mapPick: d => { ui.mapSel = d.id; RE.render(); },
     placeProp: d => { ui.placing = d.id; RE.render(); },
     cancelPlace: () => { ui.placing = null; RE.render(); },

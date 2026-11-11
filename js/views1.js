@@ -232,7 +232,10 @@
     el.querySelector('.map-pins').innerHTML = located().map(p => {
       const xy = proj(p.lat, p.lng, m.z);
       return `<button class="pin st-${p.status}${RE.ui.mapSel === p.id ? ' on' : ''}" style="left:${Math.round(xy[0] - ox)}px;top:${Math.round(xy[1] - oy)}px" data-act="mapPick" data-id="${p.id}" title="${RE.esc(p.title)}">${RE.moneyShort(p.price)}</button>`;
-    }).join('');
+    }).join('') + (RE.ui.mapMark ? (() => {
+      const k = RE.ui.mapMark, xy = proj(k.lat, k.lng, m.z);
+      return `<div class="gspot" style="left:${Math.round(xy[0] - ox)}px;top:${Math.round(xy[1] - oy)}px"><i></i><span>${RE.esc(String(k.label).split(',')[0])}</span></div>`;
+    })() : '');
   }
   RE.mapDraw = draw;
   RE.mapFit = () => { RE.ui.map = null; if (RE.gl && RE.glOn()) RE.render(); else draw(); };
@@ -322,7 +325,12 @@
       b.dataset.act = 'mapPick'; b.dataset.id = p.id; b.title = p.title; b.textContent = RE.moneyShort(p.price);
       return new maplibregl.Marker({ element: b, anchor: 'bottom' }).setLngLat([p.lng, p.lat]).addTo(map);
     });
+    if (ui.mapMark) {
+      const s = document.createElement('div'); s.className = 'gspot'; s.innerHTML = '<i></i><span></span>'; s.lastChild.textContent = String(ui.mapMark.label).split(',')[0];
+      g.markers.push(new maplibregl.Marker({ element: s, anchor: 'bottom' }).setLngLat([ui.mapMark.lng, ui.mapMark.lat]).addTo(map));
+    }
     if (!ui.map) { glFit(map); ui.map = { gl: true }; }
+    else if (!ui.map.gl && ui.map.bbox) { map.fitBounds(ui.map.bbox, { padding: 40, maxZoom: 17, pitch: 0, bearing: 0, duration: 1200 }); ui.map = { gl: true }; }
     else if (!ui.map.gl) { map.flyTo({ center: [ui.map.lng, ui.map.lat], zoom: 17, pitch: 60, bearing: -20, duration: 900 }); ui.map = { gl: true }; }
     return true;
   }
@@ -374,7 +382,8 @@
     }
     const off = S.properties.filter(p => typeof p.lat !== 'number' || typeof p.lng !== 'number');
     const sel = ui.mapSel && RE.get('properties', ui.mapSel), placing = ui.placing && RE.get('properties', ui.placing);
-    return `<div class="toolbar">
+    return `<form id="mapAsk" class="mapask" role="search"><input type="search" id="mapQ" value="${esc(ui.mapQ || '')}" placeholder="${t('Plot number, country or city')}" autocomplete="off" enterkeyhint="search" aria-label="${t('Plot number, country or city')}">${RE.micBtn('mapQ')}<button class="btn" type="submit">${RE.icon('search')}<span>${t('Find')}</span></button>${ui.mapMark ? `<button type="button" class="btn ghost" data-act="mapUnmark">${RE.icon('x')}<span>${t('Clear')}</span></button>` : ''}</form>
+    <div class="toolbar">
       <select id="mapCity" data-change="mapCity" aria-label="${t('City')}">${RE.opts([['', t('All cities')]].concat(cities.map(c => [c, c])), ui.mapCity)}</select>
       ${glOn() ? `<div class="seg text" role="group"><button class="${ui.mapStyle === 'sat' ? '' : 'on'}" data-act="mapStyle" data-k="streets">${t('Streets')}</button><button class="${ui.mapStyle === 'sat' ? 'on' : ''}" data-act="mapStyle" data-k="sat">${t('Satellite')}</button></div>
       <button class="btn ghost${ui.map3d === false ? '' : ' pressed'}" data-act="map3d" aria-pressed="${ui.map3d !== false}">${t('3D buildings')}</button><button class="btn ghost" data-act="mapFitAll">${RE.icon('fit')}${t('Show all')}</button>` : ''}

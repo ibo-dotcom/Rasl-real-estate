@@ -606,3 +606,28 @@ body { background: #8F949B var(--wall) center / cover fixed; }
   .main { margin: 10px; border-radius: var(--r); border: 3px solid rgba(255, 255, 255, .85); padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); }
 }
 body.pub .pub-wrap { background: var(--frame); border-radius: var(--r); border: 3px solid rgba(255, 255, 255, .85); margin-block: 14px; }
+
+/* ---------- ask by typing or voice ---------- */
+.askbtn { display: inline-flex; align-items: center; gap: 8px; min-height: 38px; width: 250px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink-3); font-size: 14px; text-align: start; }
+.askbtn:hover { border-color: var(--ink-3); color: var(--ink-2); }
+.askbtn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.askbtn .ic { flex: none; width: 18px; height: 18px; }
+.mic { border-color: var(--line); background: var(--surface); }
+.mic.on { background: var(--bad); border-color: var(--bad); color: #fff; animation: mic-pulse 1.2s ease-out infinite; }
+@keyframes mic-pulse { from { box-shadow: 0 0 0 0 rgba(176, 55, 43, .5); } to { box-shadow: 0 0 0 12px rgba(176, 55, 43, 0); } }
+.askbar, .mapask { display: flex; align-items: center; gap: 8px; }
+.askbar { padding: 14px 20px; border-bottom: 1px solid var(--line-2); }
+.askbar input, .mapask input { flex: 1 1 0; width: auto; min-width: 0; }
+.mapask input { max-width: 460px; }
+.askex { display: flex; flex-wrap: wrap; gap: 8px; }
+.askex .btn { direction: ltr; }
+.dlg.ask .rows .ic { flex: none; color: var(--ink-3); }
+.dlg.ask .rows small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gspot { display: flex; flex-direction: column-reverse; align-items: center; gap: 4px; pointer-events: none; }
+.gspot i { width: 18px; height: 18px; border-radius: 50%; background: var(--bad); border: 3px solid #fff; box-shadow: 0 0 0 2px var(--bad), 0 2px 8px rgba(0, 0, 0, .4); }
+.map-pins .gspot { position: absolute; transform: translate(-50%, -100%); }
+.gspot span { max-width: 200px; padding: 3px 8px; border-radius: 4px; background: #fff; color: #151B3F; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 2px 6px rgba(0, 0, 0, .3); }
+@media (max-width: 1180px) { .askbtn { width: auto; padding: 0; min-width: 38px; justify-content: center; } .askbtn span { display: none; } }
+@media (max-width: 520px) { .mapask { gap: 6px; } .mapask input { max-width: none; } .mapask .btn { padding-inline: 10px; } .mapask .btn span { display: none; } }
+@media (prefers-reduced-motion: reduce) { .mic.on { animation: none; } }
+@media print { .mapask, .askbtn { display: none !important; } }
