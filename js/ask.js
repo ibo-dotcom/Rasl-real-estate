@@ -80,6 +80,7 @@
     ui.mapMark = { lat: place.lat, lng: place.lng, label: place.label };
     if (ui.route === 'map') RE.render(); else RE.go('map');
     RE.toast(place.label);
+    RE.tripTo({ lat: place.lat, lng: place.lng, label: place.label });
   }
   async function geocode(q) {
     const lang = S().settings.lang === 'ku' ? 'ckb,ku,ar,en' : S().settings.lang === 'ar' ? 'ar,en' : 'en';
@@ -105,6 +106,7 @@
       RE.closeDlg(); ui.mapCity = ''; ui.mapMark = null; ui.placing = null; ui.mapSel = p.id; ui.map = { lat: p.lat, lng: p.lng, z: 16 };
       if (ui.route === 'map') RE.render(); else RE.go('map');
       RE.toast(p.plot ? t('Plot {n}: {p}', { n: p.plot, p: p.title }) : p.title);
+      RE.tripTo({ lat: p.lat, lng: p.lng, label: p.title });
     } else {
       A.showOnMap({ id: p.id });
       RE.toast(t('{p} has no place on the map yet. Tap the map where it stands.', { p: p.title }));
@@ -238,7 +240,11 @@
   A.askPlace = d => { const p = (ui.askPlaces || [])[+d.i]; if (p) flyTo(p); };
   A.askShow = d => { const p = RE.get('properties', d.id); if (p) showProperty(p); };
   A.askAddPlot = d => { RE.closeDlg(); A.addProp({ plot: d.plot }); };
-  A.mapUnmark = () => { ui.mapMark = null; ui.mapQ = ''; RE.render(); };
+  A.mapUnmark = () => { ui.mapMark = null; ui.mapQ = ''; RE.tripClear(); RE.render(); };
+  A.locate = () => RE.locate({ center: !ui.tripWant, loud: true });
+  A.tripClear = () => { RE.tripClear(); RE.render(); };
+  A.tripProp = d => { const p = RE.get('properties', d.id); if (p && typeof p.lat === 'number') RE.tripTo({ lat: p.lat, lng: p.lng, label: p.title }); };
+  const fitAll = A.mapFitAll; A.mapFitAll = () => { RE.tripClear(); fitAll(); };
 
   document.addEventListener('submit', e => {
     if (e.target.id === 'askForm') { e.preventDefault(); RE.ask(e.target.elements.askQ.value); }

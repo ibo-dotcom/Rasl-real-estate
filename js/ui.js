@@ -86,6 +86,8 @@
   IC.search = '<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.500 4.500"/>';
   IC.mic = '<rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.500a6.500 6.500 0 0013 0M12 18v3"/>';
   IC.pin = '<path d="M12 21s6.500-6 6.500-11a6.500 6.500 0 00-13 0c0 5 6.500 11 6.500 11z"/><circle cx="12" cy="10" r="2.300"/>';
+  IC.target = '<circle cx="12" cy="12" r="6.500"/><circle cx="12" cy="12" r="2"/><path d="M12 2.500v3M12 18.500v3M2.500 12h3M18.500 12h3"/>';
+  IC.route = '<circle cx="6" cy="18" r="2.300"/><circle cx="18" cy="6" r="2.300"/><path d="M8.300 18H15a3.500 3.500 0 000-7H9a3.500 3.500 0 010-7h6.700"/>';
   RE.icon = (n, cls) => `<svg class="ic ${cls || ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;
 
   RE.micBtn = target => `<button type="button" class="iconbtn mic" data-act="askMic" data-for="${target}" aria-label="${esc(t('Speak'))}" title="${esc(t('Speak'))}">${RE.icon('mic')}</button>`;

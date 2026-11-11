@@ -235,7 +235,7 @@
     }).join('') + (RE.ui.mapMark ? (() => {
       const k = RE.ui.mapMark, xy = proj(k.lat, k.lng, m.z);
       return `<div class="gspot" style="left:${Math.round(xy[0] - ox)}px;top:${Math.round(xy[1] - oy)}px"><i></i><span>${RE.esc(String(k.label).split(',')[0])}</span></div>`;
-    })() : '');
+    })() : '') + (RE.tripDrawFlat ? RE.tripDrawFlat(proj, m, ox, oy) : '');
   }
   RE.mapDraw = draw;
   RE.mapFit = () => { RE.ui.map = null; if (RE.gl && RE.glOn()) RE.render(); else draw(); };
@@ -287,7 +287,7 @@
   }
   function glFail() {
     if (RE.gl) { try { RE.gl.map.remove(); } catch (e) { /* already gone */ } }
-    RE.gl = null; RE.glFailed = true; RE.ui.map = null;
+    RE.gl = null; RE.glFailed = true; RE.ui.map = RE.tripView ? RE.tripView() : null;
     if (RE.ui.route === 'map') RE.render();
   }
   function glMap(el) {
@@ -301,7 +301,7 @@
       } catch (e) { box.remove(); el.classList.remove('gl'); RE.glFailed = true; return false; }
       let ready = false;
       map.on('load', () => { ready = true; });
-      map.on('style.load', () => add3d(map));
+      map.on('style.load', () => { add3d(map); if (RE.tripDrawGl) RE.tripDrawGl(map); });
       map.on('error', () => { if (!ready) glFail(); });
       map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), RE.dir() === 'rtl' ? 'top-left' : 'top-right');
       map.on('click', e => {
@@ -329,9 +329,10 @@
       const s = document.createElement('div'); s.className = 'gspot'; s.innerHTML = '<i></i><span></span>'; s.lastChild.textContent = String(ui.mapMark.label).split(',')[0];
       g.markers.push(new maplibregl.Marker({ element: s, anchor: 'bottom' }).setLngLat([ui.mapMark.lng, ui.mapMark.lat]).addTo(map));
     }
+    if (RE.tripDrawGl) RE.tripDrawGl(map, g);
     if (!ui.map) { glFit(map); ui.map = { gl: true }; }
-    else if (!ui.map.gl && ui.map.bbox) { map.fitBounds(ui.map.bbox, { padding: 40, maxZoom: 17, pitch: 0, bearing: 0, duration: 1200 }); ui.map = { gl: true }; }
-    else if (!ui.map.gl) { map.flyTo({ center: [ui.map.lng, ui.map.lat], zoom: 17, pitch: 60, bearing: -20, duration: 900 }); ui.map = { gl: true }; }
+    else if (!ui.map.gl && ui.map.bbox) { map.fitBounds(ui.map.bbox, { padding: 60, maxZoom: 17, pitch: 0, bearing: 0, duration: 1200 }); ui.map = { gl: true }; }
+    else if (!ui.map.gl) { map.flyTo(ui.map.gz ? { center: [ui.map.lng, ui.map.lat], zoom: ui.map.gz, pitch: 0, bearing: 0, duration: 900 } : { center: [ui.map.lng, ui.map.lat], zoom: 17, pitch: 60, bearing: -20, duration: 900 }); ui.map = { gl: true }; }
     return true;
   }
   RE.glSetStyle = function (kind) {
@@ -382,7 +383,8 @@
     }
     const off = S.properties.filter(p => typeof p.lat !== 'number' || typeof p.lng !== 'number');
     const sel = ui.mapSel && RE.get('properties', ui.mapSel), placing = ui.placing && RE.get('properties', ui.placing);
-    return `<form id="mapAsk" class="mapask" role="search"><input type="search" id="mapQ" value="${esc(ui.mapQ || '')}" placeholder="${t('Plot number, country or city')}" autocomplete="off" enterkeyhint="search" aria-label="${t('Plot number, country or city')}">${RE.micBtn('mapQ')}<button class="btn" type="submit">${RE.icon('search')}<span>${t('Find')}</span></button>${ui.mapMark ? `<button type="button" class="btn ghost" data-act="mapUnmark">${RE.icon('x')}<span>${t('Clear')}</span></button>` : ''}</form>
+    return `<form id="mapAsk" class="mapask" role="search"><input type="search" id="mapQ" value="${esc(ui.mapQ || '')}" placeholder="${t('Plot number, country or city')}" autocomplete="off" enterkeyhint="search" aria-label="${t('Plot number, country or city')}">${RE.micBtn('mapQ')}<button class="btn" type="submit">${RE.icon('search')}<span>${t('Find')}</span></button><button type="button" class="iconbtn here${ui.me ? ' has' : ''}" data-act="locate" aria-label="${t('My location')}" title="${t('My location')}">${RE.icon('target')}</button>${ui.mapMark ? `<button type="button" class="btn ghost" data-act="mapUnmark">${RE.icon('x')}<span>${t('Clear')}</span></button>` : ''}</form>
+    ${RE.tripBar ? RE.tripBar() : ''}
     <div class="toolbar">
       <select id="mapCity" data-change="mapCity" aria-label="${t('City')}">${RE.opts([['', t('All cities')]].concat(cities.map(c => [c, c])), ui.mapCity)}</select>
       ${glOn() ? `<div class="seg text" role="group"><button class="${ui.mapStyle === 'sat' ? '' : 'on'}" data-act="mapStyle" data-k="streets">${t('Streets')}</button><button class="${ui.mapStyle === 'sat' ? 'on' : ''}" data-act="mapStyle" data-k="sat">${t('Satellite')}</button></div>
@@ -396,7 +398,7 @@
       <aside class="mapside">
         ${sel ? `<section class="panel"><div class="side-img">${RE.thumb(sel)}</div><h3>${esc(sel.title)}</h3><p class="sub">${RE.plot(sel)} ${esc(RE.place(sel))}</p><div class="facts">${factsOf(sel)}</div>
           <div class="row"><strong class="price">${RE.priceOf(sel)}</strong><span class="grow"></span>${RE.tag(sel.status, L('status', sel.status))}</div>
-          <div class="row wrap"><button class="btn small" data-act="viewProp" data-id="${sel.id}">${t('Open')}</button><a class="btn ghost small" target="_blank" rel="noopener" href="https://www.google.com/maps?q=${sel.lat},${sel.lng}">${t('Google Maps')}</a><button class="btn ghost small" data-act="placeProp" data-id="${sel.id}">${t('Move pin')}</button></div></section>`
+          <div class="row wrap"><button class="btn small" data-act="viewProp" data-id="${sel.id}">${t('Open')}</button><a class="btn ghost small" target="_blank" rel="noopener" href="https://www.google.com/maps?q=${sel.lat},${sel.lng}">${t('Google Maps')}</a><button class="btn ghost small" data-act="tripProp" data-id="${sel.id}">${RE.icon('route')}${t('Way and distance')}</button><button class="btn ghost small" data-act="placeProp" data-id="${sel.id}">${t('Move pin')}</button></div></section>`
         : `<section class="panel"><p class="quiet">${located().length ? t('Pick a price flag to see the property.') : t('No property has a location yet.')}</p></section>`}
         ${off.length ? `<section class="panel"><header class="ph"><h2>${t('Not on the map')}</h2></header><ul class="rows">${off.map(p => `<li><span class="grow"><b>${esc(p.title)}</b><small>${esc(RE.place(p))}</small></span><button class="btn ghost small" data-act="placeProp" data-id="${p.id}">${t('Place')}</button></li>`).join('')}</ul></section>` : ''}
       </aside>

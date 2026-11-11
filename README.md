@@ -29,6 +29,8 @@ The box at the top of every screen (or the `/` key) and the microphone beside it
 - **A section name** (`ads`, `تیم`, `الخريطة`) opens it; **"new" plus a thing** (`new lead`, `کڕیاری نوێ`) opens that form.
 - **Any other name** lists matching properties, projects, leads and team members.
 
+The map opens on the person's own position (the browser asks for permission once) and marks it with a blue dot. Asking for a place or a plot then draws the road from there, with the distance and the driving time, and a button that starts the same trip in Google Maps. Roads come from the public OSRM server, which receives the two end points; where no road exists the straight-line distance is shown instead.
+
 It understands English, Arabic and Kurdish, including Kurdish typed on an Arabic keyboard. Voice uses the browser's own speech recognition (Chrome, Edge, Safari). Browsers do not recognise Kurdish speech yet, so in Kurdish the microphone falls back to Arabic; typing works in all three.
 
 ## Data
@@ -57,6 +59,7 @@ Signed in, records live in the office database (Supabase project `uejkzdpyvlaxjz
     js/views4.js      project file (media, sales, ads, team, plan) and business plan
     js/adscreen.js    ad screen player, office TV display, photo and video uploads
     js/public.js      public project page (project.html) where clients register interest
+    js/trip.js        my location, road and distance to a place
     js/app.js         routing and actions
     js/ask.js         ask box: plot numbers, places, sections and voice
     js/cloud.js       sign-in, offices, sync with the database

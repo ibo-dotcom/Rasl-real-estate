@@ -631,3 +631,18 @@ body.pub .pub-wrap { background: var(--frame); border-radius: var(--r); border: 
 @media (max-width: 520px) { .mapask { gap: 6px; } .mapask input { max-width: none; } .mapask .btn { padding-inline: 10px; } .mapask .btn span { display: none; } }
 @media (prefers-reduced-motion: reduce) { .mic.on { animation: none; } }
 @media print { .mapask, .askbtn { display: none !important; } }
+
+/* ---------- my location and the way to a place ---------- */
+.gme { width: 18px; height: 18px; border-radius: 50%; background: #2F6FD0; border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(47, 111, 208, .5), 0 0 0 9px rgba(47, 111, 208, .22), 0 2px 6px rgba(0, 0, 0, .35); pointer-events: none; }
+.gme.flat { position: absolute; transform: translate(-50%, -50%); }
+.trip-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.trip-svg polyline { fill: none; stroke: #2F6FD0; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.trip-svg polyline.edge { stroke: #fff; stroke-width: 9; }
+.notice.trip { background: var(--brand-soft); color: var(--ink); }
+.trip-t { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; min-width: 0; }
+.trip-t .ic { flex: none; color: var(--brand-ink); }
+.trip-t strong { font: 600 16px/1.2 var(--f-display); padding: 3px 9px; border-radius: 999px; background: var(--surface); direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+[dir="rtl"] .trip-t strong { direction: rtl; }
+.trip-t small { color: var(--ink-2); font-size: 13px; }
+.iconbtn.here { border-color: var(--line); background: var(--surface); }
+.iconbtn.here.has { color: #2F6FD0; }

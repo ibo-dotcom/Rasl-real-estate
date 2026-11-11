@@ -351,7 +351,26 @@ window.RE = window.RE || {};
     ['I did not hear anything. Press the microphone and speak.', 'لم أسمع شيئاً. اضغط على الميكروفون وتكلّم.', 'هیچم نەبیست. پەنجە بە مایکرۆفۆنەکەدا بنێ و قسە بکە.'],
     ['This browser cannot listen in this language. Type it instead.', 'هذا المتصفح لا يستمع بهذه اللغة. اكتب بدلاً من ذلك.', 'ئەم وێبگەڕە بەم زمانە گوێ ناگرێت. بینووسە.'],
     ['Listening stopped. Type it instead, or try again.', 'توقف الاستماع. اكتب بدلاً من ذلك أو حاول مرة أخرى.', 'گوێگرتن وەستا. بینووسە یان دووبارە هەوڵ بدەوە.'],
-    ['This browser does not listen in Kurdish yet, so it is listening in Arabic.', 'هذا المتصفح لا يستمع بالكردية بعد، لذلك يستمع بالعربية.', 'ئەم وێبگەڕە هێشتا بە کوردی گوێ ناگرێت، بۆیە بە عەرەبی گوێ دەگرێت.']
+    ['This browser does not listen in Kurdish yet, so it is listening in Arabic.', 'هذا المتصفح لا يستمع بالكردية بعد، لذلك يستمع بالعربية.', 'ئەم وێبگەڕە هێشتا بە کوردی گوێ ناگرێت، بۆیە بە عەرەبی گوێ دەگرێت.'],
+    // my location and the way to a place
+    ['m', 'م', 'م'],
+    ['km', 'كم', 'کم'],
+    ['h', 'س', 'کاتژمێر'],
+    ['min', 'د', 'خولەک'],
+    ['My location', 'موقعي', 'شوێنی من'],
+    ['You are here', 'أنت هنا', 'تۆ لێرەیت'],
+    ['Use my location', 'استخدم موقعي', 'شوێنی من بەکاربهێنە'],
+    ['This device cannot tell where it is.', 'هذا الجهاز لا يستطيع تحديد موقعه.', 'ئەم ئامێرە ناتوانێت شوێنی خۆی بزانێت.'],
+    ['Allow location for this page, then press the location button again.', 'اسمح بالموقع لهذه الصفحة، ثم اضغط على زر الموقع مرة أخرى.', 'ڕێگە بە شوێن بدە بۆ ئەم پەڕەیە، پاشان دووبارە پەنجە بە دوگمەی شوێندا بنێ.'],
+    ['Your location could not be found. Try again outdoors or with location switched on.', 'تعذّر تحديد موقعك. حاول مرة أخرى في الخارج أو بعد تشغيل الموقع.', 'شوێنەکەت نەدۆزرایەوە. لە دەرەوە یان دوای کردنەوەی شوێن دووبارە هەوڵ بدەوە.'],
+    ['Allow location for this page to see the way and the distance to {p}.', 'اسمح بالموقع لهذه الصفحة لترى الطريق والمسافة إلى {p}.', 'ڕێگە بە شوێن بدە بۆ ئەم پەڕەیە تا ڕێگا و دووری بۆ {p} ببینیت.'],
+    ['Finding where you are…', 'جارٍ تحديد موقعك…', 'شوێنەکەت دەدۆزرێتەوە…'],
+    ['Finding the way to {p}…', 'جارٍ إيجاد الطريق إلى {p}…', 'ڕێگا بۆ {p} دەدۆزرێتەوە…'],
+    ['From your location to {p}', 'من موقعك إلى {p}', 'لە شوێنی خۆتەوە بۆ {p}'],
+    ['in a straight line; no road was found', 'بخط مستقيم؛ لم يُعثر على طريق', 'بە هێڵی ڕاست؛ هیچ ڕێگایەک نەدۆزرایەوە'],
+    ['by car', 'بالسيارة', 'بە ئۆتۆمبێل'],
+    ['Start in Google Maps', 'ابدأ في خرائط Google', 'لە Google Maps دەست پێبکە'],
+    ['Way and distance', 'الطريق والمسافة', 'ڕێگا و دووری']
   ];
   const D = { ar: {}, ku: {} };
   ROWS.forEach(r => { D.ar[r[0]] = r[1]; D.ku[r[0]] = r[2]; });
