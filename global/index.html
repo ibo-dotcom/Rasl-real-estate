@@ -49,6 +49,7 @@ body.nl-fixed #app{height:calc(100vh - 54px);height:calc(100dvh - 54px)}
 /* Rows in a scrolling screen keep their own height; the screen scrolls instead of squeezing them. */
 #app [style*="overflow-y: auto"]>*{flex-shrink:0}
 #adsRow::-webkit-scrollbar{display:none}
+#email{direction:ltr;text-align:left}
 a{color:#9AA6BD}
 button,a{-webkit-tap-highlight-color:transparent}
 [dir="rtl"] *{letter-spacing:0 !important}
@@ -282,7 +283,7 @@ else{st.loginMsg='m_sent';location.hash='#Login';}
 },
 signin:async function(){
 if(!SB){msg(T('m_offline'));return;}
-var email=val('email'),pass=$('pass')?$('pass').value:'';if(!email||!pass){msg(T('m_login'));return;}
+var email=val('email').replace(/\s+/g,'').toLowerCase(),pass=$('pass')?$('pass').value:'';if(!email||!pass){msg(T('m_login'));return;}
 msg(T('m_wait'),true);
 try{var r=await SB.auth.signInWithPassword({email:email,password:pass});if(r.error){var em=String(r.error.message||'').toLowerCase();msg(T(em.indexOf('confirm')>=0?'m_unconfirmed':em.indexOf('invalid')>=0?'m_badlogin':'m_offline'));return;}put('reg_email',email);await loadMe();location.hash='#Main';}catch(e){msg(T('m_offline'));}
 },
