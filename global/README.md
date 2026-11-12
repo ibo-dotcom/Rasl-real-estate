@@ -16,4 +16,4 @@ project ads, villas and projects. One page, `index.html`, talking to Supabase pr
   Rank comes from team points against the plan's thresholds; earnings are the rank percentage of
   own approved sales plus the level percentage of every approved sale made under the member.
 
-Publish by uploading this folder to the Netlify site `rasl-global`.
+Published to GitHub Pages at https://ibo-dotcom.github.io/Rasl-real-estate/global/ on every push (`.github/workflows/pages.yml`). Opened as a preview inside Claude, it shows a banner with that address, since accounts cannot work there.
