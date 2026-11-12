@@ -18,6 +18,10 @@ project ads, villas and projects. One page, `index.html`, talking to Supabase pr
   road from the viewer with distance and driving time, and hands the trip to Google Maps. Streets
   come from OpenFreeMap (rebuilt weekly from OpenStreetMap), satellite from Esri, places from
   Nominatim and roads from the public OSRM server.
+- A project can carry a 3D / virtual tour link (Sketchfab, Kuula, Matterport, 3DVista,
+  Momento360, YouTube and Vimeo show inside the page; other links open in a new tab) and a number
+  of units. Units left = units minus approved sales of that project, read from the database each
+  time a project or the home screen opens, so the whole sales team sees the same count.
 - Projects carry a commission rate. A sale records its project; its commission and the part
   that goes into the team wallet are fixed when it is recorded.
 - When the owner approves a sale, the wallet share is paid out: the seller's part, then each level
