@@ -13,6 +13,11 @@ project ads, villas and projects. One page, `index.html`, talking to Supabase pr
 - Team map: everyone is drawn under their sponsor. A tap on a person shows rank and percentage,
   own and team points, own and team sales, earnings, sponsor, phone and city. Each sponsor sees
   only their own team; the owner sees everyone.
+- World map (the Search tab): opens on the viewer's own position, shows every project that has a
+  place, and finds a plot number, project, city, country or coordinates. "Way and time" draws the
+  road from the viewer with distance and driving time, and hands the trip to Google Maps. Streets
+  come from OpenFreeMap (rebuilt weekly from OpenStreetMap), satellite from Esri, places from
+  Nominatim and roads from the public OSRM server.
 - Projects carry a commission rate. A sale records its project; its commission and the part
   that goes into the team wallet are fixed when it is recorded.
 - When the owner approves a sale, the wallet share is paid out: the seller's part, then each level
