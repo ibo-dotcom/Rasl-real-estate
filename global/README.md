@@ -12,6 +12,12 @@ project ads, villas and projects. One page, `index.html`, talking to Supabase pr
 - Team map: everyone is drawn under their sponsor. A tap on a person shows rank and percentage,
   own and team points, own and team sales, earnings, sponsor, phone and city. Each sponsor sees
   only their own team; the owner sees everyone.
+- Projects carry a commission rate. A sale records its project; its commission and the part
+  that goes into the team wallet are fixed when it is recorded.
+- When the owner approves a sale, the wallet share is paid out: the seller's part, then each level
+  above the seller, and what is left stays with the office. The owner sets all the percentages on
+  the Accounts page and records what was paid to each member; each member's Wallet shows what they
+  earned, what was paid and the balance.
 - Sales: a member records a sale; it counts once the owner approves it. 1 point per $1,000.
   Rank comes from team points against the plan's thresholds; earnings are the rank percentage of
   own approved sales plus the level percentage of every approved sale made under the member.
