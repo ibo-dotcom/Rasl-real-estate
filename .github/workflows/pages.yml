@@ -2,7 +2,7 @@
 name: Publish to GitHub Pages
 on:
   push:
-    branches: [claude/eager-ramanujan-1ewuff]
+    branches: [claude/awesome-goldberg-8ji8zs, claude/eager-ramanujan-1ewuff]
   workflow_dispatch:
 permissions:
   contents: read
