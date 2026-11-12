@@ -7,6 +7,7 @@ project ads, villas and projects. One page, `index.html`, talking to Supabase pr
 - The first account became the owner (code `IBO-1`). Everyone after joins with a sponsor's code and
   gets a code under it (`IBO-1-1`, `IBO-1-1-1` and so on). Codes cannot be changed.
 - Each member sees their own team: everyone who joined under them, at every level.
+- Everyone can have at most 10 direct members; an 11th person is refused with that code.
 - Only the owner adds or removes project ads and villas/projects.
 - Team map: everyone is drawn under their sponsor. A tap on a person shows rank and percentage,
   own and team points, own and team sales, earnings, sponsor, phone and city. Each sponsor sees
