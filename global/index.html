@@ -159,12 +159,12 @@ function checkCodeSoon(v){
 clearTimeout(codeTimer);if(ownerMode){var u=v.trim().toUpperCase();showSponsor(u&&!OWNRE.test(u)?T('m_owncode_bad'):T('m_owncode'),!u||OWNRE.test(u));return;}showSponsor('',true);if(!SB||!v.trim())return;
 codeTimer=setTimeout(async function(){try{var r=await SB.rpc('check_code',{p_code:v});if(r.error)return;if(r.data===null)showSponsor(T('m_code_bad'),false);else showSponsor(T('m_sponsor')+': '+(r.data||'—'),true);}catch(e){}},450);
 }
-var ownerState=null,LIVE='https://rasl-global.netlify.app';
+var ownerState=null,LIVE=(/^https?:$/.test(location.protocol)&&!/claude|localhost|127\.0\.0\.1/.test(location.hostname))?location.origin+location.pathname.replace(/\/[^\/]*$/,''):'https://rasl-global.netlify.app';
 async function checkOwner(){if(!SB){ownerState='off';}else{try{var r=await SB.rpc('needs_owner');ownerState=r.error?'off':(r.data===true);}catch(e){ownerState='off';}}if(route()==='Welcome')render();}
 function welcomeState(){
 var a=app.querySelector('a[href="#Register"]'),p=a&&a.previousElementSibling;if(!a||!p)return;
 if(ownerState===true){p.textContent=T('w_owner');a.textContent=T('w_owner_cta');}
-else if(ownerState==='off'&&location.origin!==LIVE){p.textContent=T('w_off')+' ';var l=document.createElement('a');l.href=LIVE;l.target='_blank';l.rel='noopener';l.textContent='rasl-global.netlify.app';l.style.cssText='color: #D4B06A; font-weight: 600; direction: ltr; unicode-bidi: isolate';p.appendChild(l);}
+else if(ownerState==='off'&&location.origin!==LIVE){p.textContent=T('w_off')+' ';var l=document.createElement('a');l.href=LIVE;l.target='_blank';l.rel='noopener';l.textContent=LIVE.replace(/^https?:\/\//,'');l.style.cssText='color: #D4B06A; font-weight: 600; direction: ltr; unicode-bidi: isolate';p.appendChild(l);}
 }
 var ownerMode=false,OWNRE=/^[A-Z0-9][A-Z0-9-]{1,14}[A-Z0-9]$/;
 async function initRegister(){ownerMode=false;if(!SB){showSponsor(T('m_offline'),false);return;}try{var r=await SB.rpc('needs_owner');if(r.error){if(route()==='Register')showSponsor(T('m_offline'),false);return;}if(r.data===true&&route()==='Register'){ownerMode=true;var l=$('codelabel'),c=$('code');if(l)l.textContent=T('owncode');if(c){c.placeholder='RASL-1';c.style.textTransform='uppercase';}showSponsor(T('m_owncode'),true);}}catch(e){if(route()==='Register')showSponsor(T('m_offline'),false);}}
