@@ -90,7 +90,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794517734';
+var BUILD='1794518357';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -259,16 +259,29 @@ var time=straight?'':(function(){var t=Math.max(1,Math.round(min)),h=Math.floor(
 var gm='https://www.google.com/maps/dir/?api=1&origin='+me.lat+','+me.lng+'&destination='+dest.lat+','+dest.lng;
 mapInfo('<div class="mi-row"><div style="min-width: 0"><b class="mi-name">'+esc(T('m_to').replace('{p}',dest.label))+'</b><span class="mi-sub"><b dir="ltr" class="mi-big">'+dist+'</b>'+(time?' · <b class="mi-big">'+esc(time)+'</b> '+esc(T('m_car')):' '+esc(T('m_straight')))+'</span></div></div><div class="mi-acts"><a href="'+gm+'" target="_blank" rel="noopener" class="mi-btn gold">'+esc(T('m_gm'))+'</a><button data-act="tripClear" class="mi-btn">'+esc(T('m_clear'))+'</button></div>');
 }
+// Typed places: command words are dropped, Kurdish typed with Arabic letters or split words still
+// finds the city, and real places (cities, countries, areas) win over offices and shops.
+var FOLDM={'ك':'ک','ي':'ی','ى':'ی','ێ':'ی','ە':'ه','ة':'ه','ۆ':'و','ڕ':'ر','ڵ':'ل','أ':'ا','إ':'ا','آ':'ا'};
+function foldKey(s){return String(s||'').toLowerCase().replace(/[ً-ْـ‌‍]/g,'').replace(/[؀-ۿ]/g,function(c){return FOLDM[c]||c;}).replace(/[\s\-_.,،]+/g,'');}
+var CMDW=['بحرکه','بحركه','بجوله','بڕۆ','برو','بچۆ','بچو','بجو','بجیته','بجيته','بۆ','بو','سەر','سه ر','سه‌ر','نیشانم بدە','نيشانم بده','پیشانم بدە','بدۆزەوە','بدوزه وه','بگەڕێ','show','go to','go','take me to','find','where is','اذهب الى','اذهب إلى','أرني','ابحث عن'];
+function stripCmd(q){var s=' '+String(q||'').trim()+' ',again=true;while(again){again=false;CMDW.forEach(function(w){var re=new RegExp('(^|\\s)'+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?=\\s|$)','i');if(re.test(s)&&s.replace(re,' ').trim()){s=s.replace(re,' ');again=true;}});}return s.replace(/\s+/g,' ').trim();}
+var PLACES={'هولیر':'Erbil','ههولیر':'Erbil','اربیل':'Erbil','erbil':'Erbil','hewler':'Erbil','سلیمانی':'Sulaymaniyah','سلیمانیه':'Sulaymaniyah','sulaymaniyah':'Sulaymaniyah','slemani':'Sulaymaniyah','دهوک':'Duhok','duhok':'Duhok','کرکوک':'Kirkuk','kirkuk':'Kirkuk','ههلهبجه':'Halabja','حلبجه':'Halabja','halabja':'Halabja','زاخو':'Zakho','رانیه':'Ranya','کویه':'Koya','سوران':'Soran, Erbil','اکری':'Akre','ئاکری':'Akre','چمچمال':'Chamchamal','کهلار':'Kalar','بغداد':'Baghdad','موصل':'Mosul','مووسل':'Mosul','بهسره':'Basra','بصره':'Basra','نهجهف':'Najaf','کهربهلا':'Karbala','دوبهی':'Dubai','دبی':'Dubai','تورکیا':'Turkey','ترکیا':'Turkey','ئیران':'Iran','ایران':'Iran','عیراق':'Iraq','عراق':'Iraq','ئهلمانیا':'Germany','المانیا':'Germany','بهریتانیا':'United Kingdom','ئهمریکا':'United States','امریکا':'United States','ستهنبول':'Istanbul','ئهستهنبول':'Istanbul','اسطنبول':'Istanbul','ئهنقهره':'Ankara'};
+async function geoFind(q,lang){
+var tries=[q],k=foldKey(q);if(PLACES[k])tries.unshift(PLACES[k]);if(/\s/.test(q))tries.push(q.replace(/\s+/g,''));
+for(var i=0;i<tries.length;i++){var r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&accept-language='+lang+'&q='+encodeURIComponent(tries[i]));var j=r.ok?await r.json():[];if(!j.length)continue;
+var score=function(x){var c=x.category||x.class||'',big=(c==='place'||c==='boundary')?1:0;return big*10+(Number(x.importance)||0);};
+j.sort(function(a,b){return score(b)-score(a);});return j[0];}
+return null;}
 async function mapSearch(q){
-q=String(q||'').trim();if(!q)return;
+q=stripCmd(String(q||'').trim());if(!q)return;
 var low=q.toLowerCase().replace(/\s+/g,''),hit=listings.filter(function(l){return l.lat!=null&&((l.plot&&String(l.plot).toLowerCase().replace(/\s+/g,'')===low)||String(l.title||'').toLowerCase().indexOf(q.toLowerCase())>=0);});
 if(!hit.length)hit=listings.filter(function(l){return l.lat!=null&&l.plot&&String(l.plot).toLowerCase().replace(/[^a-z0-9]/g,'').indexOf(low.replace(/[^a-z0-9]/g,''))>=0&&/\d/.test(low);});
 if(hit.length){focusListing(hit[0].id);return;}
 var ll=parseLoc(q);if(ll){spotAt(ll[0],ll[1],q);MAP.gl&&MAP.gl.flyTo({center:[ll[1],ll[0]],zoom:16});MAP.dest={lat:ll[0],lng:ll[1],label:q};mapInfo('<div class="mi-acts"><button data-act="tripSpot" class="mi-btn gold">'+esc(T('m_way'))+'</button></div>');return;}
 mapInfo('<p class="mi-t">'+esc(T('m_searching'))+'</p>');
-try{var lang=st.lang==='ku'?'ckb,ku,ar,en':st.lang==='ar'?'ar,en':st.lang==='tr'?'tr,en':'en';var r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language='+lang+'&q='+encodeURIComponent(q));var j=r.ok?await r.json():[];
-if(!j.length){mapInfo('<p class="mi-t">'+esc(T('m_none').replace('{q}',q))+'</p>');return;}
-var x=j[0],lat=+x.lat,lng=+x.lon,bb=(x.boundingbox||[]).map(Number);spotAt(lat,lng,x.display_name);
+try{var lang=st.lang==='ku'?'ckb,ku,ar,en':st.lang==='ar'?'ar,en':st.lang==='tr'?'tr,en':'en';var x=await geoFind(q,lang);
+if(!x){mapInfo('<p class="mi-t">'+esc(T('m_none').replace('{q}',q))+'</p>');return;}
+var lat=+x.lat,lng=+x.lon,bb=(x.boundingbox||[]).map(Number);spotAt(lat,lng,x.display_name);
 if(MAP.gl){if(bb.length===4&&bb[1]-bb[0]>0.01)MAP.gl.fitBounds([[bb[2],bb[0]],[bb[3],bb[1]]],{padding:40,duration:1000});else MAP.gl.flyTo({center:[lng,lat],zoom:15,duration:1000});}
 MAP.dest={lat:lat,lng:lng,label:String(x.display_name).split(',')[0]};
 mapInfo('<div class="mi-row"><div style="min-width: 0"><b class="mi-name">'+esc(MAP.dest.label)+'</b><span class="mi-sub">'+esc(x.display_name)+'</span></div></div><div class="mi-acts"><button data-act="tripSpot" class="mi-btn gold">'+esc(T('m_way'))+'</button></div>');
