@@ -90,7 +90,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794518357';
+var BUILD='1794519464';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -222,7 +222,12 @@ function parseLoc(s){s=String(s||'').trim();if(!s)return null;var m=s.match(/@(-
 var MAP={gl:null,box:null,loading:false,me:null,meMarker:null,pins:[],spot:null,sel:null,style:'streets',trip:null,asked:false};
 var OFM='https://tiles.openfreemap.org';
 function mapStyle(kind){if(kind!=='sat')return OFM+'/styles/liberty';return {version:8,glyphs:OFM+'/fonts/{fontstack}/{range}.pbf',sources:{sat:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imagery © Esri'}},layers:[{id:'sat',type:'raster',source:'sat'}]};}
-function loadGL(cb){if(window.maplibregl)return cb();if(MAP.loading){MAP.wait=(MAP.wait||[]).concat(cb);return;}MAP.loading=true;MAP.wait=[cb];var l=document.createElement('link');l.rel='stylesheet';l.href='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css';document.head.appendChild(l);var s=document.createElement('script');s.src='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js';s.onload=function(){(MAP.wait||[]).forEach(function(f){f();});MAP.wait=[];};s.onerror=function(){MAP.loading=false;MAP.failed=true;if(route()==='Search')render();};document.head.appendChild(s);}
+function rtlPlugin(){try{if(maplibregl.getRTLTextPluginStatus&&maplibregl.getRTLTextPluginStatus()!=='unavailable')return;maplibregl.setRTLTextPlugin(new URL('../vendor/mapbox-gl-rtl-text.min.js',location.href).href,false);}catch(e){}}
+// Labels show one name in the reader's language, falling back to the local name.
+function labelsInLang(){var m=MAP.gl;if(!m||MAP.style==='sat')return;var keys={ku:['name:ckb','name:ku','name:ar'],ar:['name:ar'],tr:['name:tr','name:latin','name:en'],en:['name:en','name:latin']}[st.lang]||['name:en'];
+var field=['coalesce'].concat(keys.map(function(k){return ['get',k];})).concat([['get','name']]);
+try{(m.getStyle().layers||[]).forEach(function(l){if(l.type!=='symbol'||!l.layout||!l.layout['text-field'])return;if(JSON.stringify(l.layout['text-field']).indexOf('name')<0)return;m.setLayoutProperty(l.id,'text-field',field);});}catch(e){}}
+function loadGL(cb){if(window.maplibregl){rtlPlugin();return cb();}if(MAP.loading){MAP.wait=(MAP.wait||[]).concat(cb);return;}MAP.loading=true;MAP.wait=[cb];var l=document.createElement('link');l.rel='stylesheet';l.href='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css';document.head.appendChild(l);var s=document.createElement('script');s.src='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js';s.onload=function(){rtlPlugin();(MAP.wait||[]).forEach(function(f){f();});MAP.wait=[];};s.onerror=function(){MAP.loading=false;MAP.failed=true;if(route()==='Search')render();};document.head.appendChild(s);}
 function mapInfo(html){var el=$('mapInfo');if(el)el.innerHTML=html||'';}
 function drawTrip(){var m=MAP.gl;if(!m)return;var data={type:'Feature',properties:{},geometry:{type:'LineString',coordinates:MAP.trip&&MAP.trip.line?MAP.trip.line:[]}};try{var src=m.getSource('trip');if(src)src.setData(data);else{m.addSource('trip',{type:'geojson',data:data});m.addLayer({id:'trip-edge',type:'line',source:'trip',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#ffffff','line-width':9}});m.addLayer({id:'trip-line',type:'line',source:'trip',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#2F6FD0','line-width':5}});}}catch(e){}}
 function placePins(){var m=MAP.gl;if(!m)return;MAP.pins.forEach(function(p){p.remove();});MAP.pins=listings.filter(function(l){return l.lat!=null&&l.lng!=null;}).map(function(l){var b=document.createElement('button');b.className='gpin'+(MAP.sel===l.id?' on':'');b.setAttribute('data-act','pinListing');b.setAttribute('data-id',l.id);b.textContent=l.price||l.title;b.title=l.title;return new maplibregl.Marker({element:b,anchor:'bottom'}).setLngLat([l.lng,l.lat]).addTo(m);});}
@@ -237,7 +242,8 @@ loadGL(function(){
 if(MAP.gl)return;
 try{MAP.gl=new maplibregl.Map({container:MAP.box,style:mapStyle(MAP.style),center:[44.01,36.19],zoom:3,attributionControl:{compact:true}});}catch(e){MAP.failed=true;render();return;}
 MAP.gl.addControl(new maplibregl.NavigationControl({showCompass:true}),'top-right');
-MAP.gl.on('style.load',function(){drawTrip();});
+MAP.gl.on('style.load',function(){labelsInLang();drawTrip();});
+setTimeout(function(){var a=MAP.box&&MAP.box.querySelector('.maplibregl-ctrl-attrib');if(a)a.classList.remove('maplibregl-compact-show');},800);
 MAP.gl.on('load',function(){placePins();if(MAP.focus){var f=MAP.focus;MAP.focus=null;focusListing(f);}});
 if(!MAP.asked){MAP.asked=true;locate(!MAP.focus,false);}
 });
@@ -610,7 +616,7 @@ if(r==='Welcome')welcomeState();
 if(r==='Login'){var em=$('email'),last=get('reg_email');if(em&&last&&!em.value)em.value=last;if(st.loginMsg){msg(T(st.loginMsg),true);st.loginMsg='';}}
 if(r==='Register'){var cf=$('code'),ref=get('reg_ref');if(cf&&ref&&!cf.value){cf.value=ref;checkCodeSoon(ref);}}
 }
-function setLang(l){st.lang=l;put('reg_lang',l);}
+function setLang(l){st.lang=l;put('reg_lang',l);if(MAP.gl)setTimeout(labelsInLang,0);}
 app.addEventListener('click',function(e){
 var t=e.target.closest?e.target:e.target.parentNode;
 var p=t.closest('[data-pick]');if(p){setLang(p.getAttribute('data-pick'));st.open=false;render();return;}
