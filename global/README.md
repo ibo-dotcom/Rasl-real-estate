@@ -27,6 +27,10 @@ project ads, villas and projects. One page, `index.html`, talking to Supabase pr
   shows follow-ups due, the sales funnel, why clients were lost and this month's calls, WhatsApp
   messages, visits and meetings. Call and WhatsApp buttons log the contact. Sponsors and the owner
   can switch to their team's clients (read only) with a per-member performance table.
+- Academy (from the home screen): training videos in sections (getting started, business plan
+  short and long term, selling, more) as YouTube/Vimeo links or uploaded clips, and company meetings
+  with date, place, online link and picture. Members say whether they are coming; the next meeting
+  also shows on the home screen as an ad. Only the owner adds videos and meetings.
 - Projects carry a commission rate. A sale records its project; its commission and the part
   that goes into the team wallet are fixed when it is recorded.
 - When the owner approves a sale, the wallet share is paid out: the seller's part, then each level
