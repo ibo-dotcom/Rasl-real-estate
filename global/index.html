@@ -90,6 +90,8 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
+var BUILD='1794517681';
+(function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
 try{SB=window.supabase.createClient('https://wmdegnafpgzhnpplnxqo.supabase.co','sb_publishable_dxpf26f9ouYPLBDryIahKQ_53ZWlSIa');}catch(e){SB=null;}
