@@ -8,7 +8,8 @@ project ads, villas and projects. One page, `index.html`, talking to Supabase pr
   gets a code under it (`IBO-1-1`, `IBO-1-1-1` and so on). Codes cannot be changed.
 - Each member sees their own team: everyone who joined under them, at every level.
 - Everyone can have at most 10 direct members; an 11th person is refused with that code.
-- Only the owner adds or removes project ads and villas/projects.
+- Only the owner adds or removes project ads and villas/projects. An ad can be a photo, an
+  uploaded video (up to 50 MB, plays muted on a loop) or a YouTube link.
 - Team map: everyone is drawn under their sponsor. A tap on a person shows rank and percentage,
   own and team points, own and team sales, earnings, sponsor, phone and city. Each sponsor sees
   only their own team; the owner sees everyone.
