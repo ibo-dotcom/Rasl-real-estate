@@ -100,3 +100,10 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - **How it plays:** each step shows the real screen in a phone frame, with the button being explained circled in gold, a tap animation and a caption. It plays by itself like a video. Swipe or use ⏮ ⏭ to move; ☰ opens the list of parts; KU/EN switches the language.
 - **Videos:** `guide/video/*.mp4` holds one MP4 per part plus `all.mp4` (Kurdish captions, 1280×720), ready to send on WhatsApp or post. They are also added as lessons in the Academy.
 - **Rebuilding:** the screenshots come from the app with sample data (scratchpad `cap.js` + `guide_steps.json`); `rec.js` records the MP4s.
+
+## Home layout
+- **Header:** profile, search, map 📍, and language.
+- **Top:** a big ad banner that slides by itself.
+- **Under the banner:** small buttons for Training & meetings 🎓, the 360° Studio and the 3D tour.
+- **Middle:** cities as photo cards (three per screen width). Tap a city to see only its projects.
+- **Bottom:** 🔥 **Best sellers**, a 2-column grid sorted by units sold, with the sale / rent / off-plan / invest filters.
