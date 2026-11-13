@@ -113,3 +113,10 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
   - Everyone: share on social media with your code, invite a member, or make a 360° video.
 - The small buttons (🎓 / 360° / 3D and the filters) and the bottom bar are smaller, so the screen keeps more room for the ads.
 - The home screen is grouped into **three main panels**: ① 📣 Ads (with the 🎓 / 360° / 3D buttons), ② 📍 Cities (with 📢 Publish), ③ 🔥 Best sellers. My members follows underneath. The next meeting shows in the Academy.
+
+## Members publish once they reach a rank
+- **Owner:** 📢 Publish → **Who can publish**. Choose a rank, or "Only the owner". Rank names and points are set in the business plan (Admin), e.g. Leader · 1,000 points.
+- Rank is based on **team points** (own + team approved sales; 1 point per $1,000), exactly as the ranks page.
+- A member who has reached the rank sees **Post my ad** (title, city, price, phone, details, up to 8 photos). Posts wait for the owner's approval (✓ / ✕). Approved posts appear in the ads banner with the member's name.
+- A member below the rank sees which rank is needed and a progress bar (e.g. 350 / 1,000 points).
+- **Database:** `settings.publish_rank`, `publish_status()`, and the `member_posts` table. Its row rules let only eligible members insert, and only the owner approve. Photos go to the `studio` bucket in the member's own folder.
