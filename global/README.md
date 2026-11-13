@@ -87,3 +87,9 @@ Open it from the **🎥 360° · 3D · VR Studio** button on the home screen.
 - In the database the price comes from the unit itself, and a unit can only be taken once (`unit_taken`). An approved sale pays the commission out to the team as before.
 - **Owner:** "＋ Add units" creates a building's floors × units in one go (with a starting price and an optional extra amount per floor). Tap a unit to change its price, rooms or area, or to delete it.
 - A rejected sale or reservation frees the unit again.
+
+## Apartments on the towers in 3D (`towers.html?l=LISTING_ID`)
+Open it from the gold **🏙 See the apartments on the towers (3D)** button on a project's unit board.
+- Every building is drawn as a tower, floor by floor, and every apartment is a box on the facade: **green** free, **orange** reserved, **red** sold.
+- Turn, zoom, and tap an apartment. You see its price, rooms and area, and how the commission is shared. Then press **Buy** (it turns red at once) or **Reserve** (it turns orange).
+- Tapping a colour in the legend hides or shows that group, e.g. to see only the free apartments.

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>VANA · Towers</title>
+<style>
+:root{--bg:#0b1220;--card:rgba(12,19,33,.9);--line:rgba(255,255,255,.12);--ink:#f4efe6;--mute:#a9b1c0;--gold:#d4b06a;--gold2:#e7cb8f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
+button,input{font:inherit;color:inherit}button{cursor:pointer}
+.hide{display:none!important}
+canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:linear-gradient(rgba(11,18,32,.85),rgba(11,18,32,0))}
+.ib{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;font-size:18px;flex:none;color:var(--ink);text-decoration:none}
+#top .ttl{flex:1;min-width:0}#top b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#top span{font-size:12px;color:var(--gold2)}
+#legend{position:fixed;left:50%;transform:translateX(-50%);top:auto;bottom:calc(12px + env(safe-area-inset-bottom));width:max-content;--x:calc(62px + env(safe-area-inset-top));z-index:5;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:calc(100% - 20px)}
+#legend button{display:flex;align-items:center;gap:6px;font-size:12px;padding:6px 11px;border-radius:20px;border:1px solid;background:var(--card)}
+#legend button.off{opacity:.35}
+#legend i{width:10px;height:10px;border-radius:3px}
+#hint{position:fixed;left:50%;bottom:calc(64px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:4;font-size:12px;background:rgba(0,0,0,.5);padding:7px 12px;border-radius:20px;text-align:center;max-width:calc(100% - 32px);transition:opacity .8s}
+#msgBox{position:fixed;inset:0;display:grid;place-items:center;z-index:8;padding:24px;text-align:center;color:var(--mute);background:var(--bg)}
+#msgBox a{color:var(--gold)}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;justify-content:center;pointer-events:none}
+.sheet .sc{pointer-events:auto;width:min(480px,100%);max-height:72vh;overflow:auto;background:#0e1626;border:1px solid #24304a;border-bottom:0;border-radius:22px 22px 0 0;padding:16px 18px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;transform:translateY(105%);transition:transform .35s}
+.sheet.open .sc{transform:none}
+.hd{display:flex;align-items:center;gap:10px}.hd b{flex:1;font-size:17px}
+.x{width:40px;height:40px;border-radius:50%;border:1px solid #24304a;background:transparent;font-size:20px}
+.badge{align-self:flex-start;font-size:13px;padding:5px 12px;border-radius:20px;border:1px solid}
+.facts{display:flex;gap:8px}.facts div{flex:1;padding:10px;border-radius:12px;background:#131c2e;border:1px solid #24304a;display:flex;flex-direction:column;gap:2px}
+.facts span{font-size:11px;color:var(--mute)}.facts b{font-size:15px;direction:ltr;unicode-bidi:isolate}
+.split{padding:10px 12px;border-radius:12px;background:#0b1220;border:1px solid #24304a}
+.split .lab{font-size:11px;letter-spacing:.06em;color:var(--mute);margin-bottom:4px;display:block}
+.ln{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0}.ln span{color:#9aa6bd}.ln b{direction:ltr}
+.ln.me b{color:#7fd1a0;font-size:17px}
+.note{font-size:12px;line-height:1.5;color:var(--mute)}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btns button{height:52px;border-radius:14px;font-weight:700;font-size:15px}
+.buy{border:0;background:#e5484d;color:#fff}.res{border:1px solid #e3a33b;background:transparent;color:#ffd99a}
+#um{min-height:18px;font-size:13px;text-align:center;color:#ff9b8a}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="top"><a class="ib" id="back" href="index.html" aria-label="Back">‹</a><div class="ttl"><b id="tName">…</b><span id="tSub"></span></div></div>
+<div id="legend" class="hide"></div>
+<div id="hint" style="opacity:0"></div>
+<div id="msgBox">…</div>
+<div class="sheet" id="sheet"><div class="sc">
+  <div class="hd"><b id="uT"></b><button class="x" id="uX" aria-label="Close">×</button></div>
+  <span class="badge" id="uB"></span>
+  <div class="facts" id="uF"></div>
+  <div id="um" role="status"></div>
+  <div id="uBody"></div>
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+'use strict';
+var $=function(i){return document.getElementById(i)},QS=new URLSearchParams(location.search);
+var LANG=(function(){var q=QS.get('lang');if(q)return q;try{return localStorage.getItem('reg_lang')||'en'}catch(e){return 'en'}})();
+var TX={
+en:{free:'Free',reserved:'Reserved',sold:'Sold',bld:'Building',floor:'Floor',price:'Price',rooms:'Rooms',area:'Area',split:'HOW THE COMMISSION IS SHARED',comm:'Commission',pool:'Team wallet',you:'You get',lvl:'Your sponsor, level {n}',note:'A sale pays out once the owner approves it. A reservation holds the unit and pays when it becomes a sale.',buy:'Buy',res:'Reserve',wait:'Please wait…',sentS:'The sale was sent — the unit is now red. It counts once the owner approves it.',sentR:'The reservation was sent — the unit is now orange.',taken:'Someone else just took this unit.',err:'Something went wrong. Try again.',isS:'This unit is sold.',isR:'This unit is reserved.',noprice:'This unit has no price yet.',login:'Sign in to the app first.',open:'Open the app',none:'This project has no units yet. The owner adds them on the project page (＋ Add units).',hint:'Drag to turn · pinch to zoom · tap an apartment',units:'units'},
+ku:{free:'بەردەست',reserved:'حجزکراو',sold:'فرۆشراو',bld:'باڵەخانە',floor:'نهۆم',price:'نرخ',rooms:'ژوور',area:'ڕووبەر',split:'کۆمیشنەکە چۆن دابەش دەبێت',comm:'کۆمیشن',pool:'بۆ قاسەی تیم',you:'تۆ وەردەگریت',lvl:'سپۆنسەرەکەت، ئاستی {n}',note:'فرۆشتن دوای پەسەندکردنی خاوەن پارە دەدات. حجز یەکەکە دەگرێت و کاتێک بوو بە فرۆشتن پارە دەدات.',buy:'کڕین',res:'حجز',wait:'تکایە چاوەڕێ بکە…',sentS:'فرۆشتنەکە نێردرا — شوقەکە سوور بوو. دوای پەسەندکردنی خاوەن هەژمار دەکرێت.',sentR:'حجزەکە نێردرا — شوقەکە پرتەقاڵی بوو.',taken:'کەسێکی تر ئێستا ئەم شوقەیەی گرت.',err:'هەڵەیەک ڕوویدا. دووبارە هەوڵ بدەوە.',isS:'ئەم شوقەیە فرۆشراوە.',isR:'ئەم شوقەیە حجزکراوە.',noprice:'ئەم شوقەیە هێشتا نرخی نییە.',login:'سەرەتا بچۆ ژوورەوەی ئەپەکە.',open:'کردنەوەی ئەپ',none:'ئەم پڕۆژەیە هێشتا یەکەی نییە. خاوەن لە پەڕەی پڕۆژەکە زیادیان دەکات (＋ زیادکردنی یەکە).',hint:'ڕابکێشە بۆ سوڕاندن · دوو پەنجە بۆ نزیککردنەوە · لە شوقەیەک بدە',units:'یەکە'},
+ar:{free:'متاحة',reserved:'محجوزة',sold:'مباعة',bld:'مبنى',floor:'طابق',price:'السعر',rooms:'الغرف',area:'المساحة',split:'كيف تُوزَّع العمولة',comm:'العمولة',pool:'محفظة الفريق',you:'تحصل على',lvl:'راعيك، المستوى {n}',note:'يُدفع البيع بعد موافقة المالك. الحجز يثبت الوحدة ويُدفع عندما يصبح بيعاً.',buy:'شراء',res:'حجز',wait:'يرجى الانتظار…',sentS:'تم إرسال البيع — أصبحت الشقة حمراء.',sentR:'تم إرسال الحجز — أصبحت الشقة برتقالية.',taken:'أخذ شخص آخر هذه الشقة للتو.',err:'حدث خطأ. حاول مرة أخرى.',isS:'هذه الشقة مباعة.',isR:'هذه الشقة محجوزة.',noprice:'لا سعر لهذه الشقة بعد.',login:'سجّل الدخول إلى التطبيق أولاً.',open:'افتح التطبيق',none:'لا وحدات لهذا المشروع بعد. يضيفها المالك من صفحة المشروع.',hint:'اسحب للتدوير · قرّب بإصبعين · اضغط شقة',units:'وحدة'},
+tr:{free:'Boş',reserved:'Ayrıldı',sold:'Satıldı',bld:'Blok',floor:'Kat',price:'Fiyat',rooms:'Oda',area:'Alan',split:'KOMİSYON NASIL PAYLAŞILIR',comm:'Komisyon',pool:'Takım cüzdanı',you:'Sen alırsın',lvl:'Sponsorun, seviye {n}',note:'Satış, sahip onayladığında ödenir. Rezervasyon birimi tutar ve satışa dönünce ödenir.',buy:'Satın al',res:'Ayır',wait:'Lütfen bekle…',sentS:'Satış gönderildi — daire artık kırmızı.',sentR:'Rezervasyon gönderildi — daire artık turuncu.',taken:'Bu daireyi az önce başkası aldı.',err:'Bir hata oldu. Tekrar dene.',isS:'Bu daire satıldı.',isR:'Bu daire ayrıldı.',noprice:'Bu dairenin henüz fiyatı yok.',login:'Önce uygulamaya giriş yap.',open:'Uygulamayı aç',none:'Bu projenin henüz birimi yok. Sahip proje sayfasından ekler.',hint:'Döndürmek için sürükle · iki parmakla yakınlaştır · daireye dokun',units:'birim'}};
+if(!TX[LANG])LANG='en';var t=function(k){return TX[LANG][k]||TX.en[k]};
+document.documentElement.lang=LANG;document.documentElement.dir=(LANG==='ku'||LANG==='ar')?'rtl':'ltr';
+$('back').addEventListener('click',function(e){if(document.referrer&&document.referrer.indexOf(location.host)>=0&&history.length>1){e.preventDefault();history.back()}});
+function money(x){return '$'+Math.round(Number(x)||0).toLocaleString('en-US')}
+function num(x){return (Math.round((Number(x)||0)*100)/100).toLocaleString('en-US')}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var COL={free:[0x23874f,'#13261C','#3FA36B','#BFF0D2'],reserved:[0xe0921a,'#3A2A0E','#E3A33B','#FFD99A'],sold:[0xd8262d,'#3A1214','#E5484D','#FFB4B6']};
+
+/* ---------- data ---------- */
+var SB=null;try{SB=supabase.createClient('https://wmdegnafpgzhnpplnxqo.supabase.co','sb_publishable_dxpf26f9ouYPLBDryIahKQ_53ZWlSIa')}catch(e){}
+var L=null,UNITS=[],STATE={},CFG={default_commission_pct:2,pool_pct:50,seller_pct:40},LV=[],ME=null;
+async function load(){var lid=QS.get('l');
+ if(!SB){fail(t('err'));return}
+ var s=(await SB.auth.getSession()).data.session;if(!s){fail(t('login')+' <br><br><a href="index.html#Login">'+t('open')+'</a>');return}ME=s.user;
+ var a=await SB.from('listings').select('*').eq('id',lid).maybeSingle();L=a.data;if(!L){fail(t('err'));return}
+ var r=await Promise.all([SB.from('units').select('*').eq('listing_id',lid).order('building').order('floor').order('code'),SB.rpc('unit_states',{p_listing:lid}),SB.from('settings').select('*').eq('id',1).maybeSingle(),SB.from('plan_levels').select('*').order('level')]);
+ UNITS=r[0].data||[];STATE={};(r[1].data||[]).forEach(function(x){STATE[x.unit_id]=x});if(r[2].data)CFG=r[2].data;LV=(r[3].data||[]).map(function(x){return Number(x.pct)});
+ $('tName').textContent=L.title;$('tSub').textContent=(L.place||'')+' · '+UNITS.length+' '+t('units');
+ if(!UNITS.length){fail(esc(t('none')));return}
+ $('msgBox').classList.add('hide');build();legend();hint(t('hint'))}
+function fail(h){$('msgBox').innerHTML=h;$('msgBox').classList.remove('hide')}
+function stOf(u){var x=STATE[u.id];return x?x.state:'free'}
+
+/* ---------- 3D ---------- */
+var canvas=$('c'),renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputEncoding=THREE.sRGBEncoding;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.NoToneMapping;
+var scene=new THREE.Scene();scene.background=new THREE.Color(0x9cc3e6);scene.fog=new THREE.Fog(0x9cc3e6,120,420);
+var camera=new THREE.PerspectiveCamera(45,1,.5,1200);
+scene.add(new THREE.HemisphereLight(0xdbe9ff,0x6b6050,.75));var sun=new THREE.DirectionalLight(0xffffff,1.6);sun.position.set(60,90,40);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);scene.add(sun.target);
+var gnd=new THREE.Mesh(new THREE.PlaneGeometry(1200,1200),new THREE.MeshStandardMaterial({color:0x7d8a62,roughness:1}));gnd.rotation.x=-Math.PI/2;gnd.receiveShadow=true;scene.add(gnd);
+function resize(){var w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}addEventListener('resize',resize);resize();
+var FH=3.2,UW=4.2,DEP=14,PICK=[],MATS={},sel=null,selBox=null,orbit={th:.6,el:.35,r:80,tx:0,ty:20,tz:0},filt={free:1,reserved:1,sold:1};
+function unitMat(k){if(MATS[k])return MATS[k];var c=new THREE.Color(COL[k][0]).convertSRGBToLinear();MATS[k]=new THREE.MeshStandardMaterial({color:c,emissive:c,emissiveIntensity:k==='free'?.12:.38,roughness:.45,metalness:.05});return MATS[k]}
+var dimMat=new THREE.MeshStandardMaterial({color:0x8a94a6,transparent:true,opacity:.18,roughness:.6});
+function label(txt,size,color){var c=document.createElement('canvas');c.width=256;c.height=128;var x=c.getContext('2d');x.fillStyle='rgba(12,19,33,.85)';x.beginPath();if(x.roundRect)x.roundRect(8,8,240,112,26);else x.rect(8,8,240,112);x.fill();x.fillStyle=color||'#e7cb8f';x.font='800 64px system-ui,sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(txt,128,68);var tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,depthTest:false}));sp.scale.set(size*2,size,1);sp.renderOrder=9;return sp}
+function build(){var blds={};UNITS.forEach(function(u){(blds[u.building]=blds[u.building]||[]).push(u)});var names=Object.keys(blds).sort(),gx=0,maxH=0,centers=[];
+ var concrete=new THREE.MeshStandardMaterial({color:0xe9e4da,roughness:.9}),dark=new THREE.MeshStandardMaterial({color:0x2a3242,roughness:.6});
+ names.forEach(function(b){var us=blds[b],fl={};us.forEach(function(u){(fl[u.floor]=fl[u.floor]||[]).push(u)});var floors=Object.keys(fl).map(Number).sort(function(a,c){return a-c}),per=Math.max.apply(null,floors.map(function(f){return fl[f].length}));
+  var front=Math.ceil(per/2),W=Math.max(2,front)*UW+1.2,top=(Math.max.apply(null,floors)+1)*FH,g=new THREE.Group();g.position.x=gx+W/2;scene.add(g);centers.push(gx+W/2);
+  // core + slabs
+  var core=new THREE.Mesh(new THREE.BoxGeometry(W-1.6,top,DEP-1.6),dark);core.position.y=top/2;core.castShadow=true;g.add(core);
+  var podium=new THREE.Mesh(new THREE.BoxGeometry(W+6,FH,DEP+6),concrete);podium.position.y=FH/2-.01;podium.receiveShadow=true;podium.castShadow=true;g.add(podium);
+  for(var f=0;f<=Math.max.apply(null,floors)+1;f++){var sl=new THREE.Mesh(new THREE.BoxGeometry(W+.4,.22,DEP+.4),concrete);sl.position.y=f*FH;sl.castShadow=true;sl.receiveShadow=true;g.add(sl)}
+  var roof=new THREE.Mesh(new THREE.BoxGeometry(W*.5,2.4,DEP*.4),concrete);roof.position.y=top+1.2;g.add(roof);
+  floors.forEach(function(f){var row=fl[f].slice().sort(function(a,c){return String(a.code).localeCompare(String(c.code),undefined,{numeric:true})});
+   row.forEach(function(u,i){var side=i<front?1:-1,idx=side>0?i:i-front,cnt=side>0?front:row.length-front,x0=-(cnt*UW)/2+UW*(idx+.5);
+    var m=new THREE.Mesh(new THREE.BoxGeometry(UW-.25,FH-.38,DEP/2-.6),unitMat(stOf(u)));m.position.set(side>0?x0:-x0,f*FH+FH/2+.02,side*(DEP/4+.05));m.castShadow=false;m.userData.u=u;g.add(m);PICK.push(m);
+    var e=new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),new THREE.LineBasicMaterial({color:0x0b1220,transparent:true,opacity:.45}));m.add(e)})});
+  var lb=label(b,4);lb.position.set(0,top+6,0);g.add(lb);
+  floors.forEach(function(f){if(f%2&&floors.length>14)return;var fl2=label(String(f),1.3,'#f4efe6');fl2.position.set(-W/2-2.2,f*FH+FH/2,DEP/2);g.add(fl2)});
+  maxH=Math.max(maxH,top);gx+=W+14});
+ var cx=(gx-14)/2;orbit.tx=cx;orbit.ty=maxH*.45;orbit.tz=0;orbit.r=Math.max(gx,maxH)*1.35+30;sun.target.position.set(cx,0,0);sun.position.set(cx+60,maxH+80,60);
+ var R=Math.max(gx,maxH)+20;var sc=sun.shadow.camera;sc.left=-R;sc.right=R;sc.top=R;sc.bottom=-R;sc.far=600;sc.updateProjectionMatrix();
+ // a few neighbours
+ var nm=new THREE.MeshStandardMaterial({color:0xcfd3d8,roughness:.9});for(var i=0;i<26;i++){var a=Math.random()*Math.PI*2,rr=R+30+Math.random()*160,h=8+Math.random()*40,bx=new THREE.Mesh(new THREE.BoxGeometry(10+Math.random()*14,h,10+Math.random()*14),nm);bx.position.set(cx+Math.cos(a)*rr,h/2,Math.sin(a)*rr);scene.add(bx)}
+ selBox=new THREE.Mesh(new THREE.BoxGeometry(UW+.3,FH-.05,DEP/2-.2),new THREE.MeshBasicMaterial({color:0xd4b06a,wireframe:true}));selBox.visible=false;scene.add(selBox)}
+function applyFilter(){PICK.forEach(function(m){var k=stOf(m.userData.u);m.material=filt[k]?unitMat(k):dimMat;m.children[0].visible=!!filt[k]})}
+function legend(){var c={free:0,reserved:0,sold:0};UNITS.forEach(function(u){c[stOf(u)]++});var lg=$('legend');lg.innerHTML='';lg.classList.remove('hide');
+ ['free','reserved','sold'].forEach(function(k){var b=document.createElement('button');b.style.borderColor=COL[k][2];b.style.color=COL[k][3];b.style.background=COL[k][1];b.className=filt[k]?'':'off';b.innerHTML='<i style="background:'+COL[k][2]+'"></i>'+esc(t(k))+' <b dir="ltr">'+c[k]+'</b>';b.onclick=function(){filt[k]=filt[k]?0:1;applyFilter();legend()};lg.appendChild(b)})}
+var ht;function hint(s){var h=$('hint');h.textContent=s;h.style.opacity=1;clearTimeout(ht);ht=setTimeout(function(){h.style.opacity=0},5000)}
+
+/* ---------- input ---------- */
+var ptr=new Map(),drag=null,pinch=0,down=null,lastUser=0;
+canvas.addEventListener('pointerdown',function(e){canvas.setPointerCapture(e.pointerId);ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});down={x:e.clientX,y:e.clientY,t:performance.now()};lastUser=performance.now();if(ptr.size===2){var a=[...ptr.values()];pinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);drag=null}else drag={x:e.clientX,y:e.clientY}});
+canvas.addEventListener('pointermove',function(e){if(!ptr.has(e.pointerId))return;ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});lastUser=performance.now();
+ if(ptr.size===2){var a=[...ptr.values()],d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(pinch)orbit.r=Math.max(15,Math.min(400,orbit.r*pinch/d));pinch=d;return}
+ if(drag){orbit.th-=(e.clientX-drag.x)*.006;orbit.el=Math.max(.02,Math.min(1.35,orbit.el+(e.clientY-drag.y)*.004));if(e.shiftKey||ptr.size>1){}drag.x=e.clientX;drag.y=e.clientY}});
+function up(e){ptr.delete(e.pointerId);if(ptr.size<2)pinch=0;if(!ptr.size)drag=null;if(down&&performance.now()-down.t<350&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8)pick(e.clientX,e.clientY);down=null}
+canvas.addEventListener('pointerup',up);canvas.addEventListener('pointercancel',function(e){ptr.delete(e.pointerId);drag=null});
+canvas.addEventListener('wheel',function(e){e.preventDefault();orbit.r=Math.max(15,Math.min(400,orbit.r*(1+e.deltaY*.001)));lastUser=performance.now()},{passive:false});
+var rc=new THREE.Raycaster();
+function pick(x,y){rc.setFromCamera(new THREE.Vector2(x/innerWidth*2-1,-(y/innerHeight)*2+1),camera);var h=rc.intersectObjects(PICK.filter(function(m){return filt[stOf(m.userData.u)]}),false);if(h.length)openUnit(h[0].object);else closeSheet()}
+
+/* ---------- unit sheet ---------- */
+function split(price,pct){var c=price*pct/100,p=c*Number(CFG.pool_pct)/100,mine=p*Number(CFG.seller_pct)/100;var h='<div class="split"><span class="lab">'+esc(t('split'))+'</span>';
+ var ln=function(k,v,me){return '<div class="ln'+(me?' me':'')+'"><span>'+esc(k)+'</span><b>'+v+'</b></div>'};
+ h+=ln(t('comm')+' ('+num(pct)+'%)',money(c))+ln(t('pool')+' ('+num(CFG.pool_pct)+'%)',money(p))+ln(t('you')+' ('+num(CFG.seller_pct)+'%)',money(mine),1);
+ LV.forEach(function(x,i){if(x>0)h+=ln(t('lvl').replace('{n}',i+1)+' ('+num(x)+'%)',money(p*x/100))});return h+'</div>'}
+function uLabel(u){return t('bld')+' '+u.building+' · '+t('floor')+' '+u.floor+' · '+u.code}
+function openUnit(m){sel=m;var u=m.userData.u,k=stOf(u),c=COL[k];selBox.visible=true;selBox.position.copy(m.getWorldPosition(new THREE.Vector3()));selBox.quaternion.copy(m.parent.quaternion);
+ orbit.goal={tx:selBox.position.x,ty:selBox.position.y,tz:selBox.position.z,r:Math.min(orbit.r,55)};
+ $('uT').textContent=uLabel(u);var b=$('uB');b.textContent=t(k);b.style.borderColor=c[2];b.style.background=c[1];b.style.color=c[3];
+ $('uF').innerHTML='<div><span>'+esc(t('price'))+'</span><b style="color:#d4b06a">'+money(u.price)+'</b></div>'+(u.rooms?'<div><span>'+esc(t('rooms'))+'</span><b>'+num(u.rooms)+'</b></div>':'')+(u.area?'<div><span>'+esc(t('area'))+'</span><b>'+num(u.area)+' m²</b></div>':'');
+ $('um').textContent='';var pct=L.commission_pct!=null?Number(L.commission_pct):Number(CFG.default_commission_pct);
+ var body='';if(k==='free'&&Number(u.price)>0)body=split(Number(u.price),pct)+'<div class="note">'+esc(t('note'))+'</div><div class="btns"><button class="buy" data-k="sale">🏠 '+esc(t('buy'))+'</button><button class="res" data-k="reserve">📌 '+esc(t('res'))+'</button></div>';
+ else if(k==='free')body='<div class="note">'+esc(t('noprice'))+'</div>';else body='<div class="note" style="font-size:14px;color:#f4efe6">'+esc(t(k==='sold'?'isS':'isR'))+'</div>';
+ $('uBody').innerHTML=body;[].forEach.call($('uBody').querySelectorAll('[data-k]'),function(bt){bt.onclick=function(){deal(u,bt.dataset.k,bt)}});$('sheet').classList.add('open')}
+function closeSheet(){$('sheet').classList.remove('open');if(selBox)selBox.visible=false;sel=null}
+$('uX').onclick=closeSheet;
+async function deal(u,k,bt){var um=$('um');[].forEach.call($('uBody').querySelectorAll('button'),function(b){b.disabled=true});um.style.color='#d4b06a';um.textContent=t('wait');
+ try{var r=await SB.from('sales').insert({title:L.title+' · '+uLabel(u),amount:Number(u.price),listing_id:L.id,deal:k,unit:uLabel(u),unit_id:u.id});if(r.error)throw r.error;
+   STATE[u.id]={unit_id:u.id,state:k==='sale'?'sold':'reserved',mine:true};applyFilter();legend();var m=sel;if(m){m.material=unitMat(stOf(u));pulse=1}
+   openUnit(m);var um2=$('um');um2.style.color='#7fd1a0';um2.textContent=t(k==='sale'?'sentS':'sentR')}
+ catch(e){var taken=/unit_taken/.test((e&&e.message)||'');um.style.color='#ff9b8a';um.textContent=t(taken?'taken':'err');if(taken){var s=await SB.rpc('unit_states',{p_listing:L.id});STATE={};(s.data||[]).forEach(function(x){STATE[x.unit_id]=x});applyFilter();legend()}else [].forEach.call($('uBody').querySelectorAll('button'),function(b){b.disabled=false})}}
+
+/* ---------- loop ---------- */
+var last=performance.now(),pulse=0;
+function loop(now){requestAnimationFrame(loop);var dt=Math.min(.05,(now-last)/1000);last=now;
+ if(!sel&&now-lastUser>4000)orbit.th+=dt*.06;
+ if(orbit.goal){var g=orbit.goal,k=Math.min(1,dt*3);orbit.tx+=(g.tx-orbit.tx)*k;orbit.ty+=(g.ty-orbit.ty)*k;orbit.tz+=(g.tz-orbit.tz)*k;orbit.r+=(g.r-orbit.r)*k;if(Math.abs(g.r-orbit.r)<.2&&Math.abs(g.ty-orbit.ty)<.1)orbit.goal=null}
+ var o=orbit;camera.position.set(o.tx+Math.sin(o.th)*Math.cos(o.el)*o.r,o.ty+Math.sin(o.el)*o.r,o.tz+Math.cos(o.th)*Math.cos(o.el)*o.r);if(camera.position.y<2)camera.position.y=2;camera.lookAt(o.tx,o.ty,o.tz);
+ if(selBox&&selBox.visible){var s=1+Math.sin(now*.008)*.03;selBox.scale.set(s,s,s)}
+ renderer.render(scene,camera)}
+requestAnimationFrame(loop);
+load().catch(function(e){console.error(e);fail(t('err'))});
+window.__towers={get units(){return UNITS},pick:pick,camera:camera,orbit:orbit,openUnit:function(id){var m=PICK.filter(function(x){return x.userData.u.id===id})[0];if(m)openUnit(m)}};
+})();
+</script>
+</body>
+</html>
