@@ -93,3 +93,10 @@ Open it from the gold **🏙 See the apartments on the towers (3D)** button on a
 - Every building is drawn as a tower, floor by floor, and every apartment is a box on the facade: **green** free, **orange** reserved, **red** sold.
 - Turn, zoom, and tap an apartment. You see its price, rooms and area, and how the commission is shared. Then press **Buy** (it turns red at once) or **Reserve** (it turns orange).
 - Tapping a colour in the legend hides or shows that group, e.g. to see only the free apartments.
+
+## Training guide (`guide/`)
+Open it from the **📘 Full training** card at the top of the Academy page, or at `guide/index.html`.
+- **12 parts, 50 steps:** getting started, profile, home, projects and units, the 3D tour, the map, CRM, team, sales and wallet, the academy, the studio, and the owner's tools.
+- **How it plays:** each step shows the real screen in a phone frame, with the button being explained circled in gold, a tap animation and a caption. It plays by itself like a video. Swipe or use ⏮ ⏭ to move; ☰ opens the list of parts; KU/EN switches the language.
+- **Videos:** `guide/video/*.mp4` holds one MP4 per part plus `all.mp4` (Kurdish captions, 1280×720), ready to send on WhatsApp or post. They are also added as lessons in the Academy.
+- **Rebuilding:** the screenshots come from the app with sample data (scratchpad `cap.js` + `guide_steps.json`); `rec.js` records the MP4s.
