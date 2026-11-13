@@ -50,3 +50,20 @@ Members open a project page and, under the 3D tour, fill in the unit and price. 
 - **↩ Back** scrolls back to the 3D tour.
 
 The owner sees approved reservations on the Sales page. Pressing **Became a sale** turns one into a sale and pays the team.
+
+## 3D home tour (`tour.html`)
+This is a 3D walkthrough built with Three.js from a floor plan. It works on phones and laptops:
+- **Walk:** drag to look around; use the joystick or WASD to walk.
+- **Dollhouse:** a view from above with the ceilings removed.
+- **Style:** switch between 3 furniture styles (Modern, Scandinavian, Warm luxury).
+- **Light:** a slider from morning to sunset to night; at night the lamps turn on.
+- **Guided tour:** walks room by room, showing each room's name, size (m²/ft²) and selling point, with soft music made in code.
+- **Welcome screen and contact:** shows the project name, address and price, plus Call and WhatsApp buttons.
+
+Link options:
+- `tour.html` opens the sample Salam Residence layout.
+- `tour.html?p=NAME` loads `plans/NAME.json`.
+- Add `&agent=Name&phone=964...` so each member can share the link with their own phone number.
+- Add `&lang=ku|ar|tr|en` and `&style=modern|scandi|lux`.
+
+Plan format: `floors[].rooms[]` with `{id, type, rect:[x,z,w,d] in metres, name, note}`, plus `doors[]` / `windows[]` as `{x, z, w, kind}`, and `tour` for the order of rooms.
