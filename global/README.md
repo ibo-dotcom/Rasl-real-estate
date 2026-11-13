@@ -112,3 +112,4 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
   - Owner: new ad, or a new project/villa.
   - Everyone: share on social media with your code, invite a member, or make a 360° video.
 - The small buttons (🎓 / 360° / 3D and the filters) and the bottom bar are smaller, so the screen keeps more room for the ads.
+- The home screen is grouped into **three main panels**: ① 📣 Ads (with the 🎓 / 360° / 3D buttons), ② 📍 Cities (with 📢 Publish), ③ 🔥 Best sellers. My members follows underneath. The next meeting shows in the Academy.
