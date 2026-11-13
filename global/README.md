@@ -108,3 +108,7 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - **Middle:** cities as photo cards (two per screen width). Tap a city to see only its projects.
 - **Bottom:** 🔥 **Best sellers**, a 3-column grid sorted by units sold, with the sale / rent / off-plan / invest filters.
 - **Under the best sellers:** 👥 **My members**. Each person sees their own team with photo, name and code; direct members (up to 10) have a gold ring, and ★ marks members who have a rank. Tap a member to see their points, sales and earnings. "See all" opens the team map, and ＋ invites someone new.
+- **📢 Publish card** (in the cities row): opens a menu.
+  - Owner: new ad, or a new project/villa.
+  - Everyone: share on social media with your code, invite a member, or make a 360° video.
+- The small buttons (🎓 / 360° / 3D and the filters) and the bottom bar are smaller, so the screen keeps more room for the ads.
