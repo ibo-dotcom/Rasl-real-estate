@@ -105,5 +105,5 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - **Header:** profile, search, map 📍, and language.
 - **Top:** a big ad banner that slides by itself.
 - **Under the banner:** small buttons for Training & meetings 🎓, the 360° Studio and the 3D tour.
-- **Middle:** cities as photo cards (three per screen width). Tap a city to see only its projects.
-- **Bottom:** 🔥 **Best sellers**, a 2-column grid sorted by units sold, with the sale / rent / off-plan / invest filters.
+- **Middle:** cities as photo cards (two per screen width). Tap a city to see only its projects.
+- **Bottom:** 🔥 **Best sellers**, a 3-column grid sorted by units sold, with the sale / rent / off-plan / invest filters.
