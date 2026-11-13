@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
-<title>3D Home Tour</title>
+<title>VANA · 3D</title>
 <style>
 :root{--bg:#0b1220;--card:rgba(12,19,33,.86);--line:rgba(255,255,255,.12);--ink:#f4efe6;--mute:#a9b1c0;--gold:#d4b06a;--gold2:#e7cb8f}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -60,6 +60,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 #sheet .sc{width:min(440px,100%);background:#111a2c;border-radius:22px 22px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom));border:1px solid var(--line)}
 #sheet h3{margin:0 0 2px}
 #sheet p{margin:0 0 6px;color:var(--mute);direction:ltr;unicode-bidi:isolate}
+#roomsP{position:fixed;inset:0;z-index:12;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
+#roomsP .sc{width:min(440px,100%);max-height:70vh;overflow:auto;background:#111a2c;border-radius:22px 22px 0 0;padding:18px 14px calc(18px + env(safe-area-inset-bottom));border:1px solid var(--line)}
+#roomsP h3{margin:0 4px 10px;font-size:16px}
+#rpList button{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:14px;padding:12px 14px;margin-bottom:8px;text-align:start}
+#rpList b{font-size:15px}#rpList span{font-size:12px;color:var(--gold2);direction:ltr;unicode-bidi:isolate;white-space:nowrap}
 #fade{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .45s;z-index:6}
 [dir=rtl] #label,[dir=rtl] #welcome .wc,[dir=rtl] #sheet .sc{text-align:right}
 [dir=rtl] #label{text-align:center}
@@ -87,6 +92,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   <button id="bWalk"><i>🚶</i><span></span></button>
   <button id="bDoll"><i>🏠</i><span></span></button>
   <button id="bStyle"><i>🎨</i><span></span></button>
+  <button id="bRooms"><i>🧭</i><span></span></button>
   <button id="bLight"><i>☀️</i><span></span></button>
   <button id="bMute"><i>🔊</i><span></span></button>
   <button id="bCall" class="hide"><i>📞</i><span></span></button>
@@ -94,7 +100,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 <div id="welcome" class="hide">
   <div class="wc">
-    <div class="brand">RASL · 3D</div>
+    <div class="brand"><svg width="22" height="16" viewBox="0 0 22 16" style="vertical-align:-2px;margin-inline-end:8px"><path d="M1 15 L11 2 L21 15" fill="none" stroke="#d4b06a" stroke-width="2.4" stroke-linejoin="round"/><path d="M7 15 L11 9.5 L15 15" fill="none" stroke="#e7cb8f" stroke-width="2"/></svg>VANA <span style="opacity:.6;letter-spacing:.2em">· 3D</span></div>
     <h1 id="wName"></h1>
     <div class="unit" id="wUnit"></div>
     <div class="addr" id="wAddr"></div>
@@ -108,6 +114,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   </div>
 </div>
 
+<div id="roomsP" class="hide"><div class="sc"><h3 id="rpT"></h3><div id="rpList"></div></div></div>
 <div id="sheet" class="hide">
   <div class="sc">
     <h3 id="sName"></h3>
@@ -127,10 +134,10 @@ var $=function(id){return document.getElementById(id)};
 /* ---------------- language ---------------- */
 var LANG=(function(){var q=QS.get('lang');if(q)return q;try{return localStorage.getItem('reg_lang')||'en'}catch(e){return 'en'}})();
 var TX={
-en:{start:'Start the tour',explore:'Explore yourself',contact:'Contact',tour:'Tour',stop:'Stop',walk:'Walk',doll:'Dollhouse',style:'Style',light:'Light',sound:'Sound',morning:'Morning',sunset:'Sunset',night:'Night',modern:'Modern',scandi:'Scandinavian',lux:'Warm luxury',floor:'Floor',rooms:'Rooms',area:'Area',price:'Price',hintWalk:'Drag to look around · WASD, arrows or the joystick to walk',hintDoll:'Drag to turn · pinch or scroll to zoom · tap a room to step inside',call:'Call',wa:'WhatsApp',sample:'Sample layout',end:'That was the whole home.',loading:'Loading the 3D home…',err:'Could not load this plan.'},
-ku:{start:'دەستپێکردنی گەشت',explore:'خۆت بگەڕێ',contact:'پەیوەندی',tour:'گەشت',stop:'وەستان',walk:'ڕۆیشتن',doll:'لە سەرەوە',style:'ستایل',light:'ڕووناکی',sound:'دەنگ',morning:'بەیانی',sunset:'خۆرئاوا',night:'شەو',modern:'مۆدێرن',scandi:'سکاندیناڤی',lux:'لۆکسی گەرم',floor:'نهۆم',rooms:'ژوور',area:'ڕووبەر',price:'نرخ',hintWalk:'ڕابکێشە بۆ سەیرکردن · جۆیستیک یان WASD بۆ ڕۆیشتن',hintDoll:'ڕابکێشە بۆ سوڕاندن · دوو پەنجە بۆ نزیککردنەوە · لە ژوورێک بدە بۆ چوونە ناوی',call:'پەیوەندی',wa:'واتسئاپ',sample:'نەخشەی نموونە',end:'ئەمە هەموو خانووەکە بوو.',loading:'خانووە 3D ـیەکە بار دەبێت…',err:'ئەم نەخشەیە بار نەبوو.'},
-ar:{start:'ابدأ الجولة',explore:'تجوّل بنفسك',contact:'تواصل',tour:'جولة',stop:'إيقاف',walk:'مشي',doll:'منظر علوي',style:'الطراز',light:'الإضاءة',sound:'الصوت',morning:'صباح',sunset:'غروب',night:'ليل',modern:'عصري',scandi:'إسكندنافي',lux:'فخامة دافئة',floor:'طابق',rooms:'غرف',area:'المساحة',price:'السعر',hintWalk:'اسحب للنظر · عصا التحكم أو WASD للمشي',hintDoll:'اسحب للتدوير · قرّب بإصبعين · اضغط غرفة للدخول',call:'اتصال',wa:'واتساب',sample:'مخطط تجريبي',end:'هذا هو المنزل كاملاً.',loading:'جارٍ تحميل المنزل ثلاثي الأبعاد…',err:'تعذّر تحميل هذا المخطط.'},
-tr:{start:'Turu başlat',explore:'Kendin gez',contact:'İletişim',tour:'Tur',stop:'Durdur',walk:'Yürü',doll:'Kuşbakışı',style:'Stil',light:'Işık',sound:'Ses',morning:'Sabah',sunset:'Gün batımı',night:'Gece',modern:'Modern',scandi:'İskandinav',lux:'Sıcak lüks',floor:'Kat',rooms:'Oda',area:'Alan',price:'Fiyat',hintWalk:'Bakmak için sürükle · yürümek için joystick veya WASD',hintDoll:'Döndürmek için sürükle · iki parmakla yakınlaştır · girmek için odaya dokun',call:'Ara',wa:'WhatsApp',sample:'Örnek plan',end:'Evin tamamı buydu.',loading:'3D ev yükleniyor…',err:'Plan yüklenemedi.'}};
+en:{start:'Start the tour',explore:'Explore yourself',contact:'Contact',tour:'Tour',stop:'Stop',walk:'Walk',doll:'Dollhouse',style:'Style',light:'Light',sound:'Sound',morning:'Morning',sunset:'Sunset',night:'Night',modern:'Modern',scandi:'Scandinavian',lux:'Warm luxury',floor:'Floor',rooms:'Rooms',goto:'Go to a room',area:'Area',price:'Price',hintWalk:'Drag to look around · WASD, arrows or the joystick to walk',hintDoll:'Drag to turn · pinch or scroll to zoom · tap a room to step inside',call:'Call',wa:'WhatsApp',sample:'Sample layout',end:'That was the whole home.',loading:'Loading the 3D home…',err:'Could not load this plan.'},
+ku:{start:'دەستپێکردنی گەشت',explore:'خۆت بگەڕێ',contact:'پەیوەندی',tour:'گەشت',stop:'وەستان',walk:'ڕۆیشتن',doll:'لە سەرەوە',style:'ستایل',light:'ڕووناکی',sound:'دەنگ',morning:'بەیانی',sunset:'خۆرئاوا',night:'شەو',modern:'مۆدێرن',scandi:'سکاندیناڤی',lux:'لۆکسی گەرم',floor:'نهۆم',rooms:'ژوور',goto:'بڕۆ بۆ ژوورێک',area:'ڕووبەر',price:'نرخ',hintWalk:'ڕابکێشە بۆ سەیرکردن · جۆیستیک یان WASD بۆ ڕۆیشتن',hintDoll:'ڕابکێشە بۆ سوڕاندن · دوو پەنجە بۆ نزیککردنەوە · لە ژوورێک بدە بۆ چوونە ناوی',call:'پەیوەندی',wa:'واتسئاپ',sample:'نەخشەی نموونە',end:'ئەمە هەموو خانووەکە بوو.',loading:'خانووە 3D ـیەکە بار دەبێت…',err:'ئەم نەخشەیە بار نەبوو.'},
+ar:{start:'ابدأ الجولة',explore:'تجوّل بنفسك',contact:'تواصل',tour:'جولة',stop:'إيقاف',walk:'مشي',doll:'منظر علوي',style:'الطراز',light:'الإضاءة',sound:'الصوت',morning:'صباح',sunset:'غروب',night:'ليل',modern:'عصري',scandi:'إسكندنافي',lux:'فخامة دافئة',floor:'طابق',rooms:'غرف',goto:'اذهب إلى غرفة',area:'المساحة',price:'السعر',hintWalk:'اسحب للنظر · عصا التحكم أو WASD للمشي',hintDoll:'اسحب للتدوير · قرّب بإصبعين · اضغط غرفة للدخول',call:'اتصال',wa:'واتساب',sample:'مخطط تجريبي',end:'هذا هو المنزل كاملاً.',loading:'جارٍ تحميل المنزل ثلاثي الأبعاد…',err:'تعذّر تحميل هذا المخطط.'},
+tr:{start:'Turu başlat',explore:'Kendin gez',contact:'İletişim',tour:'Tur',stop:'Durdur',walk:'Yürü',doll:'Kuşbakışı',style:'Stil',light:'Işık',sound:'Ses',morning:'Sabah',sunset:'Gün batımı',night:'Gece',modern:'Modern',scandi:'İskandinav',lux:'Sıcak lüks',floor:'Kat',rooms:'Oda',goto:'Bir odaya git',area:'Alan',price:'Fiyat',hintWalk:'Bakmak için sürükle · yürümek için joystick veya WASD',hintDoll:'Döndürmek için sürükle · iki parmakla yakınlaştır · girmek için odaya dokun',call:'Ara',wa:'WhatsApp',sample:'Örnek plan',end:'Evin tamamı buydu.',loading:'3D ev yükleniyor…',err:'Plan yüklenemedi.'}};
 if(!TX[LANG])LANG='en';
 var t=function(k){return TX[LANG][k]||TX.en[k]||k};
 var RTL=(LANG==='ku'||LANG==='ar');
@@ -225,6 +232,8 @@ var M={
  metal:SM({metalness:.85,roughness:.32}),
  stone:SM({map:TEX.stone,roughness:.18}),
  cabinet:SM({roughness:.45}),
+ feature:SM({map:tex(512,function(x,s){var n=16,w=s/n;for(var i=0;i<n;i++){x.fillStyle=g(205+rnd()*35|0);x.fillRect(i*w,0,w,s);for(var k=0;k<6;k++){x.fillStyle=g(80,.06);x.fillRect(i*w+rnd()*w,0,1,s)}x.fillStyle=g(25,.9);x.fillRect(i*w,0,3,s)}}),roughness:.6}),
+ cove:SM({color:0xffffff,emissive:0xffd9a6,emissiveIntensity:.6}),
  woodF:SM({map:TEX.wood,roughness:.48}),
  black:SM({color:0x141414,roughness:.35}),
  ceramic:SM({color:0xf7f7f5,roughness:.12}),
@@ -247,13 +256,13 @@ var M={
  tree:SM({color:0x5f7a45,roughness:1,flatShading:true})
 };
 var STYLES=[
- {k:'modern',wall:0xe8e4de,wood:0xb39878,fabric:0x5f6368,fabric2:0x7d8186,rug:0x8e8a84,accent:0x1f2124,metal:0x2b2b2b,stone:0xf0eeea,cabinet:0xf3f3f1,woodF:0x4a3b30,pot:0x2c2c2c,tile:0xdedbd6,frame:0x222222},
- {k:'scandi',wall:0xf6f4ef,wood:0xead2ad,fabric:0xddd6c8,fabric2:0xc9bfae,rug:0xefe7da,accent:0x7d9b8a,metal:0xc8c0b2,stone:0xf6f4ef,cabinet:0xffffff,woodF:0xd8bb90,pot:0xe9e2d5,tile:0xf1eee8,frame:0xf2efe8},
- {k:'lux',wall:0xe6dacb,wood:0x8f5f40,fabric:0x2f4a3b,fabric2:0x3d5c4a,rug:0xc2a985,accent:0xb08d57,metal:0xb8935a,stone:0x3a3532,cabinet:0x3b2c22,woodF:0x5b3a26,pot:0x8a6a4a,tile:0xcfc2ae,frame:0xb08d57}
+ {k:'modern',wall:0xe8e4de,wood:0xb39878,fabric:0x5f6368,fabric2:0x7d8186,rug:0x8e8a84,accent:0x1f2124,metal:0x2b2b2b,stone:0xf0eeea,cabinet:0xf3f3f1,woodF:0x4a3b30,pot:0x2c2c2c,tile:0xdedbd6,frame:0x222222,feature:0x8b6d4f},
+ {k:'scandi',wall:0xf6f4ef,wood:0xead2ad,fabric:0xddd6c8,fabric2:0xc9bfae,rug:0xefe7da,accent:0x7d9b8a,metal:0xc8c0b2,stone:0xf6f4ef,cabinet:0xffffff,woodF:0xd8bb90,pot:0xe9e2d5,tile:0xf1eee8,frame:0xf2efe8,feature:0x9fb3a2},
+ {k:'lux',wall:0xe6dacb,wood:0x8f5f40,fabric:0x2f4a3b,fabric2:0x3d5c4a,rug:0xc2a985,accent:0xb08d57,metal:0xb8935a,stone:0x3a3532,cabinet:0x3b2c22,woodF:0x5b3a26,pot:0x8a6a4a,tile:0xcfc2ae,frame:0xb08d57,feature:0x4e3122}
 ];
 var styleIdx=Math.max(0,STYLES.map(function(s){return s.k}).indexOf(QS.get('style')||'modern'));
 var styleAnim=null;
-function styleTargets(s){return {wall:s.wall,wood:s.wood,fabric:s.fabric,fabric2:s.fabric2,rug:s.rug,accent:s.accent,metal:s.metal,stone:s.stone,cabinet:s.cabinet,woodF:s.woodF,pot:s.pot,tile:s.tile,frame:s.frame}}
+function styleTargets(s){return {wall:s.wall,wood:s.wood,fabric:s.fabric,fabric2:s.fabric2,rug:s.rug,accent:s.accent,metal:s.metal,stone:s.stone,cabinet:s.cabinet,woodF:s.woodF,pot:s.pot,tile:s.tile,frame:s.frame,feature:s.feature}}
 function applyStyle(i,instant){styleIdx=i;var tg=styleTargets(STYLES[i]);var from={},to={};Object.keys(tg).forEach(function(k){from[k]=M[k].color.clone();to[k]=new THREE.Color(tg[k])});
  if(instant){Object.keys(to).forEach(function(k){M[k].color.copy(to[k])});styleAnim=null}else styleAnim={from:from,to:to,t:0};
  $('bStyle').querySelector('span').textContent=t(STYLES[i].k)}
@@ -372,6 +381,7 @@ function buildFloor(Fp,fi){
    var f=plane(r.w,r.d,m,per);f.rotation.x=-Math.PI/2;f.position.set(r.cx,.002,r.cz);f.receiveShadow=true;f.userData.room=r;fg.add(f);FLOORMESH.push(f);
    if(!r.bal){var ce=plane(r.w,r.d,M.ceil);ce.rotation.x=Math.PI/2;ce.position.set(r.cx,H-.002,r.cz);fg.add(ce);CEILS.push(ce);
      var n=Math.max(r.w,r.d)>5?2:1;for(var i=0;i<n;i++){var lx=n>1&&r.w>=r.d?r.x0+r.w*(i+.5)/n:r.cx,lz=n>1&&r.d>r.w?r.z0+r.d*(i+.5)/n:r.cz;var dsc=new THREE.Mesh(new THREE.CylinderGeometry(.22,.22,.02,24),M.disc);dsc.position.set(lx,H-.012,lz);fg.add(dsc);CEILS.push(dsc)}
+     ceilingDesign(r,fg);
      var pl=new THREE.PointLight(0xffd6a0,0,Math.max(r.w,r.d)*1.8+2,2);pl.position.set(r.cx,H-.35,r.cz);fg.add(pl);roomLights.push(pl)}
  });
  // under-slab + edge
@@ -379,9 +389,36 @@ function buildFloor(Fp,fi){
  B(bx1-bx0+.3,.3,bz1-bz0+.3,M.concrete,(bx0+bx1)/2,-.3,(bz0+bz1)/2,fg);
  R.forEach(function(r){r.ops=ops});
  R.forEach(function(r){try{furnish(r,fg)}catch(e){console.warn('furnish',r.id,e)}});
+ R.forEach(function(r){addDims(r,fg)});
  ROOMS=ROOMS.concat(R);
  FLOORS.push({g:fg,rooms:R,x0:bx0,x1:bx1,z0:bz0,z1:bz1,name:Fp.name});
 }
+
+/* ---- ceiling design: gypsum drop band with LED cove + downlights ---- */
+function ceilingDesign(r,fg){if(!/living|bed|hall|dining|office|kitchen/.test(r.type)||Math.min(r.w,r.d)<2.4)return;
+ var bw=Math.min(.55,Math.min(r.w,r.d)*.16),bh=.14,yb=H-bh,ix0=r.x0+TH/2,ix1=r.x1-TH/2,iz0=r.z0+TH/2,iz1=r.z1-TH/2,iw=ix1-ix0,id=iz1-iz0;
+ [[r.cx,iz0+bw/2,iw,bw],[r.cx,iz1-bw/2,iw,bw],[ix0+bw/2,r.cz,bw,id-2*bw],[ix1-bw/2,r.cz,bw,id-2*bw]].forEach(function(b){CEILS.push(B(b[2],bh,b[3],M.ceil,b[0],yb,b[1],fg,true))});
+ [[r.cx,iz0+bw,iw-2*bw,.025],[r.cx,iz1-bw,iw-2*bw,.025],[ix0+bw,r.cz,.025,id-2*bw],[ix1-bw,r.cz,.025,id-2*bw]].forEach(function(b){CEILS.push(B(b[2],.025,b[3],M.cove,b[0],yb+.01,b[1],fg,true))});
+ var dl=new THREE.CylinderGeometry(.045,.045,.01,14);function spot(x,z){var m=new THREE.Mesh(dl,M.bulb);m.position.set(x,yb-.004,z);fg.add(m);CEILS.push(m)}
+ for(var x=ix0+bw+.4;x<ix1-bw-.2;x+=1.2){spot(x,iz0+bw/2);spot(x,iz1-bw/2)}}
+/* ---- dimensions on the walls + room tag above (dollhouse) ---- */
+var TXC={},DOLLTAGS=[];
+function canvasTex(key,w,h,draw){if(TXC[key])return TXC[key];var c=document.createElement('canvas');c.width=w;c.height=h;var x=c.getContext('2d');if(RTL)x.direction='rtl';draw(x,w,h);var tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;tx.anisotropy=ANISO;TXC[key]=tx;return tx}
+function dimTex(txt){return canvasTex('d|'+txt,512,80,function(x,w,h){var y=h/2;x.strokeStyle=x.fillStyle='rgba(55,48,40,.8)';x.lineWidth=3;x.beginPath();x.moveTo(10,y);x.lineTo(w-10,y);x.stroke();
+  [[10,1],[w-10,-1]].forEach(function(q){x.beginPath();x.moveTo(q[0],y);x.lineTo(q[0]+q[1]*20,y-10);x.lineTo(q[0]+q[1]*20,y+10);x.closePath();x.fill();x.fillRect(q[0]-1.5,y-20,3,40)});
+  x.font='600 42px system-ui,-apple-system,sans-serif';x.direction='ltr';var tw=x.measureText(txt).width+34;x.fillStyle='rgba(252,250,246,.96)';x.fillRect(w/2-tw/2,10,tw,h-20);x.fillStyle='#2b2620';x.textAlign='center';x.textBaseline='middle';x.fillText(txt,w/2,y+2)})}
+var DIMMAT={};function dimMat(txt){return DIMMAT[txt]||(DIMMAT[txt]=new THREE.MeshBasicMaterial({map:dimTex(txt),transparent:true,depthWrite:false}))}
+function fmtM(v){return (Math.round(v*100)/100).toFixed(2).replace(/\.?0+$/,'')+' m'}
+function addDims(r,fg){
+ if(!r.bal&&r.type!=='corridor'){['n','s','e','w'].forEach(function(sd){var len=(sd==='n'||sd==='s')?r.w:r.d;var pw=Math.min(len-.35,1.7);if(pw<.7)return;var ph=pw*80/512;
+   var m=new THREE.Mesh(new THREE.PlaneGeometry(pw,ph),dimMat(fmtM(len)));var o=TH/2+.008;
+   if(sd==='n'){m.position.set(r.cx,2.5,r.z0+o)}else if(sd==='s'){m.position.set(r.cx,2.5,r.z1-o);m.rotation.y=Math.PI}else if(sd==='w'){m.position.set(r.x0+o,2.5,r.cz);m.rotation.y=Math.PI/2}else{m.position.set(r.x1-o,2.5,r.cz);m.rotation.y=-Math.PI/2}
+   m.renderOrder=2;fg.add(m)})}
+ var nm=L(r.name)||'',dims=fmtM(r.w).replace(' m','')+' × '+fmtM(r.d)+'  ·  '+r.area+' m²';
+ var tx=canvasTex('t|'+r.id+'|'+r.fi,640,200,function(x,w,h){x.fillStyle='rgba(12,19,33,.82)';var rr=34;x.beginPath();x.moveTo(rr,0);x.arcTo(w,0,w,h,rr);x.arcTo(w,h,0,h,rr);x.arcTo(0,h,0,0,rr);x.arcTo(0,0,w,0,rr);x.fill();
+   x.textAlign='center';x.textBaseline='middle';x.fillStyle='#f4efe6';x.font='700 58px system-ui,-apple-system,Tahoma,sans-serif';x.fillText(nm,w/2,72,w-40);x.direction='ltr';x.fillStyle='#e7cb8f';x.font='600 42px system-ui,-apple-system,sans-serif';x.fillText(dims,w/2,146,w-40)});
+ var tw=Math.max(1.6,Math.min(3.4,Math.min(r.w,r.d)*.95));var tag=new THREE.Mesh(new THREE.PlaneGeometry(tw,tw*200/640),new THREE.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false}));
+ tag.rotation.x=-Math.PI/2;tag.position.set(r.cx,(r.bal?1.3:H)+.08,r.cz);tag.renderOrder=5;tag.visible=false;fg.add(tag);DOLLTAGS.push(tag)}
 
 /* ---- placement against walls with footprint checks ---- */
 var OPP={n:'s',s:'n',e:'w',w:'e'};
@@ -409,6 +446,9 @@ function freeNear(r,x,z,hw,hd,fg,obj,ry,axis){for(var d=0;d<=2.4;d+=.15){var c=d
 function corners(r){var R0=root(r),i=.38,dz=doorZones(r),pts=[[r.x0+i,r.z0+i],[r.x1-i,r.z0+i],[r.x0+i,r.z1-i],[r.x1-i,r.z1-i]];
  pts.sort(function(p,q){function sc(pt){var m=1e9;dz.forEach(function(z){m=Math.min(m,Math.hypot(pt[0]-(z[0]+z[2])/2,pt[1]-(z[1]+z[3])/2))});return m}return sc(q)-sc(p)});return pts}
 function plantIn(r,fg,n){var c=corners(r),k=0;for(var i=0;i<c.length&&k<(n||1);i++){var p=F.plant(.9+rnd()*.5);if(freeAt(r,c[i][0],c[i][1],.25,.25,fg,p))k++}}
+function featureWall(r,p,grp0,want){var si=sideInfo(root(r),p.side),lo=si.a0+TH/2,hi=si.a1-TH/2;
+ opsOn(root(r),p.side).forEach(function(o){var a0=o.a0/10-.08,a1=o.a1/10+.08;if(a1<=p.a)lo=Math.max(lo,a1);else if(a0>=p.a)hi=Math.min(hi,a0)});
+ var half=Math.min(want/2,p.a-lo,hi-p.a);if(half<.5)return;var off=0;var w=half*2;var fw=B(w,H-.16,.02,M.feature,0,0,.012,grp0,true);fw.receiveShadow=true}
 function sidesBy(r,fn){return ['n','s','e','w'].filter(function(s){return s!==r.blocked}).sort(function(p,q){return fn(p)-fn(q)})}
 function sub(r,x0,z0,x1,z1,blocked){var o=Object.create(r);o.parent=r;o.x0=x0;o.z0=z0;o.x1=x1;o.z1=z1;o.w=x1-x0;o.d=z1-z0;o.cx=(x0+x1)/2;o.cz=(z0+z1)/2;o.blocked=blocked;return o}
 function inward(side){return side==='n'?[0,1]:side==='s'?[0,-1]:side==='w'?[1,0]:[-1,0]}
@@ -428,7 +468,7 @@ function furnish(r,fg){var T=r.type;
      var len=2.4,p=place(A,len,2.3,order,{});if(!p){len=2.0;p=place(A,len,2.1,order,{})}
      if(p){var g0=anchor(A,p,fg);g0.add(F.sofa(len));var rg=F.rug(len+.8,2.3);rg.position.set(0,0,1.45);g0.add(rg);var ct=F.coffee();ct.position.set(0,0,1.55);g0.add(ct);
        var si=sideInfo(A,p.side);if(p.a-len/2-.75>si.a0+.1){var fl=F.lamp();fl.position.set(-(len/2+.35),0,.35);if(p.side==='s'||p.side==='w')fl.position.x*=1;g0.add(fl)}
-       if(!opsOn(A,p.side,['win']).length){var ar=F.art(1.3,.85);ar.position.set(0,1.25,0);g0.add(ar)}
+       if(!opsOn(A,p.side,['win']).length){featureWall(A,p,g0,len+1.6);var ar=F.art(1.3,.85);ar.position.set(0,1.25,.03);g0.add(ar)}
        var ac=F.armchair();var iw=inward(p.side);var ax=p.side==='n'||p.side==='s';
        var ap=place(A,.85,.85,[OPP[p.side]],{nofoot:false});
        if(ap){var g1=anchor(A,ap,fg);var ach=F.armchair();g1.add(ach)}
@@ -456,7 +496,7 @@ function furnish(r,fg){var T=r.type;
    var bw=r.area>18?1.8:1.6;var ord=sidesBy(r,function(s){return opsOn(r,s,['door','open']).length*10+winLen(r,s)-sideLen(r,s)*.1});
    var bp=place(r,bw+1.1,2.25,ord,{});if(!bp){bw=1.4;bp=place(r,bw+1.0,2.2,ord,{})}
    if(bp){var bg=anchor(r,bp,fg);bg.add(F.bed(bw));[-1,1].forEach(function(s){var ns=F.nightstand();ns.position.set(s*(bw/2+.33),0,0);bg.add(ns)});var rg2=F.rug(bw+1.2,1.6);rg2.position.set(0,0,1.7);bg.add(rg2);
-     if(!opsOn(r,bp.side,['win']).length){var a2=F.art(1.2,.7,M.art2);a2.position.set(0,1.3,.02);bg.add(a2)}}
+     featureWall(r,bp,bg,bw+2);if(!opsOn(r,bp.side,['win']).length){var a2=F.art(1.2,.7,M.art2);a2.position.set(0,1.3,.04);bg.add(a2)}}
    var wl=Math.min(2.4,Math.max(r.w,r.d)-1.4),wp=null;for(var L2=wl;L2>=1.0&&!wp;L2-=.2)wp=place(r,L2,.62,sidesBy(r,function(s){return winLen(r,s)}),{tall:true,corner:true});
    if(wp)anchor(r,wp,fg).add(F.wardrobe(wp.len));
    if(r.area>15){var dp2=place(r,1.3,1.2,sidesBy(r,function(s){return -winLen(r,s)}),{});if(dp2)anchor(r,dp2,fg).add(F.desk())}
@@ -503,7 +543,7 @@ function applyTime(){var hr=tod<.7?7+12*tod/.7:19+3*(tod-.7)/.3;var ph=Math.PI*(
  hemi.color.copy(HS_N).lerp(HS_SET.clone().lerp(HS_DAY,day),up);hemi.intensity=.14+.38*up;amb.intensity=.05+.05*up;
  roomLights.forEach(function(l){l.intensity=night*1.1});
  M.shade.emissiveIntensity=.15+night*2.2;M.bulb.emissiveIntensity=.3+night*3;M.disc.emissiveIntensity=.2+night*2.5;
- M.city.emissiveIntensity=night*.9;M.tower.emissiveIntensity=night*.7;
+ M.city.emissiveIntensity=night*.9;M.cove.emissiveIntensity=.5+night*3;M.tower.emissiveIntensity=night*.7;
  renderer.toneMappingExposure=.9+night*.3;
  Object.keys(M).forEach(function(k){M[k].envMapIntensity=(OUT[k]?.08:.18)+(OUT[k]?.12:.42)*up});
 }
@@ -528,8 +568,8 @@ function setMode(m){mode=m;
  $('joy').classList.add('hide');
  if(m==='walk')hint(t('hintWalk'));if(m==='doll')hint(t('hintDoll'));
 }
-function toDoll(fromTour){hideLabel();setMode('doll');showCeil(false);showFloors(curFloor);setOrbitForFloor(curFloor);if(fromTour){orbit.theta=yaw+Math.PI}var p=orbitPos();flyTo(p,new THREE.Vector3(orbit.tx,orbit.ty,orbit.tz),fromTour?3.2:1.6,function(){if(fromTour)hint(t('end'))})}
-function toWalk(room){hideLabel();showCeil(true);showFloors(FLOORS.length-1);var r=room||roomAtPos()||firstRoom();curFloor=r.fi;var p=viewPoint(r);var l=new THREE.Vector3(r.cx,eyeY(r.fi)-.1,r.cz);
+function toDoll(fromTour){hideLabel();showTags(true);setMode('doll');showCeil(false);showFloors(curFloor);setOrbitForFloor(curFloor);if(fromTour){orbit.theta=yaw+Math.PI}var p=orbitPos();flyTo(p,new THREE.Vector3(orbit.tx,orbit.ty,orbit.tz),fromTour?3.2:1.6,function(){if(fromTour)hint(t('end'))})}
+function toWalk(room){hideLabel();showTags(false);showCeil(true);showFloors(FLOORS.length-1);var r=room||roomAtPos()||firstRoom();curFloor=r.fi;var p=viewPoint(r);var l=new THREE.Vector3(r.cx,eyeY(r.fi)-.1,r.cz);
  setMode('walk');pos.copy(p);flyTo(p,l,mode==='intro'?0.01:1.4,function(){syncYawFromCam();pitch=-.05})}
 function firstRoom(){var ids=PLAN.tour||[];for(var i=0;i<ids.length;i++){var r=roomById(ids[i]);if(r)return r}return ROOMS[0]}
 function roomById(id){for(var i=0;i<ROOMS.length;i++)if(ROOMS[i].id===id)return ROOMS[i];return null}
@@ -538,6 +578,31 @@ function viewPoint(r){var ds=DOORS.filter(function(d){return d.rooms.indexOf(r)>
  if(ds.length){var d=ds[0];var n=normalInto(d,r);var dp=Math.min(1.1,(d.ax==='h'?r.d:r.w)*.35);return new THREE.Vector3(d.x+n.x*dp,y,d.z+n.z*dp)}
  return new THREE.Vector3(r.cx,y,r.cz)}
 function normalInto(d,r){if(d.ax==='h')return new THREE.Vector3(0,0,r.cz>d.z?1:-1);return new THREE.Vector3(r.cx>d.x?1:-1,0,0)}
+
+/* ---------------- route (straight arrows on the floor) ---------------- */
+var arrowTex=tex(128,function(x,s){x.clearRect(0,0,s,s);x.fillStyle='rgba(212,176,106,.38)';x.fillRect(14,0,s-28,s);x.strokeStyle='#fff8e6';x.lineWidth=13;x.lineCap='round';x.lineJoin='round';x.beginPath();x.moveTo(32,84);x.lineTo(64,46);x.lineTo(96,84);x.stroke()});
+var routeMat=new THREE.MeshBasicMaterial({map:arrowTex,transparent:true,depthWrite:false});
+var dotMat=new THREE.MeshBasicMaterial({color:0xd4b06a,transparent:true,opacity:.85,depthWrite:false});
+var routeG=new THREE.Group();scene.add(routeG);var pin=null;
+function clearRoute(){while(routeG.children.length){var c=routeG.children.pop();if(c.geometry&&c.geometry!==BOXG)c.geometry.dispose()}pin=null}
+function drawRoute(pts,fi){clearRoute();var y=ELEV+fi*FH+.035;
+ for(var i=0;i<pts.length-1;i++){var a=pts[i],b=pts[i+1],dx=b.x-a.x,dz=b.z-a.z,Ln=Math.hypot(dx,dz);if(Ln<.05)continue;
+   var geo=new THREE.PlaneGeometry(.46,Ln);var uv=geo.attributes.uv;for(var k=0;k<uv.count;k++)uv.setY(k,uv.getY(k)*Ln/.46);geo.rotateX(-Math.PI/2);
+   var m=new THREE.Mesh(geo,routeMat);m.position.set((a.x+b.x)/2,y,(a.z+b.z)/2);m.rotation.y=Math.atan2(-dx,-dz);m.renderOrder=3;routeG.add(m);
+   var d=new THREE.Mesh(new THREE.CircleGeometry(.23,24),dotMat);d.rotation.x=-Math.PI/2;d.position.set(b.x,y+.001,b.z);d.renderOrder=3;routeG.add(d)}
+ var e=pts[pts.length-1];pin=new THREE.Group();var cone=new THREE.Mesh(new THREE.ConeGeometry(.16,.42,20),M.bulb);cone.rotation.x=Math.PI;cone.position.y=.21;pin.add(cone);var ball=new THREE.Mesh(new THREE.SphereGeometry(.17,20,14),M.bulb);ball.position.y=.5;pin.add(ball);pin.position.set(e.x,y,e.z);pin.userData.y=y;routeG.add(pin)}
+function routeTo(r){if(!r)return;hideLabel();$('roomsP').classList.add('hide');
+ var walking=(mode==='walk'||mode==='tour');tour=null;var cur,start;
+ if(walking&&roomAtPos()&&roomAtPos().fi===r.fi){cur=roomAtPos();start=new THREE.Vector3(pos.x,0,pos.z)}
+ else{cur=MAIN&&MAIN.rooms.length?MAIN.rooms[0]:firstRoom();if(cur.fi!==r.fi)cur=FLOORS[r.fi].rooms[0];start=viewPoint(cur);start.y=0;if(MAIN&&cur===MAIN.rooms[0]){var n0=normalInto(MAIN,cur);start=new THREE.Vector3(MAIN.x,0,MAIN.z).addScaledVector(n0,.6)}}
+ var pts=[start.clone()],path=(cur===r)?[]:bfs(cur,r);
+ if(path)path.forEach(function(st){var d=st.d,n=normalInto(d,st.to),c=new THREE.Vector3(d.x,0,d.z);pts.push(c.clone().addScaledVector(n,-.6),c.clone(),c.clone().addScaledVector(n,.7))});
+ var last=pts[pts.length-1],dc=Math.hypot(r.cx-last.x,r.cz-last.z);if(dc>1.2){var k=Math.min(dc-1.4,1.8)/dc;if(k>0)pts.push(new THREE.Vector3(last.x+(r.cx-last.x)*k,0,last.z+(r.cz-last.z)*k))}
+ drawRoute(pts,r.fi);showCeil(true);showFloors(FLOORS.length-1);showTags(false);curFloor=r.fi;
+ var steps=pts.slice(1).map(function(p){return {k:'mv',p:p}});steps.push({k:'stop',room:r,quick:true});steps.push({k:'walkend'});
+ function go(){pos.set(start.x,eyeY(r.fi),start.z);var nx=pts[1]||new THREE.Vector3(r.cx,0,r.cz);yaw=Math.atan2(-(nx.x-start.x),-(nx.z-start.z));pitch=-.12;tour={steps:steps,i:0};setMode('tour');hintHide()}
+ if(walking){go()}else{var sp=new THREE.Vector3(start.x,eyeY(r.fi),start.z),nx2=pts[1]||new THREE.Vector3(r.cx,0,r.cz);flyTo(sp,new THREE.Vector3(nx2.x,eyeY(r.fi)-.25,nx2.z),1.8,go)}}
+function showTags(v){DOLLTAGS.forEach(function(t){t.visible=v})}
 
 /* ---------------- guided tour ---------------- */
 var tour=null;
@@ -554,15 +619,16 @@ function buildTour(){var S=[],ids=(PLAN.tour&&PLAN.tour.length?PLAN.tour:ROOMS.f
    else if(r!==cur){var path=bfs(cur,r);if(path)path.forEach(function(st){var d=st.d,n=normalInto(d,st.to),c=new THREE.Vector3(d.x,0,d.z);S.push({k:'mv',p:c.clone().addScaledVector(n,-.55)});S.push({k:'mv',p:c.clone()});S.push({k:'mv',p:c.clone().addScaledVector(n,.75)})});else S.push({k:'mv',p:new THREE.Vector3(r.cx,0,r.cz)});cur=r}
    S.push({k:'stop',room:r})});
  S.push({k:'end'});return S}
-function startTour(){if(mode==='tour'){stopTour();return}startMusic();showCeil(true);showFloors(FLOORS.length-1);tour={steps:buildTour(),i:0};setMode('tour');hintHide()}
+function startTour(){if(mode==='tour'){stopTour();return}clearRoute();showTags(false);startMusic();showCeil(true);showFloors(FLOORS.length-1);tour={steps:buildTour(),i:0};setMode('tour');hintHide()}
 function stopTour(){tour=null;hideLabel();setMode('walk');syncYawFromCam()}
 function tourTick(dt){var s=tour.steps[tour.i];if(!s){tour=null;return}
  if(s.k==='tp'){if(s.fade&&!s.f){s.f=1;fade(true);setTimeout(function(){s.go=1},450);return}if(s.fade&&!s.go)return;
    curFloor=s.fi;pos.set(s.p.x,eyeY(s.fi),s.p.z);yaw=Math.atan2(-(s.look.x-s.p.x),-(s.look.z-s.p.z));pitch=-.04;if(s.fade)fade(false);tour.i++}
- else if(s.k==='mv'){var dx=s.p.x-pos.x,dz=s.p.z-pos.z,d=Math.hypot(dx,dz);if(d<.04){tour.i++;return}var sp=Math.min(1.2,.35+d*1.6)*dt;var st=Math.min(sp,d);pos.x+=dx/d*st;pos.z+=dz/d*st;yaw=lerpAng(yaw,Math.atan2(-dx,-dz),dt*3.2);pitch+=(-.04-pitch)*dt*2}
+ else if(s.k==='mv'){var dx=s.p.x-pos.x,dz=s.p.z-pos.z,d=Math.hypot(dx,dz);if(d<.04){tour.i++;return}var want=Math.atan2(-dx,-dz),diff=Math.abs(((want-yaw+Math.PI*3)%(Math.PI*2))-Math.PI);yaw=lerpAng(yaw,want,dt*5);if(diff>.5)return;var sp=Math.min(1.25,.35+d*1.6)*dt;var st=Math.min(sp,d);pos.x+=dx/d*st;pos.z+=dz/d*st;pitch+=(-.04-pitch)*dt*2}
  else if(s.k==='stop'){var r=s.room;if(!s.t){var dd=Math.hypot(r.cx-pos.x,r.cz-pos.z);if(dd>3.2&&!s.moved){s.moved=1;var k=Math.min(dd-2.4,1.6)/dd;tour.steps.splice(tour.i,0,{k:'mv',p:new THREE.Vector3(pos.x+(r.cx-pos.x)*k,0,pos.z+(r.cz-pos.z)*k)});return}
      s.t=1e-4;s.base=Math.atan2(-(r.cx-pos.x),-(r.cz-pos.z));showLabel(r)}
-   s.t+=dt;yaw=lerpAng(yaw,s.base+Math.sin(s.t*.55)*.38*Math.min(1,s.t/1.5),dt*2.2);pitch+=(-.06-pitch)*dt*2;if(s.t>5.2){hideLabel();tour.i++}}
+   s.t+=dt;yaw=lerpAng(yaw,s.base,dt*2.6);pitch+=(-.06-pitch)*dt*2;if(s.t>(s.quick?3.6:5)){if(!s.quick)hideLabel();tour.i++}}
+ else if(s.k==='walkend'){tour=null;setMode('walk');setTimeout(hideLabel,2500)}
  else if(s.k==='end'){tour=null;camera.position.copy(pos);camera.rotation.set(pitch,yaw,0,'YXZ');toDoll(true)}}
 
 /* ---------------- labels / hints ---------------- */
@@ -615,6 +681,7 @@ function walkTick(dt){var f=0,s=0;if(keys.KeyW||keys.ArrowUp)f+=1;if(keys.KeyS||
 /* ---------------- loop ---------------- */
 var last=performance.now();
 function loop(now){requestAnimationFrame(loop);var dt=Math.min(.05,(now-last)/1000);last=now;
+ arrowTex.offset.y-=dt*.9;if(pin){pin.position.y=pin.userData.y+.15+Math.sin(now*.004)*.08;pin.rotation.y+=dt*1.5}
  if(styleAnim){styleAnim.t=Math.min(1,styleAnim.t+dt/0.7);var e=sstep(0,1,styleAnim.t);Object.keys(styleAnim.to).forEach(function(k){M[k].color.copy(styleAnim.from[k]).lerp(styleAnim.to[k],e)});if(styleAnim.t>=1)styleAnim=null}
  if(fly){fly.t+=dt/fly.dur;var k=sstep(0,1,fly.t);camera.position.lerpVectors(fly.p0,fly.p1,k);camera.quaternion.slerpQuaternions(fly.q0,fly.q1,k);if(fly.t>=1){var d=fly.done;fly=null;if(d)d()}}
  else if(mode==='walk'){walkTick(dt);camera.position.copy(pos);camera.rotation.set(pitch,yaw,0,'YXZ')}
@@ -624,14 +691,14 @@ function loop(now){requestAnimationFrame(loop);var dt=Math.min(.05,(now-last)/10
  renderer.render(scene,camera)}
 
 /* ---------------- UI ---------------- */
-function phoneInfo(){var c=PLAN.contact||{};var ph=(QS.get('phone')||c.phone||'').replace(/[^\d+]/g,'');var nm=QS.get('agent')||L(c.name)||'';return {ph:ph,nm:nm}}
+function phoneInfo(){var c=PLAN.contact||{};var ph=(QS.get('phone')||c.phone||'').replace(/[^\d+]/g,'');var nm=QS.get('agent')||L(c.name)||'VANA';return {ph:ph,nm:nm}}
 function initUI(){
  var name=L(PLAN.name),price=QS.get('price')||PLAN.price||'',rooms=ROOMS.filter(function(r){return r.type==='bed'}).length,area=PLAN.area||ROOMS.reduce(function(s,r){return s+(r.bal?0:r.area)},0);
- document.title=name+' · 3D';$('tName').textContent=name;$('tPrice').textContent=price;$('wName').textContent=name;$('wUnit').textContent=L(PLAN.unit);$('wAddr').textContent=L(PLAN.address);
+ document.title='VANA · '+name;$('tName').textContent=name;$('tPrice').textContent=price;$('wName').textContent=name;$('wUnit').textContent=L(PLAN.unit);$('wAddr').textContent=L(PLAN.address);
  if(PLAN.sample){$('wSample').textContent=t('sample');$('wSample').classList.remove('hide')}
  var facts='';if(price)facts+='<div class="pr">'+t('price')+'<b>'+esc(price)+'</b></div>';facts+='<div>'+t('area')+'<b>'+(+area).toFixed(0)+' m²</b></div>';if(rooms)facts+='<div>'+t('rooms')+'<b>'+rooms+'</b></div>';if(FLOORS.length>1)facts+='<div>'+t('floor')+'<b>'+FLOORS.length+'</b></div>';$('wFacts').innerHTML=facts;
  $('wStart').querySelector('span').textContent=t('start');$('wExplore').querySelector('span').textContent=t('explore');$('wCall').querySelector('span').textContent=t('contact');
- [['bTour','tour'],['bWalk','walk'],['bDoll','doll'],['bLight','light'],['bMute','sound'],['bCall','contact']].forEach(function(p){$(p[0]).querySelector('span').textContent=t(p[1])});
+ [['bRooms','rooms'],['bTour','tour'],['bWalk','walk'],['bDoll','doll'],['bLight','light'],['bMute','sound'],['bCall','contact']].forEach(function(p){$(p[0]).querySelector('span').textContent=t(p[1])});
  $('lbM').textContent=t('morning');$('lbS').textContent=t('sunset');$('lbN').textContent=t('night');
  var pi=phoneInfo();if(pi.ph){$('wCall').classList.remove('hide');$('bCall').classList.remove('hide');$('sName').textContent=pi.nm||name;$('sPhone').textContent=pi.ph;$('sCall').href='tel:'+pi.ph;$('sCall').querySelector('span').textContent=t('call');$('sWa').href='https://wa.me/'+pi.ph.replace(/^\+/,'')+'?text='+encodeURIComponent(name+' – '+location.href);$('sWa').querySelector('span').textContent=t('wa')}
  if(window.self!==window.top)$('backB').classList.add('hide');else if(document.referrer&&document.referrer.indexOf(location.host)>=0)$('backB').addEventListener('click',function(e){e.preventDefault();history.back()});
@@ -647,6 +714,8 @@ function initUI(){
  $('bStyle').onclick=function(){applyStyle((styleIdx+1)%STYLES.length)};
  $('bLight').onclick=function(){var p=$('lightP');p.classList.toggle('hide');$('bLight').classList.toggle('on',!p.classList.contains('hide'))};
  $('bMute').onclick=toggleMute;
+ $('rpT').textContent=t('goto');var rl=$('rpList');ROOMS.filter(function(r){return r.type!=='corridor'}).forEach(function(r){var b=document.createElement('button');b.innerHTML='<b></b><span></span>';b.firstChild.textContent=L(r.name);b.lastChild.textContent=fmtM(r.w).replace(' m','')+' × '+fmtM(r.d)+' · '+r.area+' m²';b.onclick=function(){routeTo(r)};rl.appendChild(b)});
+ $('bRooms').onclick=function(){$('roomsP').classList.remove('hide')};$('roomsP').onclick=function(e){if(e.target.id==='roomsP')$('roomsP').classList.add('hide')};
  var sl=$('tod');sl.value=tod*1000;sl.oninput=function(){tod=sl.value/1000;applyTime()};
  [].forEach.call(document.querySelectorAll('#lightP .lb span'),function(s){s.onclick=function(){var tg=+s.dataset.t,st=tod,t0=performance.now();(function an(){var k=Math.min(1,(performance.now()-t0)/1200);tod=st+(tg-st)*sstep(0,1,k);sl.value=tod*1000;applyTime();if(k<1)requestAnimationFrame(an)})()}});
 }
@@ -658,7 +727,7 @@ function boot(plan){PLAN=plan;ELEV=+plan.elevation||0;curPlanRooms=[];
  seed=11;(plan.floors||[]).forEach(buildFloor);
  BOUNDS={x0:Math.min.apply(null,FLOORS.map(function(f){return f.x0})),x1:Math.max.apply(null,FLOORS.map(function(f){return f.x1})),z0:Math.min.apply(null,FLOORS.map(function(f){return f.z0})),z1:Math.max.apply(null,FLOORS.map(function(f){return f.z1}))};
  buildWorld();applyStyle(styleIdx,true);applyTime();initUI();
- setOrbitForFloor(0);orbit.el=.62;orbit.r*=1.15;showCeil(false);
+ setOrbitForFloor(0);orbit.el=.62;orbit.r*=1.15;showCeil(false);showTags(true);
  $('loading').style.opacity=0;setTimeout(function(){$('loading').classList.add('hide')},500);$('welcome').classList.remove('hide');
  requestAnimationFrame(loop);
  if(QS.get('auto')==='walk'){$('wExplore').click()}else if(QS.get('auto')==='tour'){$('wStart').click()}
@@ -668,7 +737,7 @@ var pq=QS.get('plan'),pp=QS.get('p');
 if(pq){try{var js=decodeURIComponent(escape(atob(pq.replace(/-/g,'+').replace(/_/g,'/'))));boot(JSON.parse(js))}catch(e){console.error(e);fail()}}
 else if(pp){fetch('plans/'+encodeURIComponent(pp)+'.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(boot).catch(function(e){console.error(e);fail()})}
 else boot(SAMPLE);
-window.__tour={orbit:orbit,get busy(){return !!fly||(!!tour)},get mode(){return mode},ROOMS:ROOMS,DOORS:DOORS,setTime:function(v){tod=v;applyTime()},style:applyStyle,toDoll:toDoll,toWalk:toWalk,startTour:startTour,get tour(){return tour},camera:camera};
+window.__tour={routeTo:routeTo,orbit:orbit,get busy(){return !!fly||(!!tour)},get mode(){return mode},ROOMS:ROOMS,DOORS:DOORS,setTime:function(v){tod=v;applyTime()},style:applyStyle,toDoll:toDoll,toWalk:toWalk,startTour:startTour,get tour(){return tour},camera:camera};
 })();
 </script>
 </body>

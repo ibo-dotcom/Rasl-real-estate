@@ -51,13 +51,16 @@ Members open a project page and, under the 3D tour, fill in the unit and price. 
 
 The owner sees approved reservations on the Sales page. Pressing **Became a sale** turns one into a sale and pays the team.
 
-## 3D home tour (`tour.html`)
+## 3D home tour (`tour.html`) · VANA
 This is a 3D walkthrough built with Three.js from a floor plan. It works on phones and laptops:
 - **Walk:** drag to look around; use the joystick or WASD to walk.
 - **Dollhouse:** a view from above with the ceilings removed.
 - **Style:** switch between 3 furniture styles (Modern, Scandinavian, Warm luxury).
 - **Light:** a slider from morning to sunset to night; at night the lamps turn on.
 - **Guided tour:** walks room by room, showing each room's name, size (m²/ft²) and selling point, with soft music made in code.
+- **Rooms 🧭:** pick a room and gold arrows on the floor show the way there; the camera walks in straight lines through the doors.
+- **Measurements:** each room's width and length are written on its walls, and in the dollhouse view every room shows its name, size and area.
+- **Interior design:** decorative ceilings with LED cove light and downlights, and a feature wall (wood slats or colour) behind beds and sofas, changing with each style.
 - **Welcome screen and contact:** shows the project name, address and price, plus Call and WhatsApp buttons.
 
 Link options:
