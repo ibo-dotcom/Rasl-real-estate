@@ -130,3 +130,4 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - **③ Bottom:** 3 ads side by side. Then the best sellers and my members.
 - When adding an ad, the owner chooses **Where on home** (① top / ② middle / ③ bottom) and, if they want, a project it opens. Empty places show a dashed "＋ Add an ad" to the owner only. When there are more ads than places, the row slides. Approved member posts go to the bottom row.
 - **Database:** `ads.slot`, `ads.listing_id`, `member_posts.slot`.
+- Update: all round buttons are now **one row under the large ad**: CRM, Team, Wallet, Publish, Academy, 360°, 3D, Map, Language, then the cities. The bottom bar is hidden on Home, so ① + ② + ③ (all six places) fit on one phone screen. Other pages keep the bottom bar.
