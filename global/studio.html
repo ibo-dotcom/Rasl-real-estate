@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<title>VANA Studio · 360° 3D VR</title>
+<style>
+:root{--bg:#0b1220;--card:rgba(12,19,33,.88);--line:rgba(255,255,255,.12);--ink:#f4efe6;--mute:#a9b1c0;--gold:#d4b06a;--gold2:#e7cb8f;--red:#ff5a4f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+.hide{display:none!important}
+canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#embed{position:fixed;inset:0;width:100%;height:100%;border:0;background:#000;z-index:1}
+#top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:linear-gradient(rgba(11,18,32,.8),rgba(11,18,32,0))}
+#top .ttl{flex:1;min-width:0;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+#top .ttl small{font-weight:500;color:var(--gold2);font-size:12px}
+.ib{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;font-size:18px;flex:none;text-decoration:none;color:var(--ink)}
+#start{position:fixed;inset:0;z-index:4;overflow:auto;padding:calc(70px + env(safe-area-inset-top)) 18px calc(24px + env(safe-area-inset-bottom));background:radial-gradient(120% 70% at 50% 0%,#1b2740 0%,#0b1220 60%)}
+#start .in{max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.hero{font-size:44px;text-align:center;margin-top:6px}
+#start h1{margin:0;font-size:24px;text-align:center}
+#start p.lead{margin:0 0 6px;color:var(--mute);font-size:14px;line-height:1.6;text-align:center}
+.big{display:flex;align-items:center;gap:14px;width:100%;padding:16px;border-radius:18px;border:1px solid var(--gold);background:rgba(212,176,106,.1);text-align:start}
+.big i{font-style:normal;font-size:28px}
+.big b{display:block;font-size:16px}
+.big span{font-size:12px;color:var(--mute)}
+.big.solid{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+.big.solid span{color:#3b2f17}
+.linkrow{display:flex;gap:8px}
+.linkrow input{flex:1;min-width:0;height:50px;border-radius:14px;border:1px solid var(--line);background:#111a2c;padding:0 14px;direction:ltr}
+.linkrow button{height:50px;padding:0 18px;border-radius:14px;border:0;background:var(--gold);color:#1a1408;font-weight:700}
+.tip{font-size:12px;color:var(--mute);line-height:1.6;padding:12px 14px;border-radius:14px;border:1px dashed var(--line)}
+.err{color:#ff9b8a;font-size:13px;min-height:18px;text-align:center}
+#bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));z-index:5;width:min(560px,calc(100% - 16px));padding:8px;border-radius:20px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:8px}
+.row{display:flex;gap:6px;align-items:center}
+.seg{display:flex;background:#0b1220;border-radius:12px;padding:3px;gap:2px;flex:none}
+.seg button{border:0;background:transparent;border-radius:9px;padding:7px 11px;font-size:13px;font-weight:700;color:var(--mute)}
+.seg button.on{background:var(--gold);color:#1a1408}
+.sp{flex:1;display:flex;align-items:center;gap:6px;min-width:0;font-size:12px;color:var(--mute)}
+.sp input{flex:1;min-width:0;accent-color:var(--gold)}
+.tb{border:0;background:transparent;border-radius:12px;padding:6px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--mute);flex:1;min-width:0;white-space:nowrap}
+.tb i{font-style:normal;font-size:20px;color:var(--ink)}
+.tb.gold{background:var(--gold);color:#1a1408}.tb.gold i{color:#1a1408}
+.tb.rec{background:var(--red);color:#fff}.tb.rec i{color:#fff}
+#thumbs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+#thumbs::-webkit-scrollbar{display:none}
+#thumbs button{flex:none;width:54px;height:40px;border-radius:9px;border:2px solid transparent;padding:0;overflow:hidden;background:#000 center/cover no-repeat;position:relative}
+#thumbs button.on{border-color:var(--gold)}
+#thumbs button em{position:absolute;inset:auto 2px 2px auto;font-style:normal;font-size:9px;background:rgba(0,0,0,.6);border-radius:4px;padding:0 3px;color:#fff}
+#titleIn{width:100%;height:38px;border-radius:11px;border:1px solid var(--line);background:#0b1220;padding:0 12px;font-size:13px}
+#recBadge{position:fixed;top:calc(64px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:6;background:var(--red);color:#fff;border-radius:20px;padding:6px 14px;font-size:13px;font-weight:700;display:flex;gap:8px;align-items:center}
+#recBadge i{width:9px;height:9px;border-radius:50%;background:#fff;animation:bl 1s infinite}
+@keyframes bl{50%{opacity:.2}}
+#prog{position:fixed;left:0;top:0;height:3px;background:var(--red);z-index:7;width:0}
+.sheet{position:fixed;inset:0;z-index:12;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+.sheet .sc{width:min(460px,100%);max-height:92vh;overflow:auto;background:#111a2c;border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom));border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.sheet h3{margin:0}
+.sheet video{width:100%;border-radius:14px;background:#000;max-height:50vh}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:14px;border:1px solid var(--gold);background:transparent;color:var(--gold2);font-weight:700;text-decoration:none;width:100%}
+.btn.gold{background:var(--gold);color:#1a1408}
+.note{font-size:13px;color:var(--mute);text-align:center}
+#toast{position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;background:rgba(0,0,0,.75);padding:9px 14px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .4s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+#embedBar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:5;display:flex;gap:8px;width:min(460px,calc(100% - 16px))}
+#embedBar .btn{background:var(--card)}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<iframe id="embed" class="hide" allow="autoplay; fullscreen; gyroscope; accelerometer; xr-spatial-tracking" allowfullscreen></iframe>
+<div id="prog"></div>
+<div id="top">
+  <a class="ib" id="back" href="index.html" aria-label="Back">‹</a>
+  <div class="ttl"><svg width="22" height="16" viewBox="0 0 22 16"><path d="M1 15 L11 2 L21 15" fill="none" stroke="#d4b06a" stroke-width="2.4" stroke-linejoin="round"/><path d="M7 15 L11 9.5 L15 15" fill="none" stroke="#e7cb8f" stroke-width="2"/></svg><span>VANA Studio</span><small>360° · 3D · VR</small></div>
+  <button class="ib hide" id="fsB" aria-label="Fullscreen">⛶</button>
+</div>
+
+<div id="start">
+  <div class="in">
+    <div class="hero">🎥</div>
+    <h1 id="sH"></h1>
+    <p class="lead" id="sLead"></p>
+    <label class="big solid" for="file"><i>📷</i><div><b id="sAdd"></b><span id="sAddSub"></span></div></label>
+    <input id="file" type="file" accept="image/*,video/*" multiple class="hide">
+    <div class="linkrow"><input id="linkIn" type="url" inputmode="url" placeholder="https://…"><button id="linkGo"></button></div>
+    <div class="err" id="sErr"></div>
+    <button class="big" id="sSample"><i>🏠</i><div><b id="sSampleT"></b><span>VANA 3D</span></div></button>
+    <div class="tip" id="sTip"></div>
+  </div>
+</div>
+
+<div id="bar" class="hide">
+  <div id="thumbs"></div>
+  <input id="titleIn" type="text" maxlength="60">
+  <div class="row">
+    <div class="seg" id="modes"><button data-m="360">360°</button><button data-m="3d">3D</button><button data-m="vr">VR</button></div>
+    <div class="sp"><span id="spL"></span><input id="speed" type="range" min="1" max="10" value="4"></div>
+  </div>
+  <div class="row">
+    <button class="tb" id="bPlay"><i>⏸</i><span></span></button>
+    <button class="tb" id="bAdd"><i>＋</i><span></span></button>
+    <button class="tb gold" id="bRec"><i>🎬</i><span></span></button>
+    <button class="tb" id="bShare"><i>🔗</i><span></span></button>
+  </div>
+</div>
+<div id="embedBar" class="hide"><a class="btn" id="embOpen" target="_blank" rel="noopener"></a><button class="btn" id="embBack">‹</button></div>
+<div id="recBadge" class="hide"><i></i><span id="recT"></span></div>
+
+<div class="sheet hide" id="vidSheet"><div class="sc">
+  <h3 id="vH"></h3>
+  <video id="vOut" controls playsinline loop></video>
+  <a class="btn gold" id="vSave" download>⬇ <span></span></a>
+  <button class="btn" id="vSend">📤 <span></span></button>
+  <button class="btn" id="vClose"></button>
+</div></div>
+<div class="sheet hide" id="shareSheet"><div class="sc">
+  <h3 id="shH"></h3>
+  <div class="note" id="shNote"></div>
+  <div class="linkrow"><input id="shLink" readonly><button id="shCopy">⧉</button></div>
+  <a class="btn" id="shWa" target="_blank" rel="noopener">💬 WhatsApp</a>
+  <button class="btn" id="shClose"></button>
+</div></div>
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+'use strict';
+var $=function(i){return document.getElementById(i)};
+var QS=new URLSearchParams(location.search);
+var LANG=(function(){var q=QS.get('lang');if(q)return q;try{return localStorage.getItem('reg_lang')||'en'}catch(e){return 'en'}})();
+var TX={
+en:{h:'Make 360° · 3D · VR',lead:'Turn any photo, 360° picture, video or link into a view that turns slowly around itself — inside and outside — and save it as a video.',add:'Add photos or video',addSub:'From your gallery or camera · several at once',go:'Open',sample:'Try the VANA 3D home',tip:'Tip: a 360° photo (2:1 — from a 360 camera or the phone\'s panorama mode) turns all the way around. A normal photo gets a slow 3D movement. Links: a picture, a video, YouTube, or a web tour (Resimo, Matterport…).',speed:'Speed',play:'Pause',resume:'Play',more:'Add',video:'Make video',share:'Share link',titleph:'Title on the video (optional)',rec:'Recording',done:'Your video is ready',save:'Save video',send:'Send',close:'Close',copied:'Link copied',login:'Sign in to the app first, then the link can be shared.',uploading:'Uploading…',cors:'This link cannot be read directly. Save the picture and add it with “Add photos”.',norec:'This browser cannot record video. Try Chrome or the newest Safari.',openPage:'Open page',gyro:'Move your phone to look around',shareH:'Share this view',shareNote:'Anyone with the link sees it turning in 3D.',bad:'Could not open this file.',nolink:'Paste a link first.',embedNote:'Web tours turn inside their own page.'},
+ku:{h:'دروستکردنی 360° · 3D · VR',lead:'هەر وێنەیەک، وێنەی 360°، ڤیدیۆ یان لینکێک بکە بە بینینێک کە بە هێمنی بە دەوری خۆیدا دەسووڕێتەوە، ناوەوە و دەرەوە، و وەک ڤیدیۆ پاشەکەوتی بکە.',add:'وێنە یان ڤیدیۆ زیاد بکە',addSub:'لە گەلەری یان کامێرا · چەند دانەیەک پێکەوە',go:'بیکەرەوە',sample:'خانووی 3D ـی VANA تاقی بکەرەوە',tip:'ئامۆژگاری: وێنەی 360° (2:1، لە کامێرای 360 یان پانۆرامای مۆبایل) بە تەواوی بە دەوری خۆیدا دەسووڕێتەوە. وێنەی ئاسایی جووڵەیەکی 3D ـی هێمن وەردەگرێت. لینک: وێنە، ڤیدیۆ، یوتیوب، یان گەشتی ماڵپەڕ (Resimo، Matterport…).',speed:'خێرایی',play:'وەستان',resume:'لێدان',more:'زیاد',video:'ڤیدیۆ دروست بکە',share:'لینک',titleph:'ناونیشان لەسەر ڤیدیۆ (ئارەزوومەندانە)',rec:'تۆمار دەکرێت',done:'ڤیدیۆکەت ئامادەیە',save:'پاشەکەوتکردنی ڤیدیۆ',send:'ناردن',close:'داخستن',copied:'لینکەکە کۆپی کرا',login:'سەرەتا بچۆ ژوورەوەی ئەپەکە، ئینجا لینکەکە بڵاو دەکرێتەوە.',uploading:'بار دەکرێت…',cors:'ئەم لینکە ڕاستەوخۆ ناخوێندرێتەوە. وێنەکە پاشەکەوت بکە و بە «وێنە زیاد بکە» دایبنێ.',norec:'ئەم وێبگەڕە ڤیدیۆ تۆمار ناکات. Chrome یان نوێترین Safari تاقی بکەرەوە.',openPage:'کردنەوەی پەڕە',gyro:'مۆبایلەکەت بجووڵێنە بۆ سەیرکردن',shareH:'ئەم بینینە بڵاو بکەرەوە',shareNote:'هەر کەسێک لینکەکەی هەبێت بە 3D دەیبینێت.',bad:'ئەم فایلە نەکرایەوە.',nolink:'سەرەتا لینکێک دابنێ.',embedNote:'گەشتی ماڵپەڕەکان لە ناو پەڕەی خۆیان دەسووڕێنەوە.'},
+ar:{h:'اصنع 360° · 3D · VR',lead:'حوّل أي صورة أو صورة 360° أو فيديو أو رابط إلى عرض يدور ببطء حول نفسه — من الداخل والخارج — واحفظه كفيديو.',add:'أضف صوراً أو فيديو',addSub:'من المعرض أو الكاميرا · عدة ملفات معاً',go:'افتح',sample:'جرّب منزل VANA ثلاثي الأبعاد',tip:'نصيحة: صورة 360° (2:1 من كاميرا 360 أو وضع البانوراما) تدور بالكامل. الصورة العادية تحصل على حركة ثلاثية الأبعاد هادئة. الروابط: صورة، فيديو، يوتيوب، أو جولة ويب (Resimo، Matterport…).',speed:'السرعة',play:'إيقاف',resume:'تشغيل',more:'إضافة',video:'اصنع فيديو',share:'رابط',titleph:'عنوان على الفيديو (اختياري)',rec:'جارٍ التسجيل',done:'الفيديو جاهز',save:'حفظ الفيديو',send:'إرسال',close:'إغلاق',copied:'تم نسخ الرابط',login:'سجّل الدخول إلى التطبيق أولاً لمشاركة الرابط.',uploading:'جارٍ الرفع…',cors:'لا يمكن قراءة هذا الرابط مباشرة. احفظ الصورة وأضفها عبر «أضف صوراً».',norec:'هذا المتصفح لا يسجل الفيديو. جرّب Chrome أو أحدث Safari.',openPage:'افتح الصفحة',gyro:'حرّك هاتفك للنظر حولك',shareH:'شارك هذا العرض',shareNote:'كل من لديه الرابط يراه يدور بثلاثة أبعاد.',bad:'تعذّر فتح هذا الملف.',nolink:'الصق رابطاً أولاً.',embedNote:'جولات الويب تدور داخل صفحتها.'},
+tr:{h:'360° · 3D · VR oluştur',lead:'Her fotoğrafı, 360° resmi, videoyu veya bağlantıyı kendi etrafında yavaşça dönen bir görünüme çevir — iç ve dış — ve video olarak kaydet.',add:'Fotoğraf veya video ekle',addSub:'Galeriden veya kameradan · birden fazla',go:'Aç',sample:'VANA 3D evi dene',tip:'İpucu: 360° fotoğraf (2:1 — 360 kamera veya panorama modu) tamamen döner. Normal fotoğraf yavaş bir 3D hareket alır. Bağlantılar: resim, video, YouTube veya web turu (Resimo, Matterport…).',speed:'Hız',play:'Durdur',resume:'Oynat',more:'Ekle',video:'Video yap',share:'Bağlantı',titleph:'Videodaki başlık (isteğe bağlı)',rec:'Kaydediliyor',done:'Videonuz hazır',save:'Videoyu kaydet',send:'Gönder',close:'Kapat',copied:'Bağlantı kopyalandı',login:'Bağlantıyı paylaşmak için önce uygulamaya giriş yap.',uploading:'Yükleniyor…',cors:'Bu bağlantı doğrudan okunamıyor. Resmi kaydedip “Fotoğraf ekle” ile ekle.',norec:'Bu tarayıcı video kaydedemiyor. Chrome veya en yeni Safari\'yi dene.',openPage:'Sayfayı aç',gyro:'Etrafa bakmak için telefonu hareket ettir',shareH:'Bu görünümü paylaş',shareNote:'Bağlantıya sahip herkes 3D döndüğünü görür.',bad:'Bu dosya açılamadı.',nolink:'Önce bir bağlantı yapıştır.',embedNote:'Web turları kendi sayfalarında döner.'}};
+if(!TX[LANG])LANG='en';var t=function(k){return TX[LANG][k]||TX.en[k]};
+document.documentElement.lang=LANG;document.documentElement.dir=(LANG==='ku'||LANG==='ar')?'rtl':'ltr';
+$('sH').textContent=t('h');$('sLead').textContent=t('lead');$('sAdd').textContent=t('add');$('sAddSub').textContent=t('addSub');$('linkGo').textContent=t('go');$('sSampleT').textContent=t('sample');$('sTip').textContent=t('tip');
+$('spL').textContent=t('speed');$('bPlay').querySelector('span').textContent=t('play');$('bAdd').querySelector('span').textContent=t('more');$('bRec').querySelector('span').textContent=t('video');$('bShare').querySelector('span').textContent=t('share');$('titleIn').placeholder=t('titleph');
+$('vH').textContent=t('done');$('vSave').querySelector('span').textContent=t('save');$('vSend').querySelector('span').textContent=t('send');$('vClose').textContent=t('close');$('shH').textContent=t('shareH');$('shNote').textContent=t('shareNote');$('shClose').textContent=t('close');$('embOpen').textContent=t('openPage');
+if(window.self!==window.top)$('back').classList.add('hide');
+var toastT;function toast(s){var e=$('toast');e.textContent=s;e.style.opacity=1;clearTimeout(toastT);toastT=setTimeout(function(){e.style.opacity=0},3200)}
+
+/* ---------------- three ---------------- */
+var canvas=$('c');
+var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,preserveDrawingBuffer:false});
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.outputEncoding=THREE.sRGBEncoding;
+var scene=new THREE.Scene();scene.background=new THREE.Color(0x05080f);
+var camera=new THREE.PerspectiveCamera(75,1,.05,200);scene.add(camera);
+var camL=new THREE.PerspectiveCamera(80,1,.05,200),camR=camL.clone();
+function resize(){var w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();placeMark()}
+addEventListener('resize',resize);
+
+var sphere=new THREE.Mesh(new THREE.SphereGeometry(50,96,64),new THREE.MeshBasicMaterial({transparent:true,opacity:1}));sphere.geometry.scale(-1,1,1);scene.add(sphere);
+var curved=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial({side:THREE.BackSide,transparent:true,opacity:1}));scene.add(curved);
+var flatBg=new THREE.Mesh(new THREE.SphereGeometry(60,32,16),new THREE.MeshBasicMaterial({color:0x05080f,side:THREE.BackSide}));scene.add(flatBg);
+
+/* watermark (VANA + optional title) that is part of the recorded picture */
+var markC=document.createElement('canvas');markC.width=1024;markC.height=160;var markT=new THREE.CanvasTexture(markC);markT.encoding=THREE.sRGBEncoding;
+var mark=new THREE.Mesh(new THREE.PlaneGeometry(1,.15625),new THREE.MeshBasicMaterial({map:markT,transparent:true,depthTest:false,depthWrite:false}));mark.renderOrder=10;camera.add(mark);
+function drawMark(){var x=markC.getContext('2d'),w=markC.width,h=markC.height,title=$('titleIn').value.trim();x.clearRect(0,0,w,h);
+ var g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.55)');x.fillStyle=g;x.fillRect(0,0,w,h);
+ x.strokeStyle='#d4b06a';x.lineWidth=7;x.lineJoin='round';x.beginPath();x.moveTo(30,118);x.lineTo(70,66);x.lineTo(110,118);x.stroke();x.strokeStyle='#e7cb8f';x.lineWidth=5;x.beginPath();x.moveTo(54,118);x.lineTo(70,96);x.lineTo(86,118);x.stroke();
+ x.fillStyle='#f4efe6';x.font='800 52px system-ui,-apple-system,sans-serif';x.textBaseline='alphabetic';x.direction='ltr';x.textAlign='left';x.fillText('VANA',126,118);
+ if(title){x.font='600 44px system-ui,-apple-system,Tahoma,sans-serif';x.textAlign='right';x.direction=/[؀-ۿ]/.test(title)?'rtl':'ltr';x.fillStyle='#e7cb8f';x.fillText(title,w-30,118,w-330);if(x.direction==='rtl'){/* keep right aligned */}}
+ markT.needsUpdate=true}
+function placeMark(){var d=1,hh=Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*d,hw=hh*camera.aspect;var mw=Math.min(hw*2,hh*2*1.6);mark.scale.set(mw,mw,1);mark.position.set(0,-hh+mw*.15625/2,-d)}
+$('titleIn').addEventListener('input',drawMark);
+
+/* ---------------- items ---------------- */
+var items=[],cur=-1,mode='360',playing=true,autoYaw=0,dragYaw=0,dragPitch=0,lastUser=0,fov=75,tAcc=0,fadeA=1,fadeTo=null,itemT=0;
+var curTex=null,curVideo=null,vrOn=false,gyro=null;
+function isPano(w,h){var a=w/h;return a>1.85&&a<2.15}
+function addFiles(list){var arr=[].slice.call(list||[]);if(!arr.length)return;var start=items.length;
+ arr.forEach(function(f){var vid=/^video\//.test(f.type);items.push({type:vid?'video':'image',src:URL.createObjectURL(f),file:f,name:f.name})});
+ openStage();select(start)}
+function addUrl(u){u=(u||'').trim();if(!u){$('sErr').textContent=t('nolink');return}if(!/^https?:\/\//i.test(u))u='https://'+u;$('sErr').textContent='';
+ var yt=u.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/i);
+ if(yt){openEmbed('https://www.youtube.com/embed/'+yt[1]+'?autoplay=1&mute=1&loop=1&playlist='+yt[1]+'&playsinline=1',u);return}
+ var path=u.split('?')[0].toLowerCase();
+ if(/\.(jpe?g|png|webp|gif|avif)$/.test(path)){items.push({type:'image',src:u,remote:true,name:u});openStage();select(items.length-1);return}
+ if(/\.(mp4|webm|mov|m4v)$/.test(path)){items.push({type:'video',src:u,remote:true,name:u});openStage();select(items.length-1);return}
+ // unknown: try as image first, otherwise show the page
+ var im=new Image();im.crossOrigin='anonymous';im.onload=function(){items.push({type:'image',src:u,remote:true,name:u});openStage();select(items.length-1)};im.onerror=function(){openEmbed(u,u)};im.src=u}
+function openStage(){$('start').classList.add('hide');$('bar').classList.remove('hide');$('fsB').classList.remove('hide');$('embed').classList.add('hide');$('embedBar').classList.add('hide');renderThumbs()}
+function openEmbed(src,orig){$('embed').src=src;$('embed').classList.remove('hide');$('start').classList.add('hide');$('bar').classList.add('hide');$('embedBar').classList.remove('hide');$('embOpen').href=orig;toast(t('embedNote'))}
+$('embBack').onclick=function(){$('embed').src='about:blank';$('embed').classList.add('hide');$('embedBar').classList.add('hide');if(items.length)openStage();else $('start').classList.remove('hide')};
+function renderThumbs(){var th=$('thumbs');th.innerHTML='';th.style.display=items.length>1?'flex':'none';items.forEach(function(it,i){var b=document.createElement('button');if(it.type==='image')b.style.backgroundImage='url("'+it.src.replace(/"/g,'%22')+'")';else b.textContent='🎞';b.className=i===cur?'on':'';var em=document.createElement('em');em.textContent=it.pano?'360':'3D';b.appendChild(em);b.onclick=function(){select(i)};th.appendChild(b)})}
+
+function select(i){if(i<0||i>=items.length)return;var it=items[i];cur=i;itemT=0;
+ if(curVideo){curVideo.pause();curVideo=null}
+ var done=function(tex,w,h){if(curTex&&curTex!==tex)curTex.dispose();curTex=tex;tex.encoding=THREE.sRGBEncoding;tex.anisotropy=renderer.capabilities.getMaxAnisotropy();
+   it.w=w;it.h=h;it.pano=isPano(w,h);setMode(vrOn?'vr':(it.pano?'360':'3d'),true);applyTex();fadeA=0;fadeTo=1;renderThumbs()};
+ if(it.type==='image'){var ld=new THREE.TextureLoader();ld.setCrossOrigin('anonymous');ld.load(it.src,function(tx){done(tx,tx.image.width,tx.image.height)},undefined,function(){toast(it.remote?t('cors'):t('bad'));items.splice(i,1);if(!items.length){$('start').classList.remove('hide');$('bar').classList.add('hide')}else select(0)})}
+ else{var v=document.createElement('video');v.crossOrigin='anonymous';v.src=it.src;v.loop=true;v.muted=true;v.playsInline=true;v.setAttribute('playsinline','');v.onloadeddata=function(){var tx=new THREE.VideoTexture(v);done(tx,v.videoWidth,v.videoHeight);v.play().catch(function(){})};v.onerror=function(){toast(it.remote?t('cors'):t('bad'))};curVideo=v;v.load()}}
+
+function buildCurved(aspect){var arc=THREE.MathUtils.degToRad(Math.max(70,Math.min(300,aspect*58))),R=10,h=arc*R/aspect;
+ var g=new THREE.CylinderGeometry(R,R,h,Math.max(24,Math.round(arc*30)),1,true,Math.PI-arc/2,arc);curved.geometry.dispose();curved.geometry=g;curved.userData.arc=arc;curved.userData.h=h;
+ // flip uv horizontally because we look from inside
+ var uv=g.attributes.uv;for(var k=0;k<uv.count;k++)uv.setX(k,1-uv.getX(k));}
+function applyTex(){var it=items[cur];if(!it||!curTex)return;var pano=mode==='360'||(mode==='vr'&&it.pano);
+ sphere.visible=pano;curved.visible=!pano;
+ if(pano){sphere.material.map=curTex;sphere.material.needsUpdate=true}
+ else{buildCurved(it.w/it.h);curved.material.map=curTex;curved.material.needsUpdate=true}
+ autoYaw=0;dragYaw=0;dragPitch=0;fov=pano?75:62}
+
+function setMode(m,silent){if(m==='vr'){if(!vrOn)enterVR();}else if(vrOn){exitVR()}
+ if(m!=='vr')mode=m;else mode='vr';
+ [].forEach.call($('modes').children,function(b){b.classList.toggle('on',b.dataset.m===(vrOn?'vr':mode))});
+ if(!silent)applyTex()}
+$('modes').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;setMode(b.dataset.m)});
+
+/* ---------------- VR (split screen + phone movement) ---------------- */
+function enterVR(){vrOn=true;mode='vr';var ask=window.DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission;
+ var start=function(){addEventListener('deviceorientation',onOri);toast(t('gyro'))};
+ if(ask){DeviceOrientationEvent.requestPermission().then(function(s){if(s==='granted')start()}).catch(function(){})}else start();
+ try{var el=document.documentElement;(el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el);screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(function(){})}catch(e){}}
+function exitVR(){vrOn=false;gyro=null;removeEventListener('deviceorientation',onOri);try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}}
+function onOri(e){if(e.alpha==null)return;gyro={a:e.alpha,b:e.beta,g:e.gamma}}
+var zee=new THREE.Vector3(0,0,1),eul=new THREE.Euler(),q0=new THREE.Quaternion(),q1=new THREE.Quaternion(-Math.sqrt(.5),0,0,Math.sqrt(.5));
+function gyroQuat(q){var d=THREE.MathUtils.degToRad,or=d((screen.orientation&&screen.orientation.angle)||window.orientation||0);eul.set(d(gyro.b),d(gyro.a),-d(gyro.g),'YXZ');q.setFromEuler(eul);q.multiply(q1);q.multiply(q0.setFromAxisAngle(zee,-or))}
+
+/* ---------------- input ---------------- */
+var ptrs=new Map(),drag=null,pinch=0;
+canvas.addEventListener('pointerdown',function(e){canvas.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});if(ptrs.size===2){var a=[...ptrs.values()];pinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);drag=null}else drag={id:e.pointerId,x:e.clientX,y:e.clientY};lastUser=performance.now()});
+canvas.addEventListener('pointermove',function(e){if(!ptrs.has(e.pointerId))return;ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});lastUser=performance.now();
+ if(ptrs.size===2){var a=[...ptrs.values()],d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(pinch)fov=Math.max(30,Math.min(100,fov*pinch/d));pinch=d;return}
+ if(drag&&drag.id===e.pointerId){var k=camera.fov/innerHeight*Math.PI/180;dragYaw+=(e.clientX-drag.x)*k;dragPitch=Math.max(-1.2,Math.min(1.2,dragPitch+(e.clientY-drag.y)*k));drag.x=e.clientX;drag.y=e.clientY}});
+function up(e){ptrs.delete(e.pointerId);if(drag&&drag.id===e.pointerId)drag=null;if(ptrs.size<2)pinch=0}
+canvas.addEventListener('pointerup',up);canvas.addEventListener('pointercancel',up);
+canvas.addEventListener('wheel',function(e){e.preventDefault();fov=Math.max(30,Math.min(100,fov*(1+e.deltaY*.001)));lastUser=performance.now()},{passive:false});
+
+/* ---------------- loop ---------------- */
+function speedDeg(){return 1.5+(+$('speed').value)*1.6}  /* default ≈ 8°/s → one full turn in ~45 s */
+var last=performance.now(),recording=null;
+function loop(now){requestAnimationFrame(loop);var dt=Math.min(.05,(now-last)/1000);last=now;if(recording)dt=1/30;
+ var it=items[cur];
+ if(fadeTo!=null){fadeA+=(fadeTo-fadeA)*Math.min(1,dt*2.2);if(Math.abs(fadeTo-fadeA)<.01){fadeA=fadeTo;var f=fadeTo;fadeTo=null;if(f===0&&pendingNext!=null){var n=pendingNext;pendingNext=null;select(n)}}}
+ sphere.material.opacity=curved.material.opacity=fadeA;
+ var idle=now-lastUser>2500;
+ if(playing&&it&&(idle||recording)){itemT+=dt;
+   if(sphere.visible){autoYaw+=THREE.MathUtils.degToRad(speedDeg())*dt;dragPitch*=.985}
+   else{var arc=curved.userData.arc||1.2,hf=THREE.MathUtils.degToRad(camera.fov)*camera.aspect;var amp=Math.max(0,(arc-Math.min(hf,arc)*.9)/2);var period=Math.max(10,360/speedDeg()*.5);autoYaw=amp*Math.sin(itemT*Math.PI*2/period);dragYaw*=.97;dragPitch*=.97}
+   var per=sphere.visible?360/speedDeg():Math.max(10,360/speedDeg()*.5);
+   if(items.length>1&&itemT>per&&fadeTo==null&&!recordingSingle){pendingNext=(cur+1)%items.length;fadeTo=0}}
+ var zoom=curved.visible&&playing?Math.sin(itemT*.25)*3:0;
+ camera.fov+=((fov-zoom)-camera.fov)*Math.min(1,dt*4);camera.updateProjectionMatrix();placeMark();
+ if(vrOn&&gyro){gyroQuat(camera.quaternion);var yq=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),dragYaw);camera.quaternion.premultiply(yq)}
+ else{camera.rotation.set(dragPitch,autoYaw+dragYaw,0,'YXZ')}
+ if(curved.visible){var hgt=curved.userData.h||5;var vf=THREE.MathUtils.degToRad(camera.fov);var maxP=Math.max(0,Math.atan(hgt/2/10)-vf/2);camera.rotation.x=Math.max(-maxP,Math.min(maxP,camera.rotation.x))}
+ if(vrOn){var w=innerWidth,h=innerHeight;renderer.setScissorTest(true);camera.updateMatrixWorld();
+   [camL,camR].forEach(function(c,i){c.aspect=(w/2)/h;c.fov=Math.max(70,camera.fov);c.updateProjectionMatrix();c.position.copy(camera.position);c.quaternion.copy(camera.quaternion);c.translateX(i?.032:-.032);renderer.setViewport(i*w/2,0,w/2,h);renderer.setScissor(i*w/2,0,w/2,h);renderer.render(scene,c)});
+   renderer.setScissorTest(false);renderer.setViewport(0,0,w,h)}
+ else renderer.render(scene,camera);
+ if(recording){var p=Math.min(1,(now-recording.t0)/recording.ms);$('prog').style.width=(p*100)+'%';$('recT').textContent=t('rec')+' '+Math.ceil((recording.ms-(now-recording.t0))/1000)+'s';if(p>=1)stopRec()}
+}
+var pendingNext=null,recordingSingle=false;
+
+/* ---------------- video recording ---------------- */
+function pickMime(){var c=['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];if(!window.MediaRecorder)return null;for(var i=0;i<c.length;i++)if(MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(c[i]))return c[i];return ''}
+function startRec(){if(recording){stopRec();return}var mime=pickMime();if(mime===null||!canvas.captureStream){toast(t('norec'));return}
+ if(vrOn)setMode(items[cur]&&items[cur].pano?'360':'3d');
+ var it=items[cur];if(!it)return;var per=sphere.visible?360/speedDeg():Math.max(10,360/speedDeg()*.5);var ms=Math.min(60000,Math.max(8000,per*1000*Math.max(1,Math.min(items.length,4))));
+ autoYaw=0;dragYaw=0;dragPitch=0;itemT=0;playing=true;updPlay();
+ var stream=canvas.captureStream(30),chunks=[];var rec;try{rec=new MediaRecorder(stream,mime?{mimeType:mime,videoBitsPerSecond:8e6}:{})}catch(e){try{rec=new MediaRecorder(stream)}catch(e2){toast(t('norec'));return}}
+ rec.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};
+ rec.onstop=function(){var type=(rec.mimeType||mime||'video/webm').split(';')[0];var blob=new Blob(chunks,{type:type});showVideo(blob,type)};
+ recordingSingle=items.length<2;recording={rec:rec,t0:performance.now(),ms:ms};rec.start(500);
+ $('recBadge').classList.remove('hide');var b=$('bRec');b.classList.remove('gold');b.classList.add('rec');b.querySelector('i').textContent='■'}
+function stopRec(){if(!recording)return;var r=recording;recording=null;recordingSingle=false;try{r.rec.stop()}catch(e){}$('recBadge').classList.add('hide');$('prog').style.width=0;var b=$('bRec');b.classList.add('gold');b.classList.remove('rec');b.querySelector('i').textContent='🎬'}
+var lastBlob=null;
+function showVideo(blob,type){lastBlob={blob:blob,type:type};var url=URL.createObjectURL(blob);var v=$('vOut');v.src=url;v.play().catch(function(){});var ext=/mp4/.test(type)?'mp4':'webm';var name='VANA-360-'+new Date().toISOString().slice(0,10)+'.'+ext;$('vSave').href=url;$('vSave').download=name;lastBlob.name=name;
+ var f=null;try{f=new File([blob],name,{type:type})}catch(e){}$('vSend').classList.toggle('hide',!(f&&navigator.canShare&&navigator.canShare({files:[f]})));$('vidSheet').classList.remove('hide')}
+$('vSend').onclick=function(){if(!lastBlob)return;var f=new File([lastBlob.blob],lastBlob.name,{type:lastBlob.type});navigator.share({files:[f],title:'VANA'}).catch(function(){})};
+$('vClose').onclick=function(){$('vidSheet').classList.add('hide');$('vOut').pause()};
+
+/* ---------------- share link (uploads to the app's storage) ---------------- */
+var SB=null;try{SB=window.supabase&&supabase.createClient('https://wmdegnafpgzhnpplnxqo.supabase.co','sb_publishable_dxpf26f9ouYPLBDryIahKQ_53ZWlSIa')}catch(e){}
+async function share(){if(!items.length)return;var sess=SB?(await SB.auth.getSession()).data.session:null;
+ var need=items.some(function(i){return !i.remote});if(need&&!sess){toast(t('login'));return}
+ toast(t('uploading'));var out=[];
+ try{for(var i=0;i<items.length;i++){var it=items[i];if(it.remote){out.push({t:it.type[0],u:it.src});continue}
+     if(!it.uploaded){var ext=(it.file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');var path=sess.user.id+'/'+Date.now()+'-'+i+'.'+ext;var r=await SB.storage.from('studio').upload(path,it.file,{contentType:it.file.type,upsert:false});if(r.error)throw r.error;it.uploaded=SB.storage.from('studio').getPublicUrl(path).data.publicUrl}
+     out.push({t:it.type[0],u:it.uploaded})}}catch(e){console.error(e);toast(t('bad'));return}
+ var data={i:out,s:+$('speed').value};var ti=$('titleIn').value.trim();if(ti)data.n=ti;
+ var enc=btoa(unescape(encodeURIComponent(JSON.stringify(data)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+ var link=location.origin+location.pathname+'?v='+enc;$('shLink').value=link;$('shWa').href='https://wa.me/?text='+encodeURIComponent((ti?ti+' – ':'')+link);$('shareSheet').classList.remove('hide')}
+$('shCopy').onclick=function(){var l=$('shLink').value;(navigator.clipboard?navigator.clipboard.writeText(l):Promise.reject()).then(function(){toast(t('copied'))}).catch(function(){$('shLink').select();try{document.execCommand('copy');toast(t('copied'))}catch(e){}})};
+$('shClose').onclick=function(){$('shareSheet').classList.add('hide')};
+
+/* ---------------- buttons ---------------- */
+function updPlay(){$('bPlay').querySelector('i').textContent=playing?'⏸':'▶';$('bPlay').querySelector('span').textContent=playing?t('play'):t('resume');if(curVideo){playing?curVideo.play().catch(function(){}):curVideo.pause()}}
+$('bPlay').onclick=function(){playing=!playing;updPlay()};
+$('bAdd').onclick=function(){$('file').click()};
+$('file').onchange=function(){addFiles(this.files);this.value=''};
+$('linkGo').onclick=function(){addUrl($('linkIn').value)};
+$('linkIn').addEventListener('keydown',function(e){if(e.key==='Enter')addUrl(this.value)});
+$('sSample').onclick=function(){openEmbed('tour.html?auto=tour&lang='+LANG,'tour.html')};
+$('bRec').onclick=startRec;$('bShare').onclick=share;
+$('fsB').onclick=function(){var el=document.documentElement;if(document.fullscreenElement)document.exitFullscreen();else (el.requestFullscreen||el.webkitRequestFullscreen||function(){}).call(el)};
+document.addEventListener('visibilitychange',function(){if(document.hidden&&recording)stopRec()});
+
+/* ---------------- boot ---------------- */
+resize();drawMark();requestAnimationFrame(loop);
+var v=QS.get('v'),src=QS.get('src');
+if(v){try{var d=JSON.parse(decodeURIComponent(escape(atob(v.replace(/-/g,'+').replace(/_/g,'/')))));if(d.s)$('speed').value=d.s;if(d.n){$('titleIn').value=d.n;drawMark()}(d.i||[]).forEach(function(x){items.push({type:x.t==='v'?'video':'image',src:x.u,remote:true,uploaded:x.u})});if(items.length){openStage();select(0)}}catch(e){console.error(e)}}
+else if(src)addUrl(src);
+window.__studio={get items(){return items},get mode(){return mode},addUrl:addUrl,select:select,camera:camera};
+})();
+</script>
+</body>
+</html>
