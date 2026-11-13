@@ -79,3 +79,11 @@ Open it from the **🎥 360° · 3D · VR Studio** button on the home screen.
 - **VR:** split screen for a headset; move the phone to look around.
 - **🎬 Make video:** records one full slow turn (up to 60 s) with the VANA logo and an optional title. You can then save it or send it.
 - **🔗 Link:** uploads the photos to the `studio` storage bucket (signed-in members only, each into their own folder) and makes a link that anyone can open.
+
+## Unit board on a project (buy / reserve a specific unit)
+- On the project page, each building shows its floors and units. Each unit shows its code (e.g. `A-10-3`) and price.
+- Colours: **green** = free, **orange** = reserved, **red** = sold. A gold border marks your own.
+- Tap a unit to see its price, rooms and area, and how the commission is shared (team wallet, you, sponsor levels 1–5). Then press **Buy** or **Reserve**.
+- In the database the price comes from the unit itself, and a unit can only be taken once (`unit_taken`). An approved sale pays the commission out to the team as before.
+- **Owner:** "＋ Add units" creates a building's floors × units in one go (with a starting price and an optional extra amount per floor). Tap a unit to change its price, rooms or area, or to delete it.
+- A rejected sale or reservation frees the unit again.
