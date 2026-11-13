@@ -107,3 +107,4 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - **Under the banner:** small buttons for Training & meetings 🎓, the 360° Studio and the 3D tour.
 - **Middle:** cities as photo cards (two per screen width). Tap a city to see only its projects.
 - **Bottom:** 🔥 **Best sellers**, a 3-column grid sorted by units sold, with the sale / rent / off-plan / invest filters.
+- **Under the best sellers:** 👥 **My members**. Each person sees their own team with photo, name and code; direct members (up to 10) have a gold ring, and ★ marks members who have a rank. Tap a member to see their points, sales and earnings. "See all" opens the team map, and ＋ invites someone new.
