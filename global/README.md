@@ -72,7 +72,7 @@ Link options:
 Plan format: `floors[].rooms[]` with `{id, type, rect:[x,z,w,d] in metres, name, note}`, plus `doors[]` / `windows[]` as `{x, z, w, kind}`, and `tour` for the order of rooms.
 
 ## 360° · 3D · VR Studio (`studio.html`)
-Open it from the **🎥 360° · 3D · VR Studio** button on the home screen.
+Open it from the round **360°** button at the top of the home screen (next to it, **3D** opens the 3D home tour).
 - **Add:** photos or videos (several at once), or paste a link to a picture, a video, YouTube, or a web tour (Resimo, Matterport, `tour.html`).
 - **360°:** a 2:1 panorama (from a 360 camera or the phone's panorama mode) turns slowly all the way around. Drag to look; pinch to zoom.
 - **3D:** a normal photo is shown on a curved surface and pans slowly with a gentle zoom. Several photos fade from one to the next.
