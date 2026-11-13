@@ -42,3 +42,11 @@ project ads, villas and projects. One page, `index.html`, talking to Supabase pr
   own approved sales plus the level percentage of every approved sale made under the member.
 
 Published to GitHub Pages at https://ibo-dotcom.github.io/Rasl-real-estate/global/ on every push (`.github/workflows/pages.yml`). Opened as a preview inside Claude, it shows a banner with that address, since accounts cannot work there.
+
+## Buy / Reserve on a project
+Members open a project page and, under the 3D tour, fill in the unit and price. Before sending, they see how much commission there is, what goes to the team wallet, what they get, and what each sponsor level gets.
+- **🏠 Buy** creates a sale, which pays out after the owner approves it.
+- **📌 Reserve** creates a reservation, which holds the unit and pays nothing yet.
+- **↩ Back** scrolls back to the 3D tour.
+
+The owner sees approved reservations on the Sales page. Pressing **Became a sale** turns one into a sale and pays the team.
