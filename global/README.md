@@ -120,3 +120,13 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - A member who has reached the rank sees **Post my ad** (title, city, price, phone, details, up to 8 photos). Posts wait for the owner's approval (✓ / ✕). Approved posts appear in the ads banner with the member's name.
 - A member below the rank sees which rank is needed and a progress bar (e.g. 350 / 1,000 points).
 - **Database:** `settings.publish_rank`, `publish_status()`, and the `member_posts` table. Its row rules let only eligible members insert, and only the owner approve. Photos go to the `studio` bucket in the member's own folder.
+
+## Home: six ad places of three kinds (owner's sketch)
+- **Header:** profile · search · 📍 map · 🏠 3D · 📢 Ad (publish).
+- **① Top:** 1 large ad (slides when there are several).
+- A row of round city buttons (photo + name; tap to filter).
+- **② Middle:** 2 ads side by side.
+- A row of round buttons: 📢 publish, 🎓 academy, 360° studio, 🏠 3D, 🗺 map, language.
+- **③ Bottom:** 3 ads side by side. Then the best sellers and my members.
+- When adding an ad, the owner chooses **Where on home** (① top / ② middle / ③ bottom) and, if they want, a project it opens. Empty places show a dashed "＋ Add an ad" to the owner only. When there are more ads than places, the row slides. Approved member posts go to the bottom row.
+- **Database:** `ads.slot`, `ads.listing_id`, `member_posts.slot`.
