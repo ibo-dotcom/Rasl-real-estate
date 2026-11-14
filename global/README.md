@@ -329,3 +329,8 @@ The whole app was restyled without changing any feature, route, database call or
 - The owner's direct members ("first line") are never cut off: from every approved sale in their branch they receive at least 1% of the team pool, at any depth. Inside generations 1–5 they get their generation % (5/4/3/2/1); beyond generation 5 `sale_payout` adds a `firstline` wallet entry of `settings.firstline_pct` (default 1%) for the owner's direct member at the top of the seller's branch (only if that code is active), taken from the office remainder. New people joining below never change this.
 - Shown in the wallet ("First line 1% (generation N)") and in the unit card's commission split.
 - Tested on a temporary 7-level chain inside a rolled-back transaction: generations 1–5 = $50/$40/$30/$20/$10, first line at generation 6 = $10, seller $400 + $100 points, office $340 (for a $100,000 sale).
+
+### Code numbering
+
+- The owner's direct members have their own series: **RASL-01, RASL-02, …** (RASL-100 after RASL-99). The six existing direct members were renumbered in the order they joined (IBO-1-1 → RASL-01 … IBO-1-6 → RASL-06; nobody was under them yet).
+- Everyone else keeps the normal style: members under RASL-01 get RASL-01-1, RASL-01-2, … (up to 10 per code). Codes are case-insensitive when typed.
