@@ -353,3 +353,8 @@ The whole app was restyled without changing any feature, route, database call or
 - Only active codes receive seller, generation, first-line and points money; the buyer's discount is always paid; the buyer's sponsor share is paid if that sponsor is active. Anything not paid goes to the rank bonus pool.
 - The owner changes every percentage on the **Accounts** page (`settings.company_pct`, `buyer_pct`, `buyer_sponsor_pct`, `seller_share_pct`, `firstline_pct`, levels).
 - Verified on a temporary chain (rolled back) for a $500,000 villa: buyer $2,500, buyer's sponsor $1,000, seller $2,500 + $500 points, generations $500/$400/$300/$200/$100, first line $100, rank pool $400 — members $8,500 (85%), company $1,500 (15%).
+
+### Weekly rank bonus and 7-day withdrawals
+
+- **Rank bonus pool, weekly.** Every Friday 18:00 UTC (21:00 Erbil) a `pg_cron` job runs `distribute_rank_pool()`: the pool balance (all `rankpool` entries minus what was already paid) is shared among **active members who hold a rank**, weighted by their rank's bonus % (`rankbonus` wallet entries, `rank_distributions` log, at most once per week). If nobody holds a rank, it stays for next week. The owner sees the pool and can press **Distribute now** on the Accounts page.
+- **Withdrawals after 7 days.** Money can be withdrawn `settings.hold_days` (7) days after it reaches the wallet. The Wallet page shows *available now / waiting 7 days / requested* and a **Request a withdrawal** form (amount, how to receive, account/number). The database refuses more than the available amount. The owner sees requests on the Accounts page and taps **Mark as paid** (creates the payout) or rejects with a reason (`decide_withdrawal`).
