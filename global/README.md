@@ -310,3 +310,4 @@ The whole app was restyled without changing any feature, route, database call or
 - Enter full name, mobile, email and a password (a strong one is suggested; tap ↻ for a new one). "Under the code of" is your own code by default (direct member); write another member's code to place the new person under them.
 - The account is ready at once — no confirmation email. The app shows the login details to copy or send by WhatsApp. Members can change the password later in their profile.
 - Server side: edge function `add-member` (see `supabase/functions/add-member`). The limit of 10 direct members per code still applies.
+- One person can have several accounts with the same name or the same email; each gets its own code. If the email is already used, the new account's login email becomes an alias of the same inbox (e.g. `name+r2@gmail.com`), shown in the result card.

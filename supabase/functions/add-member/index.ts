@@ -41,14 +41,24 @@ Deno.serve(async (req) => {
   const { count } = await admin.from("profiles").select("id", { count: "exact", head: true }).eq("sponsor_id", sp.id);
   if ((count ?? 0) >= 10) return json({ error: "sponsor_full", direct: count }, 400);
 
-  const { data: made, error } = await admin.auth.admin.createUser({
-    email, password, email_confirm: true,
-    user_metadata: { full_name, phone, country, sponsor_code: sp.code },
-  });
-  if (error || !made?.user) {
-    const m = String(error?.message || "").toLowerCase();
-    return json({ error: m.includes("already") || m.includes("registered") ? "exists" : m.includes("sponsor_full") ? "sponsor_full" : "failed", detail: error?.message }, 400);
+  // The same person may hold several accounts (same name or same email, different code).
+  // When the email is already used, sign-in uses an alias of the same inbox: name+r2@gmail.com, name+r3@...
+  const [local, domain] = email.split("@");
+  const alias = (n: number) => n < 2 ? email : `${local}+r${n}@${domain}`;
+  let made = null, used = email, lastErr = "";
+  for (let n = 1; n <= 40; n++) {
+    used = alias(n);
+    const { data, error } = await admin.auth.admin.createUser({
+      email: used, password, email_confirm: true,
+      user_metadata: { full_name, phone, country, sponsor_code: sp.code, contact_email: email },
+    });
+    if (!error && data?.user) { made = data.user; break; }
+    lastErr = String(error?.message || "").toLowerCase();
+    if (!(lastErr.includes("already") || lastErr.includes("registered") || lastErr.includes("exists"))) break;
   }
-  const { data: prof } = await admin.from("profiles").select("code, full_name").eq("id", made.user.id).maybeSingle();
-  return json({ ok: true, email, code: prof?.code ?? null, full_name: prof?.full_name ?? full_name, sponsor: sp.code });
+  if (!made) {
+    return json({ error: lastErr.includes("sponsor_full") ? "sponsor_full" : lastErr.includes("already") || lastErr.includes("registered") ? "exists" : "failed", detail: lastErr }, 400);
+  }
+  const { data: prof } = await admin.from("profiles").select("code, full_name").eq("id", made.id).maybeSingle();
+  return json({ ok: true, email: used, aliased: used !== email, contact_email: email, code: prof?.code ?? null, full_name: prof?.full_name ?? full_name, sponsor: sp.code });
 });
