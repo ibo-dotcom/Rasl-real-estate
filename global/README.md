@@ -264,3 +264,9 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - `settings.point_value` (default **$1**; the owner changes it on the wallet page). When a sale is approved, `sale_payout` adds a `points` wallet entry for the seller: points × point value. It is taken from the office's share of the pool, so the commission split of the team does not change.
 - Approved sales that already existed were back-filled (5 sales, 195 points → $195).
 - Wallet: "⭐ 1 point = $1" banner, **Points money** total, each points entry shown as "⭐ Points money × $1"; the unit card shows "⭐ Points you get (+N × $1) = $N"; pending sales show the expected money including points.
+
+## Forgot password (self-service reset)
+
+- The login screen has a **"Forgot password?"** link under Sign in. The member types their email, taps it, and Supabase sends a reset link (`auth.resetPasswordForEmail`, redirect back to the app).
+- Opening the link signs them in (recovery session); the app detects `type=recovery` in the URL, goes to the profile, and prompts them to set a new password with the existing change-password form (`auth.updateUser`). Nobody — not even the owner — can read an existing password; it can only be reset.
+- Note: reliable delivery of the reset email needs Supabase Auth email (custom SMTP) and the app URL in the allowed redirect URLs.
