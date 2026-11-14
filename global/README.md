@@ -296,3 +296,10 @@ The whole app was restyled without changing any feature, route, database call or
 
 - The home search updates only the property list (`#homeRes`) as you type; the header, ads and shortcut row are not rebuilt, and the list keeps its height while you type so the page does not jump.
 - Every full redraw (`render()`) now keeps photos that are already loaded (`keepBefore` / `keepAfter` move the same `<img>` elements into the new screen) and restores the scroll position of each scrolling area. This also fixes the project-card search and the CRM search, which redraw on each letter.
+
+### Automatic updates on every phone
+
+- Each deploy stamps a version into `index.html` (`APP_VER`) and writes the same value to `global/version.json`.
+- The app checks `version.json` (never cached) when it opens, whenever it comes back from the background, and every 5 minutes. If the server has a newer version it reloads itself with a fresh copy, staying on the same screen. If the member is typing or has a panel open, it shows a small "A new version is ready — Update" bar instead of interrupting. A reload is tried only once per version, so it can never loop.
+- Deploy: `VER=$(date -u +%Y%m%d%H%M%S); sed "s/__APP_VER__/$VER/" reg/index.html > global/index.html; printf '{"v":"%s"}\n' "$VER" > global/version.json`.
+- Home-screen app name and colours updated to Rasl Estate Global (navy / white).
