@@ -366,3 +366,10 @@ The whole app was restyled without changing any feature, route, database call or
 - Used for ranks (`team_stats_v2`) and the weekly rank bonus (`private.team_points_all`). Verified on a temporary 8-level chain (rolled back): a $100,000 sale gave 100 points to every person above the seller, to the buyer and the buyer's sponsor, and 100 (once) to the owner.
 - Money from a sale is split and credited to wallets at the moment the sale is approved; it can be withdrawn after 7 days.
 - **Buying team leadership gives points too:** when the owner approves a leadership payment, the member gets `greatest(1, price / 1000)` points (at least 1 point, even under $1,000) in `point_awards`. These points count like sale points: for the member and everyone above them up to the owner (ranks and weekly rank bonus). Verified (rolled back): a $250 leadership purchase under RASL-07 gave 1 point to the member, RASL-07 and the owner.
+
+## Offers (price discount and extra points for a set time)
+
+- **Offers** (tag icon in the shortcut row, the menu, and a strip on the home screen while an offer runs). The owner adds, edits, hides or deletes offers: title, benefit (what the member gets), details, photo, project (one project or all), **price discount %**, **points ×** (e.g. ×2), **extra points per sale**, start and end dates.
+- While an offer runs, its project's cards show an "Offers" badge, the unit card shows the offer and the purchase is recorded at the discounted price (`sales.offer_id`).
+- When a sale made during the offer is approved, the extra points (`points × (multiplier − 1) + extra points`) are added for the seller and the buyer (`point_awards`, source `offer`) and flow up the whole line like all points. Verified (rolled back): ×2 and +5 on a 100-point sale → +105, so 205 points for everyone above, counted once for the owner.
+- Charity and activities stay as they are.
