@@ -220,3 +220,9 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
   - that project's latest sales;
   - buttons: 📄 sales list (with Excel/PDF), 🏢 units, ✎ info.
 - **Shared sales:** the project owner and partners see who sold or reserved each of their units (approve/cancel stays with the app owner). Every sale, whether by a member, an agent or the project owner, appears in 🔥 Latest sales for everyone.
+
+## Taxes, fees, fines & charity
+
+- **🏛 Government (owner only)** — circle icon on the home screen. Set the government tax % and the charity % taken from each sale's commission (both are shown to everyone in the commission split). Summary of approved sales: total commission, tax owed / paid / still to pay, fees paid, fines paid. Record payments (tax, fee, fine, charity spending, other) with amount, date and note; delete wrong entries.
+- **🤲 Charity (everyone)** — circle icon on the home screen. Charity projects with photo, details, goal and a progress bar of confirmed gifts and donor count. Members tap **Give**, write an amount and note; the gift waits for the owner's confirmation and shows in "My gifts" with its status. The owner sees the charity fund (from sales %, members' gifts, spent, balance), confirms or rejects pending gifts, adds new charity projects (with photo) and hides or deletes them.
+- Tables: `ledger`, `charity_projects`, `donations`; settings `tax_pct`, `charity_pct`; functions `charity_totals()` and `finance_summary()` (owner only).
