@@ -192,3 +192,12 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
   - **✕ Cancel** rejects the sale and makes the unit green (free) again.
   - Database function: `unit_sales_admin`, owner only.
 - **Price per m²:** in the unit editor and in "＋ Add units", the price can be the full price (e.g. 106250) or the price per m², which is multiplied by the area. A live preview shows the result, e.g. $106,250.
+
+## Differences between units (price, area, floor, payment)
+- **＋ Add units** has new fields:
+  - **area of each position** (e.g. `125, 125, 177, 90` = the 1st–4th unit on every floor) and **rooms of each position**;
+  - price per m² with **+ $ per m² for each higher floor**;
+  - **installment +%**, which gives each unit an installment price.
+- **✎ Change many units at once (owner):** choose a building, floors from–to and positions (e.g. `1, 2`; empty = all). Then set any of: area, rooms, price per m² (+ per higher floor), a full price (+ per floor), installment +%. Database function: `bulk_units`, owner only.
+- **Unit card:** shows the cash price and the installment price, with two buy buttons, **💵 Buy · Cash** and **📅 Buy · Installment**. The sale records the way (`sales.pay_way`), and the database takes the matching price from the unit.
+- **Unit editor:** also has the installment price.
