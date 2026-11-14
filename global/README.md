@@ -270,3 +270,16 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - The login screen has a **"Forgot password?"** link under Sign in. The member types their email, taps it, and Supabase sends a reset link (`auth.resetPasswordForEmail`, redirect back to the app).
 - Opening the link signs them in (recovery session); the app detects `type=recovery` in the URL, goes to the profile, and prompts them to set a new password with the existing change-password form (`auth.updateUser`). Nobody — not even the owner — can read an existing password; it can only be reset.
 - Note: reliable delivery of the reset email needs Supabase Auth email (custom SMTP) and the app URL in the allowed redirect URLs.
+
+## Design system — navy & white (Rasl Estate Global)
+
+The whole app was restyled without changing any feature, route, database call or business rule.
+
+- **Colours:** Deep Navy `#102B46`, Royal Navy `#173F63`, White `#FFFFFF`, Soft Background `#F5F8FB`, Light Blue `#EAF1F7`, Text `#172B3A`, Secondary text `#718096`, Borders `#DFE7EF`. The old dark/gold palette is mapped to these at build time (`theme.py`, the last build step); status colours (sold red, reserved amber, free green) are kept but toned for a light background. No purple, neon or decorative gradients.
+- **Shapes:** smaller corner radii (no pill-shaped cards), soft navy shadows instead of heavy black ones.
+- **Icons:** emoji in the circle row, header, section titles and payment methods replaced by one consistent line-icon set (`ICO`, `icoIn`).
+- **Glass:** only where it helps — the bottom navigation, the sheet backdrop and the language button on the welcome screen use a light blur with thin borders.
+- **Welcome screen:** the "HERO PHOTO" placeholder is replaced by a navy brand panel with an architectural skyline; brand name is now **RASL ESTATE GLOBAL**.
+- **Map:** light "Positron" map style, navy price markers with white borders, white info panels.
+- **Interaction:** smooth colour/border transitions, navy focus ring for keyboard users, white input fields with navy focus, and reduced motion when the phone asks for it.
+- **Other pages:** the 3D towers, home tour, studio and training guide keep their dark immersive scenes but now use navy surfaces and white accents instead of gold.

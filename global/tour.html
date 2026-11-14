@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b1220">
+<meta name="theme-color" content="#0D2136">
 <title>VANA · 3D</title>
 <style>
-:root{--bg:#0b1220;--card:rgba(12,19,33,.86);--line:rgba(255,255,255,.12);--ink:#f4efe6;--mute:#a9b1c0;--gold:#d4b06a;--gold2:#e7cb8f}
+:root{--bg:#0D2136;--card:rgba(12,19,33,.86);--line:rgba(255,255,255,.12);--ink:#FFFFFF;--mute:#A9BACB;--gold:#FFFFFF;--gold2:#C9D6E3}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
 canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:none}
@@ -22,9 +22,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 #bar::-webkit-scrollbar{display:none}
 #bar button{border:0;background:transparent;border-radius:13px;padding:7px 9px;min-width:54px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--mute);white-space:nowrap}
 #bar button i{font-style:normal;font-size:19px;line-height:1.1;color:var(--ink)}
-#bar button.on{background:rgba(212,176,106,.16);color:var(--gold2)}
-#bar button.gold{background:var(--gold);color:#1a1408}
-#bar button.gold i{color:#1a1408}
+#bar button.on{background:rgba(255,255,255,.16);color:var(--gold2)}
+#bar button.gold{background:var(--gold);color:#102B46}
+#bar button.gold i{color:#102B46}
 #lightP{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));width:min(360px,calc(100% - 32px));padding:14px 16px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);z-index:5}
 #lightP input{width:100%;accent-color:var(--gold)}
 #lightP .lb{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-top:4px;direction:ltr}
@@ -39,7 +39,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 #label p{margin:6px 0 0;font-size:14px;color:var(--ink);opacity:.9}
 #hint{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateX(-50%);font-size:12px;color:var(--ink);background:rgba(0,0,0,.45);padding:7px 12px;border-radius:20px;z-index:4;transition:opacity .8s;max-width:calc(100% - 32px);text-align:center;pointer-events:none}
 #joy{position:fixed;width:120px;height:120px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);z-index:4;pointer-events:none;transform:translate(-50%,-50%)}
-#joy b{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:rgba(212,176,106,.75)}
+#joy b{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:rgba(255,255,255,.75)}
 #welcome{position:fixed;inset:0;z-index:10;display:flex;align-items:flex-end;justify-content:center;padding:20px 16px calc(24px + env(safe-area-inset-bottom));background:linear-gradient(rgba(11,18,32,.15),rgba(11,18,32,.55) 45%,rgba(11,18,32,.96));transition:opacity .7s}
 #welcome.out{opacity:0;pointer-events:none}
 #welcome .wc{width:min(440px,100%)}
@@ -52,16 +52,16 @@ button{font:inherit;color:inherit;cursor:pointer}
 #welcome .facts b{display:block;color:var(--ink);font-size:16px;direction:ltr;unicode-bidi:isolate}
 #welcome .facts .pr b{color:var(--gold2)}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:52px;border-radius:15px;border:1px solid var(--gold);background:transparent;color:var(--gold2);font-weight:700;font-size:16px;margin-top:10px;text-decoration:none}
-.btn.gold{background:var(--gold);color:#1a1408}
+.btn.gold{background:var(--gold);color:#102B46}
 .row{display:flex;gap:10px}.row .btn{flex:1}
-.badge{display:inline-block;margin-top:10px;font-size:11px;color:#1a1408;background:var(--gold2);border-radius:20px;padding:3px 9px}
+.badge{display:inline-block;margin-top:10px;font-size:11px;color:#102B46;background:var(--gold2);border-radius:20px;padding:3px 9px}
 #loading{position:fixed;inset:0;display:grid;place-items:center;z-index:20;background:var(--bg);color:var(--mute);font-size:14px;transition:opacity .5s}
 #sheet{position:fixed;inset:0;z-index:12;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center}
-#sheet .sc{width:min(440px,100%);background:#111a2c;border-radius:22px 22px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom));border:1px solid var(--line)}
+#sheet .sc{width:min(440px,100%);background:#102B46;border-radius:22px 22px 0 0;padding:20px 18px calc(22px + env(safe-area-inset-bottom));border:1px solid var(--line)}
 #sheet h3{margin:0 0 2px}
 #sheet p{margin:0 0 6px;color:var(--mute);direction:ltr;unicode-bidi:isolate}
 #roomsP{position:fixed;inset:0;z-index:12;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
-#roomsP .sc{width:min(440px,100%);max-height:70vh;overflow:auto;background:#111a2c;border-radius:22px 22px 0 0;padding:18px 14px calc(18px + env(safe-area-inset-bottom));border:1px solid var(--line)}
+#roomsP .sc{width:min(440px,100%);max-height:70vh;overflow:auto;background:#102B46;border-radius:22px 22px 0 0;padding:18px 14px calc(18px + env(safe-area-inset-bottom));border:1px solid var(--line)}
 #roomsP h3{margin:0 4px 10px;font-size:16px}
 #rpList button{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:14px;padding:12px 14px;margin-bottom:8px;text-align:start}
 #rpList b{font-size:15px}#rpList span{font-size:12px;color:var(--gold2);direction:ltr;unicode-bidi:isolate;white-space:nowrap}
@@ -100,7 +100,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 <div id="welcome" class="hide">
   <div class="wc">
-    <div class="brand"><svg width="22" height="16" viewBox="0 0 22 16" style="vertical-align:-2px;margin-inline-end:8px"><path d="M1 15 L11 2 L21 15" fill="none" stroke="#d4b06a" stroke-width="2.4" stroke-linejoin="round"/><path d="M7 15 L11 9.5 L15 15" fill="none" stroke="#e7cb8f" stroke-width="2"/></svg>VANA <span style="opacity:.6;letter-spacing:.2em">· 3D</span></div>
+    <div class="brand"><svg width="22" height="16" viewBox="0 0 22 16" style="vertical-align:-2px;margin-inline-end:8px"><path d="M1 15 L11 2 L21 15" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linejoin="round"/><path d="M7 15 L11 9.5 L15 15" fill="none" stroke="#C9D6E3" stroke-width="2"/></svg>VANA <span style="opacity:.6;letter-spacing:.2em">· 3D</span></div>
     <h1 id="wName"></h1>
     <div class="unit" id="wUnit"></div>
     <div class="addr" id="wAddr"></div>
@@ -211,7 +211,7 @@ var TEX={
  fabric:tex(256,function(x,s){x.fillStyle=g(225);x.fillRect(0,0,s,s);for(var i=0;i<s;i+=2){x.fillStyle=g(i%4?245:205,.35);x.fillRect(0,i,s,1);x.fillRect(i,0,1,s)}for(var k=0;k<3000;k++){x.fillStyle=g(rnd()<.5?170:255,.12);x.fillRect(rnd()*s,rnd()*s,1.5,1.5)}}),
  facade:tex(512,function(x,s){x.fillStyle=g(200);x.fillRect(0,0,s,s);for(var r=0;r<16;r++)for(var c=0;c<8;c++){x.fillStyle=rnd()<.5?'#3e4a5a':'#4a5666';x.fillRect(c*64+8,r*32+6,48,20)}}),
  facadeE:tex(512,function(x,s){x.fillStyle='#000';x.fillRect(0,0,s,s);for(var r=0;r<16;r++)for(var c=0;c<8;c++){if(rnd()<.45){x.fillStyle=rnd()<.6?'#ffcf8a':'#fff2d6';x.fillRect(c*64+8,r*32+6,48,20)}}}),
- art:tex(512,function(x,s){var pal=['#c8643b','#e0b15a','#25344f','#8fa48a','#efe6d6','#9b3d2e'];x.fillStyle='#f1ebdf';x.fillRect(0,0,s,s);for(var i=0;i<9;i++){x.globalAlpha=.55+rnd()*.4;x.fillStyle=pal[rnd()*pal.length|0];x.beginPath();if(rnd()<.5){x.arc(rnd()*s,rnd()*s,40+rnd()*150,0,7)}else{x.rect(rnd()*s-60,rnd()*s-60,60+rnd()*220,20+rnd()*160)}x.fill()}x.globalAlpha=.9;x.strokeStyle='#1b1b1b';x.lineWidth=5;x.beginPath();x.moveTo(rnd()*s,rnd()*s);x.bezierCurveTo(rnd()*s,rnd()*s,rnd()*s,rnd()*s,rnd()*s,rnd()*s);x.stroke();x.globalAlpha=1})
+ art:tex(512,function(x,s){var pal=['#c8643b','#e0b15a','#2A4A6B','#8fa48a','#efe6d6','#9b3d2e'];x.fillStyle='#f1ebdf';x.fillRect(0,0,s,s);for(var i=0;i<9;i++){x.globalAlpha=.55+rnd()*.4;x.fillStyle=pal[rnd()*pal.length|0];x.beginPath();if(rnd()<.5){x.arc(rnd()*s,rnd()*s,40+rnd()*150,0,7)}else{x.rect(rnd()*s-60,rnd()*s-60,60+rnd()*220,20+rnd()*160)}x.fill()}x.globalAlpha=.9;x.strokeStyle='#1b1b1b';x.lineWidth=5;x.beginPath();x.moveTo(rnd()*s,rnd()*s);x.bezierCurveTo(rnd()*s,rnd()*s,rnd()*s,rnd()*s,rnd()*s,rnd()*s);x.stroke();x.globalAlpha=1})
 };
 TEX.fabric.repeat.set(3,3);TEX.facade.repeat.set(1,4);TEX.facadeE.repeat.set(1,4);
 var art2=TEX.art.clone();art2.needsUpdate=true;art2.offset.set(.5,.3);
@@ -416,7 +416,7 @@ function addDims(r,fg){
    m.renderOrder=2;fg.add(m)})}
  var nm=L(r.name)||'',dims=fmtM(r.w).replace(' m','')+' × '+fmtM(r.d)+'  ·  '+r.area+' m²';
  var tx=canvasTex('t|'+r.id+'|'+r.fi,640,200,function(x,w,h){x.fillStyle='rgba(12,19,33,.82)';var rr=34;x.beginPath();x.moveTo(rr,0);x.arcTo(w,0,w,h,rr);x.arcTo(w,h,0,h,rr);x.arcTo(0,h,0,0,rr);x.arcTo(0,0,w,0,rr);x.fill();
-   x.textAlign='center';x.textBaseline='middle';x.fillStyle='#f4efe6';x.font='700 58px system-ui,-apple-system,Tahoma,sans-serif';x.fillText(nm,w/2,72,w-40);x.direction='ltr';x.fillStyle='#e7cb8f';x.font='600 42px system-ui,-apple-system,sans-serif';x.fillText(dims,w/2,146,w-40)});
+   x.textAlign='center';x.textBaseline='middle';x.fillStyle='#FFFFFF';x.font='700 58px system-ui,-apple-system,Tahoma,sans-serif';x.fillText(nm,w/2,72,w-40);x.direction='ltr';x.fillStyle='#C9D6E3';x.font='600 42px system-ui,-apple-system,sans-serif';x.fillText(dims,w/2,146,w-40)});
  var tw=Math.max(1.6,Math.min(3.4,Math.min(r.w,r.d)*.95));var tag=new THREE.Mesh(new THREE.PlaneGeometry(tw,tw*200/640),new THREE.MeshBasicMaterial({map:tx,transparent:true,depthWrite:false}));
  tag.rotation.x=-Math.PI/2;tag.position.set(r.cx,(r.bal?1.3:H)+.08,r.cz);tag.renderOrder=5;tag.visible=false;fg.add(tag);DOLLTAGS.push(tag)}
 
@@ -580,7 +580,7 @@ function viewPoint(r){var ds=DOORS.filter(function(d){return d.rooms.indexOf(r)>
 function normalInto(d,r){if(d.ax==='h')return new THREE.Vector3(0,0,r.cz>d.z?1:-1);return new THREE.Vector3(r.cx>d.x?1:-1,0,0)}
 
 /* ---------------- route (straight arrows on the floor) ---------------- */
-var arrowTex=tex(128,function(x,s){x.clearRect(0,0,s,s);x.fillStyle='rgba(212,176,106,.38)';x.fillRect(14,0,s-28,s);x.strokeStyle='#fff8e6';x.lineWidth=13;x.lineCap='round';x.lineJoin='round';x.beginPath();x.moveTo(32,84);x.lineTo(64,46);x.lineTo(96,84);x.stroke()});
+var arrowTex=tex(128,function(x,s){x.clearRect(0,0,s,s);x.fillStyle='rgba(255,255,255,.38)';x.fillRect(14,0,s-28,s);x.strokeStyle='#fff8e6';x.lineWidth=13;x.lineCap='round';x.lineJoin='round';x.beginPath();x.moveTo(32,84);x.lineTo(64,46);x.lineTo(96,84);x.stroke()});
 var routeMat=new THREE.MeshBasicMaterial({map:arrowTex,transparent:true,depthWrite:false});
 var dotMat=new THREE.MeshBasicMaterial({color:0xd4b06a,transparent:true,opacity:.85,depthWrite:false});
 var routeG=new THREE.Group();scene.add(routeG);var pin=null;

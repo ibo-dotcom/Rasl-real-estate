@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1220">
-<title>Real Estate Global · فێرکاری</title>
+<meta name="theme-color" content="#0D2136">
+<title>Rasl Estate Global · فێرکاری</title>
 <style>
-:root{--bg:#0b1220;--card:#121b2d;--line:#24304a;--ink:#f4efe6;--mute:#9aa6bd;--gold:#d4b06a;--gold2:#e7cb8f}
+:root{--bg:#0D2136;--card:#102B46;--line:#2A4A6B;--ink:#FFFFFF;--mute:#A9BACB;--gold:#FFFFFF;--gold2:#C9D6E3}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;background:#05080f;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans Arabic",sans-serif;overflow:hidden}
+html,body{margin:0;height:100%;background:#081827;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans Arabic",sans-serif;overflow:hidden}
 button{font:inherit;color:inherit;cursor:pointer}
 .hide{display:none!important}
-#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(90% 80% at 70% 20%,#1b2740,#0b1220 70%)}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(90% 80% at 70% 20%,#173F63,#0D2136 70%)}
 /* landscape: phone left (visually), text right */
 #frame{position:relative;width:min(100vw,177.78vh);height:min(56.25vw,100vh);display:flex;align-items:center;gap:4%;padding:3% 5%}
 #phoneWrap{height:88%;aspect-ratio:390/844;position:relative;flex:none}
-#phone{position:absolute;inset:0;border-radius:9% / 4.2%;border:.6vmin solid #2b3852;background:#000;overflow:hidden;box-shadow:0 3vmin 8vmin rgba(0,0,0,.55),0 0 0 .35vmin #0a0f1a inset}
+#phone{position:absolute;inset:0;border-radius:9% / 4.2%;border:.6vmin solid #2A4A6B;background:#000;overflow:hidden;box-shadow:0 3vmin 8vmin rgba(0,0,0,.55),0 0 0 .35vmin #0B1D30 inset}
 #shot{position:absolute;inset:0;transform-origin:50% 50%;transition:transform 6s ease-out}
 #shot img{width:100%;height:100%;display:block;object-fit:cover}
 #shot.in{animation:sin .6s ease-out}
 @keyframes sin{from{opacity:0;transform:translateY(3%) scale(.97)}to{opacity:1}}
-#ring{position:absolute;border:.5vmin solid var(--gold);border-radius:1.6vmin;box-shadow:0 0 0 200vmax rgba(5,8,15,.38),0 0 3vmin rgba(212,176,106,.8);opacity:0;transition:opacity .5s;pointer-events:none}
+#ring{position:absolute;border:.5vmin solid var(--gold);border-radius:1.6vmin;box-shadow:0 0 0 200vmax rgba(5,8,15,.38),0 0 3vmin rgba(255,255,255,.8);opacity:0;transition:opacity .5s;pointer-events:none}
 #ring.on{opacity:1;animation:pulse 1.6s ease-in-out infinite}
-@keyframes pulse{50%{box-shadow:0 0 0 200vmax rgba(5,8,15,.38),0 0 6vmin rgba(212,176,106,1)}}
+@keyframes pulse{50%{box-shadow:0 0 0 200vmax rgba(5,8,15,.38),0 0 6vmin rgba(255,255,255,1)}}
 #tap{position:absolute;width:5vmin;height:5vmin;margin:-2.5vmin 0 0 -2.5vmin;border-radius:50%;background:rgba(255,255,255,.85);opacity:0;pointer-events:none}
 #tap.go{animation:tap 1.2s ease-out}
 @keyframes tap{0%{opacity:0;transform:scale(1.6)}30%{opacity:.95;transform:scale(.8)}60%{opacity:.6;transform:scale(1)}100%{opacity:0;transform:scale(2.4)}}
@@ -34,11 +34,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 #cap.in{animation:cin .6s ease-out}
 @keyframes cin{from{opacity:0;transform:translateY(1.5vmin)}to{opacity:1}}
 #dots{display:flex;gap:1vmin;flex-wrap:wrap}
-#dots b{width:1.4vmin;height:1.4vmin;border-radius:1vmin;background:#2c3a5a;transition:.3s}
+#dots b{width:1.4vmin;height:1.4vmin;border-radius:1vmin;background:#3A5A7C;transition:.3s}
 #dots b.on{width:4vmin;background:var(--gold)}
 #bar{position:absolute;left:0;bottom:0;height:.7vmin;background:var(--gold);width:0}
 /* title card */
-#card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5vmin;background:radial-gradient(70% 70% at 50% 40%,#1d2a45,#0b1220);text-align:center;padding:5vmin;opacity:0;pointer-events:none;transition:opacity .6s}
+#card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5vmin;background:radial-gradient(70% 70% at 50% 40%,#173F63,#0D2136);text-align:center;padding:5vmin;opacity:0;pointer-events:none;transition:opacity .6s}
 #card.on{opacity:1}
 #card .n{font-size:2.6vmin;color:var(--gold);letter-spacing:.2em;font-weight:800}
 #card h1{margin:0;font-size:7vmin;line-height:1.2}
@@ -47,13 +47,13 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* controls */
 #ctl{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));display:flex;gap:6px;padding:6px;border-radius:16px;background:rgba(12,19,33,.92);border:1px solid var(--line);z-index:5;align-items:center}
 #ctl button{border:0;background:transparent;border-radius:11px;min-width:42px;height:40px;padding:0 10px;font-size:16px}
-#ctl button.gold{background:var(--gold);color:#1a1408}
+#ctl button.gold{background:var(--gold);color:#102B46}
 #ctl .lg{font-size:13px;font-weight:700}
 #menu{position:fixed;inset:0;z-index:9;background:rgba(0,0,0,.6);display:flex;justify-content:center;align-items:flex-end}
-#menu .sc{width:min(520px,100%);max-height:85vh;overflow:auto;background:#0e1626;border:1px solid var(--line);border-radius:20px 20px 0 0;padding:16px 14px calc(16px + env(safe-area-inset-bottom))}
+#menu .sc{width:min(520px,100%);max-height:85vh;overflow:auto;background:#102B46;border:1px solid var(--line);border-radius:20px 20px 0 0;padding:16px 14px calc(16px + env(safe-area-inset-bottom))}
 #menu h3{margin:4px 6px 12px}
 #menu button.c{display:flex;align-items:center;gap:12px;width:100%;text-align:start;border:1px solid var(--line);background:var(--card);border-radius:14px;padding:12px;margin-bottom:8px}
-#menu button.c b{width:34px;height:34px;flex:none;border-radius:10px;background:rgba(212,176,106,.15);color:var(--gold);display:grid;place-items:center}
+#menu button.c b{width:34px;height:34px;flex:none;border-radius:10px;background:rgba(255,255,255,.15);color:var(--gold);display:grid;place-items:center}
 #menu button.c span{flex:1}#menu button.c small{color:var(--mute);direction:ltr}
 #menu a{display:block;text-align:center;color:var(--gold);margin-top:6px;font-size:14px}
 body.rec #ctl{display:none}
@@ -72,7 +72,7 @@ body.rec #ctl{display:none}
 <body>
 <div id="stage"><div id="frame">
   <div id="phoneWrap"><div id="phone"><div id="shot"><img id="img" alt=""></div><div id="ring"></div><div id="tap"></div></div></div>
-  <div id="txt"><div class="brand"><i>R</i>REAL ESTATE GLOBAL</div><div id="chT"></div><div id="cap"></div><div id="dots"></div></div>
+  <div id="txt"><div class="brand"><i>R</i>RASL ESTATE GLOBAL</div><div id="chT"></div><div id="cap"></div><div id="dots"></div></div>
   <div id="card"><div class="logo">R</div><div class="n" id="cN"></div><h1 id="cH"></h1><p id="cP"></p></div>
   <div id="bar"></div>
 </div></div>
@@ -98,7 +98,7 @@ Promise.all([fetch('chapters.json').then(function(r){return r.json()}),fetch('da
  var c=REC||QS.get('c');start(c&&c!=='all'?c:null)});
 function build(){var ml=$('mList');ml.innerHTML='';CH.forEach(function(c,i){var n=ST.filter(function(s){return s.ch===c.id}).length;var b=document.createElement('button');b.className='c';b.innerHTML='<b>'+(i+1)+'</b><span></span><small>'+n+'</small>';b.querySelector('span').textContent=c[LANG];b.onclick=function(){$('menu').classList.add('hide');start(c.id)};ml.appendChild(b)});
  var vh=document.createElement('h3');vh.textContent=u('vids');ml.appendChild(vh);var vw=document.createElement('div');vw.style.cssText='display:flex;flex-wrap:wrap;gap:8px';
- [{id:'all',t:u('full')}].concat(CH.map(function(c,i){return {id:c.id,t:(i+1)+'. '+c[LANG]}})).forEach(function(v){var a=document.createElement('a');a.href='video/'+v.id+'.mp4';a.target='_blank';a.rel='noopener';a.textContent='🎬 '+v.t;a.style.cssText='display:inline-block;margin:0;padding:8px 12px;border-radius:12px;border:1px solid #24304a;background:#121b2d;color:#e7cb8f;font-size:13px;text-decoration:none';vw.appendChild(a)});ml.appendChild(vw)}
+ [{id:'all',t:u('full')}].concat(CH.map(function(c,i){return {id:c.id,t:(i+1)+'. '+c[LANG]}})).forEach(function(v){var a=document.createElement('a');a.href='video/'+v.id+'.mp4';a.target='_blank';a.rel='noopener';a.textContent='🎬 '+v.t;a.style.cssText='display:inline-block;margin:0;padding:8px 12px;border-radius:12px;border:1px solid #2A4A6B;background:#102B46;color:#C9D6E3;font-size:13px;text-decoration:none';vw.appendChild(a)});ml.appendChild(vw)}
 function start(cid){seq=[];var list=cid?CH.filter(function(c){return c.id===cid}):CH;
  if(!cid)seq.push({card:'intro'});
  list.forEach(function(c){var i=CH.indexOf(c);seq.push({card:'ch',c:c,i:i});ST.filter(function(s){return s.ch===c.id}).forEach(function(s,k,arr){seq.push({s:s,c:c,k:k,n:arr.length})})});
@@ -106,9 +106,9 @@ function start(cid){seq=[];var list=cid?CH.filter(function(c){return c.id===cid}
 function show(){clearTimeout(timer);var it=seq[pos];if(!it)return;
  var card=$('card');
  if(it.card){card.classList.add('on');$('ring').classList.remove('on');
-   if(it.card==='intro'){$('cN').textContent='REAL ESTATE GLOBAL';$('cH').textContent=u('intro');$('cP').textContent=u('introP')}
+   if(it.card==='intro'){$('cN').textContent='RASL ESTATE GLOBAL';$('cH').textContent=u('intro');$('cP').textContent=u('introP')}
    else if(it.card==='ch'){$('cN').textContent=u('part')+' '+(it.i+1)+' '+u('of')+' '+CH.length;$('cH').textContent=it.c[LANG];$('cP').textContent=ST.filter(function(s){return s.ch===it.c.id}).length+' '+u('steps')}
-   else{$('cN').textContent=it.card==='endch'?u('end')+' · '+it.c[LANG]:'REAL ESTATE GLOBAL';$('cH').textContent=it.card==='endch'?'✓':u('endAll');$('cP').textContent=''}
+   else{$('cN').textContent=it.card==='endch'?u('end')+' · '+it.c[LANG]:'RASL ESTATE GLOBAL';$('cH').textContent=it.card==='endch'?'✓':u('endAll');$('cP').textContent=''}
    dur=it.card==='ch'?3200:3000;}
  else{card.classList.remove('on');var s=it.s;$('chT').textContent=it.c[LANG]+' · '+(it.k+1)+'/'+it.n;
    var cap=$('cap');cap.classList.remove('in');void cap.offsetWidth;cap.textContent=s[LANG]||s.en;cap.classList.add('in');

@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b1220">
+<meta name="theme-color" content="#0D2136">
 <title>VANA Studio · 360° 3D VR</title>
 <style>
-:root{--bg:#0b1220;--card:rgba(12,19,33,.88);--line:rgba(255,255,255,.12);--ink:#f4efe6;--mute:#a9b1c0;--gold:#d4b06a;--gold2:#e7cb8f;--red:#ff5a4f}
+:root{--bg:#0D2136;--card:rgba(12,19,33,.88);--line:rgba(255,255,255,.12);--ink:#FFFFFF;--mute:#A9BACB;--gold:#FFFFFF;--gold2:#C9D6E3;--red:#ff5a4f}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
 button,input{font:inherit;color:inherit}
@@ -18,49 +18,49 @@ canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-actio
 #top .ttl{flex:1;min-width:0;font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
 #top .ttl small{font-weight:500;color:var(--gold2);font-size:12px}
 .ib{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;font-size:18px;flex:none;text-decoration:none;color:var(--ink)}
-#start{position:fixed;inset:0;z-index:4;overflow:auto;padding:calc(70px + env(safe-area-inset-top)) 18px calc(24px + env(safe-area-inset-bottom));background:radial-gradient(120% 70% at 50% 0%,#1b2740 0%,#0b1220 60%)}
+#start{position:fixed;inset:0;z-index:4;overflow:auto;padding:calc(70px + env(safe-area-inset-top)) 18px calc(24px + env(safe-area-inset-bottom));background:radial-gradient(120% 70% at 50% 0%,#173F63 0%,#0D2136 60%)}
 #start .in{max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 .hero{font-size:44px;text-align:center;margin-top:6px}
 #start h1{margin:0;font-size:24px;text-align:center}
 #start p.lead{margin:0 0 6px;color:var(--mute);font-size:14px;line-height:1.6;text-align:center}
-.big{display:flex;align-items:center;gap:14px;width:100%;padding:16px;border-radius:18px;border:1px solid var(--gold);background:rgba(212,176,106,.1);text-align:start}
+.big{display:flex;align-items:center;gap:14px;width:100%;padding:16px;border-radius:18px;border:1px solid var(--gold);background:rgba(255,255,255,.1);text-align:start}
 .big i{font-style:normal;font-size:28px}
 .big b{display:block;font-size:16px}
 .big span{font-size:12px;color:var(--mute)}
-.big.solid{background:var(--gold);color:#1a1408;border-color:var(--gold)}
-.big.solid span{color:#3b2f17}
+.big.solid{background:var(--gold);color:#102B46;border-color:var(--gold)}
+.big.solid span{color:#173F63}
 .linkrow{display:flex;gap:8px}
-.linkrow input{flex:1;min-width:0;height:50px;border-radius:14px;border:1px solid var(--line);background:#111a2c;padding:0 14px;direction:ltr}
-.linkrow button{height:50px;padding:0 18px;border-radius:14px;border:0;background:var(--gold);color:#1a1408;font-weight:700}
+.linkrow input{flex:1;min-width:0;height:50px;border-radius:14px;border:1px solid var(--line);background:#102B46;padding:0 14px;direction:ltr}
+.linkrow button{height:50px;padding:0 18px;border-radius:14px;border:0;background:var(--gold);color:#102B46;font-weight:700}
 .tip{font-size:12px;color:var(--mute);line-height:1.6;padding:12px 14px;border-radius:14px;border:1px dashed var(--line)}
 .err{color:#ff9b8a;font-size:13px;min-height:18px;text-align:center}
 #bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));z-index:5;width:min(560px,calc(100% - 16px));padding:8px;border-radius:20px;background:var(--card);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:8px}
 .row{display:flex;gap:6px;align-items:center}
-.seg{display:flex;background:#0b1220;border-radius:12px;padding:3px;gap:2px;flex:none}
+.seg{display:flex;background:#0D2136;border-radius:12px;padding:3px;gap:2px;flex:none}
 .seg button{border:0;background:transparent;border-radius:9px;padding:7px 11px;font-size:13px;font-weight:700;color:var(--mute)}
-.seg button.on{background:var(--gold);color:#1a1408}
+.seg button.on{background:var(--gold);color:#102B46}
 .sp{flex:1;display:flex;align-items:center;gap:6px;min-width:0;font-size:12px;color:var(--mute)}
 .sp input{flex:1;min-width:0;accent-color:var(--gold)}
 .tb{border:0;background:transparent;border-radius:12px;padding:6px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--mute);flex:1;min-width:0;white-space:nowrap}
 .tb i{font-style:normal;font-size:20px;color:var(--ink)}
-.tb.gold{background:var(--gold);color:#1a1408}.tb.gold i{color:#1a1408}
+.tb.gold{background:var(--gold);color:#102B46}.tb.gold i{color:#102B46}
 .tb.rec{background:var(--red);color:#fff}.tb.rec i{color:#fff}
 #thumbs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 #thumbs::-webkit-scrollbar{display:none}
 #thumbs button{flex:none;width:54px;height:40px;border-radius:9px;border:2px solid transparent;padding:0;overflow:hidden;background:#000 center/cover no-repeat;position:relative}
 #thumbs button.on{border-color:var(--gold)}
 #thumbs button em{position:absolute;inset:auto 2px 2px auto;font-style:normal;font-size:9px;background:rgba(0,0,0,.6);border-radius:4px;padding:0 3px;color:#fff}
-#titleIn{width:100%;height:38px;border-radius:11px;border:1px solid var(--line);background:#0b1220;padding:0 12px;font-size:13px}
+#titleIn{width:100%;height:38px;border-radius:11px;border:1px solid var(--line);background:#0D2136;padding:0 12px;font-size:13px}
 #recBadge{position:fixed;top:calc(64px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:6;background:var(--red);color:#fff;border-radius:20px;padding:6px 14px;font-size:13px;font-weight:700;display:flex;gap:8px;align-items:center}
 #recBadge i{width:9px;height:9px;border-radius:50%;background:#fff;animation:bl 1s infinite}
 @keyframes bl{50%{opacity:.2}}
 #prog{position:fixed;left:0;top:0;height:3px;background:var(--red);z-index:7;width:0}
 .sheet{position:fixed;inset:0;z-index:12;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
-.sheet .sc{width:min(460px,100%);max-height:92vh;overflow:auto;background:#111a2c;border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom));border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.sheet .sc{width:min(460px,100%);max-height:92vh;overflow:auto;background:#102B46;border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom));border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
 .sheet h3{margin:0}
 .sheet video{width:100%;border-radius:14px;background:#000;max-height:50vh}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:14px;border:1px solid var(--gold);background:transparent;color:var(--gold2);font-weight:700;text-decoration:none;width:100%}
-.btn.gold{background:var(--gold);color:#1a1408}
+.btn.gold{background:var(--gold);color:#102B46}
 .note{font-size:13px;color:var(--mute);text-align:center}
 #toast{position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;background:rgba(0,0,0,.75);padding:9px 14px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .4s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
 #embedBar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:5;display:flex;gap:8px;width:min(460px,calc(100% - 16px))}
@@ -73,7 +73,7 @@ canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-actio
 <div id="prog"></div>
 <div id="top">
   <a class="ib" id="back" href="index.html" aria-label="Back">‹</a>
-  <div class="ttl"><svg width="22" height="16" viewBox="0 0 22 16"><path d="M1 15 L11 2 L21 15" fill="none" stroke="#d4b06a" stroke-width="2.4" stroke-linejoin="round"/><path d="M7 15 L11 9.5 L15 15" fill="none" stroke="#e7cb8f" stroke-width="2"/></svg><span>VANA Studio</span><small>360° · 3D · VR</small></div>
+  <div class="ttl"><svg width="22" height="16" viewBox="0 0 22 16"><path d="M1 15 L11 2 L21 15" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linejoin="round"/><path d="M7 15 L11 9.5 L15 15" fill="none" stroke="#C9D6E3" stroke-width="2"/></svg><span>VANA Studio</span><small>360° · 3D · VR</small></div>
   <button class="ib hide" id="fsB" aria-label="Fullscreen">⛶</button>
 </div>
 
@@ -164,9 +164,9 @@ var markC=document.createElement('canvas');markC.width=1024;markC.height=160;var
 var mark=new THREE.Mesh(new THREE.PlaneGeometry(1,.15625),new THREE.MeshBasicMaterial({map:markT,transparent:true,depthTest:false,depthWrite:false}));mark.renderOrder=10;camera.add(mark);
 function drawMark(){var x=markC.getContext('2d'),w=markC.width,h=markC.height,title=$('titleIn').value.trim();x.clearRect(0,0,w,h);
  var g=x.createLinearGradient(0,0,0,h);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.55)');x.fillStyle=g;x.fillRect(0,0,w,h);
- x.strokeStyle='#d4b06a';x.lineWidth=7;x.lineJoin='round';x.beginPath();x.moveTo(30,118);x.lineTo(70,66);x.lineTo(110,118);x.stroke();x.strokeStyle='#e7cb8f';x.lineWidth=5;x.beginPath();x.moveTo(54,118);x.lineTo(70,96);x.lineTo(86,118);x.stroke();
- x.fillStyle='#f4efe6';x.font='800 52px system-ui,-apple-system,sans-serif';x.textBaseline='alphabetic';x.direction='ltr';x.textAlign='left';x.fillText('VANA',126,118);
- if(title){x.font='600 44px system-ui,-apple-system,Tahoma,sans-serif';x.textAlign='right';x.direction=/[؀-ۿ]/.test(title)?'rtl':'ltr';x.fillStyle='#e7cb8f';x.fillText(title,w-30,118,w-330);if(x.direction==='rtl'){/* keep right aligned */}}
+ x.strokeStyle='#FFFFFF';x.lineWidth=7;x.lineJoin='round';x.beginPath();x.moveTo(30,118);x.lineTo(70,66);x.lineTo(110,118);x.stroke();x.strokeStyle='#C9D6E3';x.lineWidth=5;x.beginPath();x.moveTo(54,118);x.lineTo(70,96);x.lineTo(86,118);x.stroke();
+ x.fillStyle='#FFFFFF';x.font='800 52px system-ui,-apple-system,sans-serif';x.textBaseline='alphabetic';x.direction='ltr';x.textAlign='left';x.fillText('VANA',126,118);
+ if(title){x.font='600 44px system-ui,-apple-system,Tahoma,sans-serif';x.textAlign='right';x.direction=/[؀-ۿ]/.test(title)?'rtl':'ltr';x.fillStyle='#C9D6E3';x.fillText(title,w-30,118,w-330);if(x.direction==='rtl'){/* keep right aligned */}}
  markT.needsUpdate=true}
 function placeMark(){var d=1,hh=Math.tan(THREE.MathUtils.degToRad(camera.fov/2))*d,hw=hh*camera.aspect;var mw=Math.min(hw*2,hh*2*1.6);mark.scale.set(mw,mw,1);mark.position.set(0,-hh+mw*.15625/2,-d)}
 $('titleIn').addEventListener('input',drawMark);
