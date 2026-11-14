@@ -20,6 +20,23 @@ html,body{height:100%;margin:0;background:#0B1220;overscroll-behavior:none}
    If the host ever pins it again, the app ends above it so it never covers a button. */
 #nl-badge-frame{position:static!important;display:block!important;margin:0 0 0 auto!important}
 body.nl-fixed #app{height:calc(100vh - 54px);height:calc(100dvh - 54px)}
+.desk-side{display:none;position:fixed;top:50%;transform:translateY(-50%);flex-direction:column;align-items:center;gap:10px;color:#9AA6BD;font:500 13px Inter,'Noto Sans Arabic',system-ui,sans-serif;pointer-events:none;text-align:center;max-width:220px}
+/* Desktop / laptop: the app sits in a phone-like frame in the middle, rows can be dragged with the mouse */
+@media (min-width: 700px){
+ html,body{background:radial-gradient(1200px 700px at 15% 10%,#1B2740 0%,rgba(11,18,32,0) 60%),radial-gradient(900px 600px at 90% 90%,rgba(212,176,106,.10) 0%,rgba(11,18,32,0) 60%),#070C16}
+ #app{max-width:500px;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px #1C2740;border-radius:0}
+ .tm-sheet{background:rgba(4,7,14,.55)}
+ .tm-panel{max-width:500px}
+ #app ::-webkit-scrollbar{width:8px;height:0}
+ #app ::-webkit-scrollbar-thumb{background:#24304A;border-radius:4px}
+ #app [style*="overflow-x: auto"],#app .cz-track{cursor:grab}
+ #app .dragging,#app .dragging *{cursor:grabbing!important;user-select:none}
+ .desk-side{display:flex}
+}
+@media (min-width: 1100px){#app{max-width:520px}.tm-panel{max-width:520px}}
+.desk-side b{color:#D4B06A;letter-spacing:.24em;font-size:15px}
+.desk-side i{font-style:normal;width:64px;height:64px;border:1px solid #D4B06A;border-radius:50%;display:grid;place-items:center;font:600 34px 'Cormorant Garamond',Georgia,serif;color:#D4B06A}
+@media (max-width: 1099px){.desk-side{display:none!important}}
 /* Compact bottom bar */
 nav[aria-label="Main"]{height:58px!important}
 nav[aria-label="Main"] a{gap:2px!important;font-size:10px!important;font-weight:500!important}
@@ -107,7 +124,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794633082';
+var BUILD='1794635188';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -1128,6 +1145,16 @@ app.addEventListener('submit',function(e){e.preventDefault();if(e.target&&e.targ
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&st.mid){st.mid=null;render();}});
 (function(){var sx=null,sy=0;document.addEventListener('touchstart',function(e){var p=e.target.closest&&e.target.closest('.pj-panel');if(!p||e.target.closest('[data-noswipe],input,textarea,select')||!st.pid||st.pedit){sx=null;return;}sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
 document.addEventListener('touchend',function(e){if(sx==null)return;var dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;if(Math.abs(dx)<60||Math.abs(dx)<Math.abs(dy)*1.5)return;var rtl=!!document.querySelector('#app [dir="rtl"]');projGo((dx<0)!==rtl?1:-1);},{passive:true});})();
+(function(){if(true){
+var side=document.createElement('div');side.className='desk-side';side.style.left='calc(50% - 260px - 250px)';side.innerHTML='<i>R</i><b>REAL ESTATE</b><span>GLOBAL</span>';document.body.appendChild(side);
+var side2=document.createElement('div');side2.className='desk-side';side2.style.right='calc(50% - 260px - 250px)';side2.innerHTML='<span style="font-size:28px">🏠 🏙 🏞</span><span>Projects · Villas · Land</span>';document.body.appendChild(side2);
+var hz=function(el){while(el&&el!==document.body){if(el.nodeType===1){var cs=getComputedStyle(el);if((cs.overflowX==='auto'||cs.overflowX==='scroll')&&el.scrollWidth>el.clientWidth+2)return el;}el=el.parentNode;}return null;};
+document.addEventListener('wheel',function(e){if(Math.abs(e.deltaX)>Math.abs(e.deltaY))return;var t=hz(e.target);if(!t||e.target.closest('.tm-panel')&&!t.closest('.tm-panel'))return;var before=t.scrollLeft;t.scrollLeft+=e.deltaY*(document.querySelector('#app [dir="rtl"]')?-1:1);if(t.scrollLeft!==before)e.preventDefault();},{passive:false});
+var dr=null;document.addEventListener('mousedown',function(e){if(e.button!==0||e.target.closest('input,textarea,select'))return;var t=hz(e.target);if(!t)return;dr={t:t,x:e.clientX,l:t.scrollLeft,moved:false,snap:t.style.scrollSnapType};});
+document.addEventListener('mousemove',function(e){if(!dr)return;var dx=e.clientX-dr.x;if(!dr.moved&&Math.abs(dx)>5){dr.moved=true;dr.t.classList.add('dragging');dr.t.style.scrollSnapType='none';}if(dr.moved){dr.t.scrollLeft=dr.l-dx;e.preventDefault();}});
+document.addEventListener('mouseup',function(){if(!dr)return;var d=dr;dr=null;d.t.classList.remove('dragging');d.t.style.scrollSnapType=d.snap;if(d.moved){var stop=function(ev){ev.stopPropagation();ev.preventDefault();document.removeEventListener('click',stop,true);};document.addEventListener('click',stop,true);setTimeout(function(){document.removeEventListener('click',stop,true);},50);if(d.t.classList.contains('cz-track')){var w=d.t.clientWidth||1;d.t.scrollTo({left:Math.round(d.t.scrollLeft/w)*w,behavior:'smooth'});}}});
+document.addEventListener('keydown',function(e){if(!st.pid||st.pedit||e.target.closest('input,textarea,select'))return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){var rtl=!!document.querySelector('#app [dir="rtl"]');projGo((e.key==='ArrowLeft')!==rtl?1:-1);}});
+}})();
 window.addEventListener('hashchange',function(){st.open=false;st.mid=null;st.uid=null;st.pub=false;st.pid=null;if(route()!=='Sales')st.sellId=null;if(route()!=='Profile'){pf={blob:null,url:''};}if(route()!=='Ads')adBlobs=[];if(route()!=='Listings')lBlobs=[];render();});
 // Opened from the home-screen icon, iOS reports a viewport shorter than the screen, which left an empty strip
 // under the app. There the app takes the real screen height, so it fills the screen edge to edge.

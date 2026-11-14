@@ -151,3 +151,8 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
   - Both forms also have **Where on home** (① top · ② middle · ③ bottom).
 - **Types:** 🏗 Project · 🏞 Land · 🏡 Villa · 🏢 Apartment · 🏪 Commercial, and ✨ New / ♻ Used. Set in the owner's project form, the member registration form, and ✎ Edit on the project card (`listings.ptype`, `listings.cond`; database functions `submit_property`, `set_property_type`).
 - **Bottom section of Home:** buttons filter by type and by new/used, separate from projects. Each card shows its type icon and new/used.
+
+## On a computer
+- The same link works on laptops and desktops. The app keeps its phone design in a centred frame (500–520 px wide), with a soft background and the brand on both sides on wide screens, so nothing stretches or breaks.
+- Rows that slide (ads, icons, cities, photos) can be **dragged with the mouse** or moved with the **mouse wheel**. In the project card, the **← →** keys go to the next or previous project.
+- tour.html, towers.html, studio.html and guide/ already fill a computer screen.
