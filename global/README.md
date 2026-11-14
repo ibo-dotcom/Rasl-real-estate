@@ -185,3 +185,10 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 
 ## Map links
 - Location fields accept **any Google Maps link, also the short `maps.app.goo.gl/...` links** from the Share button, as well as "36.19, 44.01" or 📍 "I'm here". Short links are opened on the server by the Supabase edge function `resolve-map`, which only follows Google hosts. It reads the place's exact pin (`!3d…!4d…`), or `?q=`, `/place/`, `/search/`, `@lat,lng`.
+
+## Unit card for the owner
+- A sold or reserved unit shows who took it, at what amount, and whether it is waiting for approval.
+  - **✓ Approve** pays the commission out.
+  - **✕ Cancel** rejects the sale and makes the unit green (free) again.
+  - Database function: `unit_sales_admin`, owner only.
+- **Price per m²:** in the unit editor and in "＋ Add units", the price can be the full price (e.g. 106250) or the price per m², which is multiplied by the area. A live preview shows the result, e.g. $106,250.
