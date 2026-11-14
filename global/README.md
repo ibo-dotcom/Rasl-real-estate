@@ -241,3 +241,13 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - They set that project's own tax %, tax base (sale price or commission), fees % and fixed fee per contract (`project_tax`, via `set_project_tax`). Everything starts at **0**; **⓪ Back to 0** returns the project and its unpaid contracts to zero at any time.
 - They see only their project's contracts and can change only tax, fees, optional charity, contract no., buyer, receipt, note and paid status (`update_contract_tax`); nothing else in the app becomes editable. **⓪** on a contract zeroes that contract's tax and fees.
 - **↻ Recalculate unpaid** reapplies the current rates to unpaid contracts (`recalc_contract_taxes`); paid contracts never change. Project rates override the company rates; without them the company rates (default 0) apply.
+
+## Payment methods (bank, wallet, Visa card, cash)
+
+- **💵 Payment** circle on the home screen: everyone sees the company's payment details; the owner turns each method on/off and fills them in (`settings.pay_methods`):
+  - 🏦 **Bank** — bank, account name, account no., IBAN (each with a copy button).
+  - 👛 **Wallet** — one wallet per line, `Name: number` (e.g. FIB, FastPay, ZainCash).
+  - 💳 **Visa card** — a payment link from the bank / payment company (must start with https://). The app opens it; the card is charged there, not inside the app.
+  - 💵 **Cash** — office address and hours.
+- The "How will you pay?" picker (with the details of the chosen method and a transfer/receipt number) appears when **buying or reserving a unit** (`sales.pay_method`, `sales.pay_ref`), **giving to charity** (`donations.pay_method`, `pay_ref`) and when an agent **pays the ad fee** (`report_fee_payment` → `listings.fee_method`, `fee_ref`; the owner sees it next to 💵 before approving).
+- **Tax payments**: each contract and each ledger entry records how it was paid (`contract_taxes.pay_method` via `set_contract_tax_method`, `ledger.pay_method`); the contract card also shows how the buyer paid.
