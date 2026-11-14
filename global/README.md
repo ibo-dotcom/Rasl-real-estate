@@ -234,3 +234,10 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - The list shows each contract (project, unit, contract no., buyer, seller, date) with paid / not paid. Filter by status and month; edit the contract no., buyer, tax, fees, optional charity (one tap applies the suggested %), receipt and note; mark **✓ Tax paid** with the government receipt number.
 - **Excel (CSV)** and **Print for government** produce the report (with totals, signature and stamp lines) to hand to the government.
 - `finance_summary()` now counts tax owed/paid from the contracts; charity from sales = the optional charity entered per contract.
+
+### Agents and partners handle their own project's tax
+
+- In **🏢 My projects** each project now has **🏛 Tax & fees**. The agent (project owner) and the partners of that project — and the company owner — can open it; nobody else.
+- They set that project's own tax %, tax base (sale price or commission), fees % and fixed fee per contract (`project_tax`, via `set_project_tax`). Everything starts at **0**; **⓪ Back to 0** returns the project and its unpaid contracts to zero at any time.
+- They see only their project's contracts and can change only tax, fees, optional charity, contract no., buyer, receipt, note and paid status (`update_contract_tax`); nothing else in the app becomes editable. **⓪** on a contract zeroes that contract's tax and fees.
+- **↻ Recalculate unpaid** reapplies the current rates to unpaid contracts (`recalc_contract_taxes`); paid contracts never change. Project rates override the company rates; without them the company rates (default 0) apply.
