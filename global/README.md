@@ -258,3 +258,9 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - **Wallet page** now shows a ⭐ **My points** card (my points, team points, current rank and %, points left to the next rank with a progress bar) and **My sales — points and money**: each own sale with price, sold/reserved, date, status, ⭐ points (or "after approval"), and the money it put in the wallet (≈ expected amount while pending).
 - Each wallet entry shows the sale's points (my points for my own sale, team points for a sale from the team).
 - The commission split in the unit card starts with "⭐ Points you get +N".
+
+### Points are paid as money (1 point = $1)
+
+- `settings.point_value` (default **$1**; the owner changes it on the wallet page). When a sale is approved, `sale_payout` adds a `points` wallet entry for the seller: points × point value. It is taken from the office's share of the pool, so the commission split of the team does not change.
+- Approved sales that already existed were back-filled (5 sales, 195 points → $195).
+- Wallet: "⭐ 1 point = $1" banner, **Points money** total, each points entry shown as "⭐ Points money × $1"; the unit card shows "⭐ Points you get (+N × $1) = $N"; pending sales show the expected money including points.
