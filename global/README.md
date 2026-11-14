@@ -311,3 +311,4 @@ The whole app was restyled without changing any feature, route, database call or
 - The account is ready at once — no confirmation email. The app shows the login details to copy or send by WhatsApp. Members can change the password later in their profile.
 - Server side: edge function `add-member` (see `supabase/functions/add-member`). The limit of 10 direct members per code still applies.
 - One person can have several accounts with the same name or the same email; each gets its own code. If the email is already used, the new account's login email becomes an alias of the same inbox (e.g. `name+r2@gmail.com`), shown in the result card.
+- **No limit on the owner's code.** `private.direct_limit_for(sponsor)` returns 0 (no limit) for the owner and 10 for everyone else; the sign-up trigger, `check_code_v2` and the `add-member` function all use it. Names, phone numbers and emails may repeat across accounts — only the code is unique.

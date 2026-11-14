@@ -1,6 +1,6 @@
 // add-member: the company owner creates a member account directly (already confirmed, no email needed).
 // The account is placed under a sponsor code (the owner's own code by default). The database trigger
-// `private.handle_new_user` gives the new code and enforces the direct-member limit.
+// `private.handle_new_user` gives the new code and enforces the direct-member limit (none for the owner's code).
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const cors = {
@@ -36,10 +36,13 @@ Deno.serve(async (req) => {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "email" }, 400);
   if (password.length < 6) return json({ error: "password" }, 400);
 
-  const { data: sp } = await admin.from("profiles").select("id, code").eq("code", sponsor_code).maybeSingle();
+  const { data: sp } = await admin.from("profiles").select("id, code, role").eq("code", sponsor_code).maybeSingle();
   if (!sp) return json({ error: "sponsor" }, 400);
-  const { count } = await admin.from("profiles").select("id", { count: "exact", head: true }).eq("sponsor_id", sp.id);
-  if ((count ?? 0) >= 10) return json({ error: "sponsor_full", direct: count }, 400);
+  // The owner's code has no limit; every other code takes 10 direct members (same rule as the database trigger).
+  if (sp.role !== "owner") {
+    const { count } = await admin.from("profiles").select("id", { count: "exact", head: true }).eq("sponsor_id", sp.id);
+    if ((count ?? 0) >= 10) return json({ error: "sponsor_full", direct: count }, 400);
+  }
 
   // The same person may hold several accounts (same name or same email, different code).
   // When the email is already used, sign-in uses an alias of the same inbox: name+r2@gmail.com, name+r3@...

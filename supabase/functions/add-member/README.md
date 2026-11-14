@@ -4,7 +4,7 @@ Lets the company owner create a member account directly from the app (menu → "
 
 - Owner only: the caller's token is checked and their profile must have `role = 'owner'`.
 - The account is created **already confirmed** (`email_confirm: true`), so no confirmation email is sent — this avoids Supabase's email limit and the localhost link.
-- The member is placed under `sponsor_code` (the owner's own code by default). The `private.handle_new_user` trigger gives the new code (e.g. `IBO-1-5`) and enforces the limit of 10 direct members; the function checks the limit first to return a clear error.
+- The member is placed under `sponsor_code` (the owner's own code by default). The `private.handle_new_user` trigger gives the new code (e.g. `IBO-1-5`) and enforces the limit of 10 direct members for every code except the owner's (no limit); the function checks the limit first to return a clear error.
 - Returns `{ ok, email, code, full_name, sponsor }`. Errors: `not_signed_in`, `owner_only`, `name`, `email`, `password`, `sponsor`, `sponsor_full`, `exists`, `failed`.
 - Deployed with `verify_jwt = true`. Uses the built-in `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` secrets.
 
