@@ -131,3 +131,10 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - When adding an ad, the owner chooses **Where on home** (① top / ② middle / ③ bottom) and, if they want, a project it opens. Empty places show a dashed "＋ Add an ad" to the owner only. When there are more ads than places, the row slides. Approved member posts go to the bottom row.
 - **Database:** `ads.slot`, `ads.listing_id`, `member_posts.slot`.
 - Update: all round buttons are now **one row under the large ad**: CRM, Team, Wallet, Publish, Academy, 360°, 3D, Map, Language, then the cities. The bottom bar is hidden on Home, so ① + ② + ③ (all six places) fit on one phone screen. Other pages keep the bottom bar.
+
+## Project card (tap any ad or best seller)
+- **Shows:** photos and videos; price range (from the units); units left / total; buildings; sold; commission % and $; points per unit; a sold-progress bar; payment steps (with $ per step); details; notes; project owner and partners.
+- **Buttons:** See the units and buy · 🧭 Directions (Google Maps to the project location) · 🏙 3D towers / 3D tour · 💬 Share · ✎ Edit.
+- **Who can edit:** the app owner, or members added to the project as **Project owner / Partner / Agreement holder** (by member code, in ✎ Edit → partners). They can change buildings, details, payment steps (one per line, e.g. `Down payment: 10`), notes, and add or remove photos and videos. Database function: `update_project`.
+- **Who sees commission, points and partners:** the owner chooses a rank per project (✎ Edit → 👁). Price, units, buildings and photos are shown to everyone.
+- **Ad places:** every empty place shows **＋ Add an ad · Free** to all members. The owner can set a price per place later (📢 Publish → 🏷 price of each ad place; 0 = free). Partners can post ads for their own projects for free, even below the publishing rank. The owner still approves every post.
