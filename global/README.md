@@ -143,3 +143,11 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - **In the project card:** swipe left/right (or ‹ ›) to go to the next project. "3 / 12" shows where you are, and 🔍 finds a project by name or city. Projects are ordered by most sold.
 - **Register a project (any member, free):** 📢 Publish → 🏢 **Register your project for sale** (name, city, price, units, buildings, type, details, photos). It stays hidden until the owner approves it. The person who registers becomes the project's **owner** (`project_members`) and can add more info, photos and videos from the project card. Database function: `submit_project` (limit 10 waiting per member).
 - **Owner:** 📢 Publish → **New projects waiting for approval**: 👁 view, ✓ approve (goes live), ✕ delete. The owner still adds projects directly in ⚙ Manage villas & projects.
+
+## Choosing the row, and property types
+- Under every ad row there is a small **＋ Add here ① / ② / ③** button, also when the row is already full. More ads in a row slide left/right.
+  - Owner: opens the ad form with that row chosen.
+  - Members: opens the post form with that row.
+  - Both forms also have **Where on home** (① top · ② middle · ③ bottom).
+- **Types:** 🏗 Project · 🏞 Land · 🏡 Villa · 🏢 Apartment · 🏪 Commercial, and ✨ New / ♻ Used. Set in the owner's project form, the member registration form, and ✎ Edit on the project card (`listings.ptype`, `listings.cond`; database functions `submit_property`, `set_property_type`).
+- **Bottom section of Home:** buttons filter by type and by new/used, separate from projects. Each card shows its type icon and new/used.
