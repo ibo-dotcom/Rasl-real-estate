@@ -334,3 +334,22 @@ The whole app was restyled without changing any feature, route, database call or
 
 - The owner's direct members have their own series: **RASL-01, RASL-02, …** (RASL-100 after RASL-99). The six existing direct members were renumbered in the order they joined (IBO-1-1 → RASL-01 … IBO-1-6 → RASL-06; nobody was under them yet).
 - Everyone else keeps the normal style: members under RASL-01 get RASL-01-1, RASL-01-2, … (up to 10 per code). Codes are case-insensitive when typed.
+
+## New commission plan (shares of the whole commission)
+
+| Share | Default |
+|---|---|
+| Company — taxes & fees (not paid to anyone) | 15% |
+| Buyer — discount to the buyer's wallet | 25% |
+| Buyer's sponsor | 10% |
+| Seller | 25% |
+| Generations 1–5 above the seller | 5 / 4 / 3 / 2 / 1% |
+| First line (owner's direct member) beyond generation 5 | 1% |
+| Points money ($1 per point, 1 point per $1,000) | ~5% at 2% commission |
+| Rest → rank bonus pool (`rankpool` entry, to distribute) | ~4% |
+
+- **No sale without a buyer code.** The unit card, the project deal box and the Sales form ask for the buyer's code; the database refuses a sale without a valid code (`buyer_code_required` / `buyer_code_bad`) and stores `sales.buyer_id`.
+- Buying a property activates the buyer's code (identity still required unless the buyer is the owner's direct member; if identity is approved later, the code activates then).
+- Only active codes receive seller, generation, first-line and points money; the buyer's discount is always paid; the buyer's sponsor share is paid if that sponsor is active. Anything not paid goes to the rank bonus pool.
+- The owner changes every percentage on the **Accounts** page (`settings.company_pct`, `buyer_pct`, `buyer_sponsor_pct`, `seller_share_pct`, `firstline_pct`, levels).
+- Verified on a temporary chain (rolled back) for a $500,000 villa: buyer $2,500, buyer's sponsor $1,000, seller $2,500 + $500 points, generations $500/$400/$300/$200/$100, first line $100, rank pool $400 — members $8,500 (85%), company $1,500 (15%).
