@@ -202,3 +202,12 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - **Unit card:** shows the cash price and the installment price, with two buy buttons, **💵 Buy · Cash** and **📅 Buy · Installment**. The sale records the way (`sales.pay_way`), and the database takes the matching price from the unit.
 - **Unit editor:** also has the installment price.
 - **📋 Units table (owner):** on the project's unit board, every unit is listed in one table with its area, rooms, $/m², cash price and installment price. Writing $/m² works out the cash price from the area. **Paste from Excel or a list** (one line per unit: code, area, rooms, cash price, installment price) fills the table. **💾 Save all** saves only the changed units.
+
+## Sales list per project (project, villa, land…)
+- **Project card → 📄 Sales list:**
+  - totals for free / reserved / sold, each with its $ value;
+  - the payment steps;
+  - a table of every unit: code, m², rooms, cash price, installment price, first-step amount, and a status colour.
+- The owner, project owner and partners get **⬇ Excel** (a CSV with every unit plus one column per payment step), **🖨 PDF** (print-ready page) and **💬 Share**. Members see the list.
+- **On the map:** tapping a project pin shows units left, plus **Open** (project card) and **📄 List**.
+- **Every sale is visible to everyone:** a 🔥 **Latest sales** strip on Home (project · unit · sold/reserved · cash/installment · how long ago). The project card shows that project's latest sales. Buyers' details are not shown. Database function: `recent_sales`.
