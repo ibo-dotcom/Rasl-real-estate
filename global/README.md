@@ -163,3 +163,18 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
   - ☕ **Lounge:** electric-piano chords, soft bass, light hi-hat.
   - 🌊 **Sea:** slow pads and waves.
 - **Silent at start.** Press ▶ to play. There's a volume slider, and the chosen track and volume are remembered. The music keeps playing while you move between pages, and a small 🎵 ⏸ button stays visible to reopen the player.
+
+## Rule: no ad without complete project info (and payment)
+- An ad (owner ad or member post) is shown to members only when:
+  - it is **linked to a project**;
+  - the project's info is **complete**: at least 3 photos or videos, a full description, prices, units (not needed for land), buildings (for projects), map location, commission %, payment way (cash / installment, with the steps for installment), and who owns the project;
+  - if the place has a price, the ad is **marked paid**.
+- The owner still sees the other ads, with a red ⚠ and the reason. The ad form and the member post form refuse an incomplete project and list what is missing.
+- **Owner:** 📢 Publish → 📋 **Ads: ready or not**. Link each ad to a project, mark 💵 paid, and see ✅ or ⚠ for each.
+- **Project card:**
+  - 👤 project owner;
+  - 💵 payment way (cash / installment / both);
+  - 📊 **business plan**: commission from start to end (total, team wallet, seller, levels 1–5) for that price;
+  - payment steps.
+  The project's owner, partners and the app owner also see ✅ "can be advertised" or the list of what is missing.
+- **✎ Edit** also sets the payment way and the location (map link or "36.19, 44.01"). Database functions: `set_pay_mode`, `set_project_loc`; new columns `ads.paid`, `member_posts.paid`.
