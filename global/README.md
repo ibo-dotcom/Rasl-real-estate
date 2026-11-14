@@ -156,3 +156,10 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - The same link works on laptops and desktops. The app keeps its phone design in a centred frame (500–520 px wide), with a soft background and the brand on both sides on wide screens, so nothing stretches or breaks.
 - Rows that slide (ads, icons, cities, photos) can be **dragged with the mouse** or moved with the **mouse wheel**. In the project card, the **← →** keys go to the next or previous project.
 - tour.html, towers.html, studio.html and guide/ already fill a computer screen.
+
+## Calm music (🎵)
+- The 🎵 icon in the round-button row opens a small player with three calm tracks, made live in the app (no sound files):
+  - 🌙 **Focus:** soft pads, a few bell notes, light rain.
+  - ☕ **Lounge:** electric-piano chords, soft bass, light hi-hat.
+  - 🌊 **Sea:** slow pads and waves.
+- **Silent at start.** Press ▶ to play. There's a volume slider, and the chosen track and volume are remembered. The music keeps playing while you move between pages, and a small 🎵 ⏸ button stays visible to reopen the player.
