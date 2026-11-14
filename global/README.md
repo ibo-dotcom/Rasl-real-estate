@@ -358,3 +358,10 @@ The whole app was restyled without changing any feature, route, database call or
 
 - **Rank bonus pool, weekly.** Every Friday 18:00 UTC (21:00 Erbil) a `pg_cron` job runs `distribute_rank_pool()`: the pool balance (all `rankpool` entries minus what was already paid) is shared among **active members who hold a rank**, weighted by their rank's bonus % (`rankbonus` wallet entries, `rank_distributions` log, at most once per week). If nobody holds a rank, it stays for next week. The owner sees the pool and can press **Distribute now** on the Accounts page.
 - **Withdrawals after 7 days.** Money can be withdrawn `settings.hold_days` (7) days after it reaches the wallet. The Wallet page shows *available now / waiting 7 days / requested* and a **Request a withdrawal** form (amount, how to receive, account/number). The database refuses more than the available amount. The owner sees requests on the Accounts page and taps **Mark as paid** (creates the payout) or rejects with a reason (`decide_withdrawal`).
+
+### Points never stop
+
+- Money stops after generation 5 (plus the first-line 1%), but **points continue up the whole line to the owner** with no generation limit.
+- Every approved sale's points count for the **seller and the buyer** and for **everyone above either of them**; each sale is counted once per person (no double counting when both lines meet). The buyer also gets the purchase points as their own points.
+- Used for ranks (`team_stats_v2`) and the weekly rank bonus (`private.team_points_all`). Verified on a temporary 8-level chain (rolled back): a $100,000 sale gave 100 points to every person above the seller, to the buyer and the buyer's sponsor, and 100 (once) to the owner.
+- Money from a sale is split and credited to wallets at the moment the sale is approved; it can be withdrawn after 7 days.
