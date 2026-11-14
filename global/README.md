@@ -178,3 +178,7 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
   - payment steps.
   The project's owner, partners and the app owner also see ✅ "can be advertised" or the list of what is missing.
 - **✎ Edit** also sets the payment way and the location (map link or "36.19, 44.01"). Database functions: `set_pay_mode`, `set_project_loc`; new columns `ads.paid`, `member_posts.paid`.
+- **Fill in on the spot:** in the ad form (owner) and the post form (members), choosing the project opens its checklist. ✅ marks what is done; each ⚠ item has its own field right there:
+  - description, buildings, map location (Google Maps link or numbers), cash/installment and the installment steps;
+  - owner only: price, units, commission, and the project owner (member code or "Me").
+  **💾 Save project info** saves it all. The photos and videos chosen for the ad count toward the project's 3 and are added to the project. Each project in the list shows ✅ or ⚠.
