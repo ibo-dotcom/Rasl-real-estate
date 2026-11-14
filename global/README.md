@@ -138,3 +138,8 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - **Who can edit:** the app owner, or members added to the project as **Project owner / Partner / Agreement holder** (by member code, in ✎ Edit → partners). They can change buildings, details, payment steps (one per line, e.g. `Down payment: 10`), notes, and add or remove photos and videos. Database function: `update_project`.
 - **Who sees commission, points and partners:** the owner chooses a rank per project (✎ Edit → 👁). Price, units, buildings and photos are shown to everyone.
 - **Ad places:** every empty place shows **＋ Add an ad · Free** to all members. The owner can set a price per place later (📢 Publish → 🏷 price of each ad place; 0 = free). Partners can post ads for their own projects for free, even below the publishing rank. The owner still approves every post.
+
+## More projects: swipe, search, register
+- **In the project card:** swipe left/right (or ‹ ›) to go to the next project. "3 / 12" shows where you are, and 🔍 finds a project by name or city. Projects are ordered by most sold.
+- **Register a project (any member, free):** 📢 Publish → 🏢 **Register your project for sale** (name, city, price, units, buildings, type, details, photos). It stays hidden until the owner approves it. The person who registers becomes the project's **owner** (`project_members`) and can add more info, photos and videos from the project card. Database function: `submit_project` (limit 10 waiting per member).
+- **Owner:** 📢 Publish → **New projects waiting for approval**: 👁 view, ✓ approve (goes live), ✕ delete. The owner still adds projects directly in ⚙ Manage villas & projects.
