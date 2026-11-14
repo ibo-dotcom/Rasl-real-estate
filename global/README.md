@@ -226,3 +226,11 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - **🏛 Government (owner only)** — circle icon on the home screen. Set the government tax % and the charity % taken from each sale's commission (both are shown to everyone in the commission split). Summary of approved sales: total commission, tax owed / paid / still to pay, fees paid, fines paid. Record payments (tax, fee, fine, charity spending, other) with amount, date and note; delete wrong entries.
 - **🤲 Charity (everyone)** — circle icon on the home screen. Charity projects with photo, details, goal and a progress bar of confirmed gifts and donor count. Members tap **Give**, write an amount and note; the gift waits for the owner's confirmation and shows in "My gifts" with its status. The owner sees the charity fund (from sales %, members' gifts, spent, balance), confirms or rejects pending gifts, adds new charity projects (with photo) and hides or deletes them.
 - Tables: `ledger`, `charity_projects`, `donations`; settings `tax_pct`, `charity_pct`; functions `charity_totals()` and `finance_summary()` (owner only).
+
+### Contracts & government tax (per contract)
+
+- In the 🏛 sheet the owner sets: government tax %, whether it is taken **from the sale price or from the commission**, government fees (% of price and/or a fixed amount per contract), and a *suggested* charity % (charity is optional).
+- Every sale the owner approves (signed contract) automatically gets a row in `contract_taxes` with the rates of that moment: price, tax %, tax $, fees $, total to government. Old approved sales were back-filled.
+- The list shows each contract (project, unit, contract no., buyer, seller, date) with paid / not paid. Filter by status and month; edit the contract no., buyer, tax, fees, optional charity (one tap applies the suggested %), receipt and note; mark **✓ Tax paid** with the government receipt number.
+- **Excel (CSV)** and **Print for government** produce the report (with totals, signature and stamp lines) to hand to the government.
+- `finance_summary()` now counts tax owed/paid from the contracts; charity from sales = the optional charity entered per contract.
