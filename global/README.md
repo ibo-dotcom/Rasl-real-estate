@@ -303,3 +303,10 @@ The whole app was restyled without changing any feature, route, database call or
 - The app checks `version.json` (never cached) when it opens, whenever it comes back from the background, and every 5 minutes. If the server has a newer version it reloads itself with a fresh copy, staying on the same screen. If the member is typing or has a panel open, it shows a small "A new version is ready — Update" bar instead of interrupting. A reload is tried only once per version, so it can never loop.
 - Deploy: `VER=$(date -u +%Y%m%d%H%M%S); sed "s/__APP_VER__/$VER/" reg/index.html > global/index.html; printf '{"v":"%s"}\n' "$VER" > global/version.json`.
 - Home-screen app name and colours updated to Rasl Estate Global (navy / white).
+
+### Owner adds members directly
+
+- Menu → **Add a member** (owner only), or the button under **My members** on the home screen.
+- Enter full name, mobile, email and a password (a strong one is suggested; tap ↻ for a new one). "Under the code of" is your own code by default (direct member); write another member's code to place the new person under them.
+- The account is ready at once — no confirmation email. The app shows the login details to copy or send by WhatsApp. Members can change the password later in their profile.
+- Server side: edge function `add-member` (see `supabase/functions/add-member`). The limit of 10 direct members per code still applies.
