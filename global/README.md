@@ -251,3 +251,10 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
   - 💵 **Cash** — office address and hours.
 - The "How will you pay?" picker (with the details of the chosen method and a transfer/receipt number) appears when **buying or reserving a unit** (`sales.pay_method`, `sales.pay_ref`), **giving to charity** (`donations.pay_method`, `pay_ref`) and when an agent **pays the ad fee** (`report_fee_payment` → `listings.fee_method`, `fee_ref`; the owner sees it next to 💵 before approving).
 - **Tax payments**: each contract and each ledger entry records how it was paid (`contract_taxes.pay_method` via `set_contract_tax_method`, `ledger.pay_method`); the contract card also shows how the buyer paid.
+
+## Points per sale in the wallet
+
+- Rule (database, `sales.points` = price ÷ 1,000): every **approved sale** gives 1 ⭐ point per $1,000. Points count for the seller and for the team points of everyone above them (ranks); reservations give no points.
+- **Wallet page** now shows a ⭐ **My points** card (my points, team points, current rank and %, points left to the next rank with a progress bar) and **My sales — points and money**: each own sale with price, sold/reserved, date, status, ⭐ points (or "after approval"), and the money it put in the wallet (≈ expected amount while pending).
+- Each wallet entry shows the sale's points (my points for my own sale, team points for a sale from the team).
+- The commission split in the unit card starts with "⭐ Points you get +N".
