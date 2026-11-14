@@ -319,3 +319,7 @@ The whole app was restyled without changing any feature, route, database call or
 - **Team leadership.** New members' codes start **inactive** (the owner's direct members start active; all existing members were kept active). An inactive code cannot bring members (sign-up with it is refused with a clear message) and receives no commission or points money — its share stays with the office. To activate, the member opens **Team leadership** (crown icon in the shortcut row and the menu), sends the identity, and pays the leadership price with the usual payment methods (`leader_requests`). The owner sets the price, checks identities with the photos, and taps **Activate code** (`decide_leader`, which requires an approved identity unless the member is exempt).
 - Members who still need to act see a banner on the home screen.
 - Database: `profiles.active`, `settings.leader_price`, `kyc`, `leader_requests`, `my_status()`, `check_code_v3()`, `decide_leader()`, `set_member_active()`; `handle_new_user` and `sale_payout` updated. `add-member` refuses inactive sponsor codes.
+
+### Owner edits direct members
+
+- In a member's card (tap a member), the owner sees **Edit member** for their own direct members: name, last name, phone, country, city, sign-in email (stays confirmed) and a new password (leave empty to keep; ↻ suggests one). Server side: edge function `edit-member` (owner only, direct members only).
