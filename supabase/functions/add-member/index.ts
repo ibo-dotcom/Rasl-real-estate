@@ -36,8 +36,9 @@ Deno.serve(async (req) => {
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "email" }, 400);
   if (password.length < 6) return json({ error: "password" }, 400);
 
-  const { data: sp } = await admin.from("profiles").select("id, code, role").eq("code", sponsor_code).maybeSingle();
+  const { data: sp } = await admin.from("profiles").select("id, code, role, active").eq("code", sponsor_code).maybeSingle();
   if (!sp) return json({ error: "sponsor" }, 400);
+  if (!sp.active) return json({ error: "sponsor_inactive" }, 400);
   // The owner's code has no limit; every other code takes 10 direct members (same rule as the database trigger).
   if (sp.role !== "owner") {
     const { count } = await admin.from("profiles").select("id", { count: "exact", head: true }).eq("sponsor_id", sp.id);
@@ -60,7 +61,7 @@ Deno.serve(async (req) => {
     if (!(lastErr.includes("already") || lastErr.includes("registered") || lastErr.includes("exists"))) break;
   }
   if (!made) {
-    return json({ error: lastErr.includes("sponsor_full") ? "sponsor_full" : lastErr.includes("already") || lastErr.includes("registered") ? "exists" : "failed", detail: lastErr }, 400);
+    return json({ error: lastErr.includes("sponsor_inactive") ? "sponsor_inactive" : lastErr.includes("sponsor_full") ? "sponsor_full" : lastErr.includes("already") || lastErr.includes("registered") ? "exists" : "failed", detail: lastErr }, 400);
   }
   const { data: prof } = await admin.from("profiles").select("code, full_name").eq("id", made.id).maybeSingle();
   return json({ ok: true, email: used, aliased: used !== email, contact_email: email, code: prof?.code ?? null, full_name: prof?.full_name ?? full_name, sponsor: sp.code });
