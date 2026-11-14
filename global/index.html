@@ -124,7 +124,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794642990';
+var BUILD='1794660705';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -485,7 +485,10 @@ if(/kuula\.co\/(share|post)/i.test(u))return u;
 if(/(^https:\/\/([a-z0-9-]+\.)*resimo\.io\/)/i.test(u))return u;
 if(/(3dvista\.com|momento360\.com|cloudpano\.com|panoee\.com|lumion\.com|twinmotion|vimeo\.com\/\d+|player\.vimeo\.com)/i.test(u)){if((m=u.match(/vimeo\.com\/(\d+)/)))return 'https://player.vimeo.com/video/'+m[1];return u;}
 return '';}
-function parseLoc(s){s=String(s||'').trim();if(!s)return null;var m=s.match(/@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/)||s.match(/[?&](?:q|ll|query|destination)=(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/)||s.match(/^\s*(-?\d{1,2}(?:\.\d+)?)\s*[,،\s]\s*(-?\d{1,3}(?:\.\d+)?)\s*$/);if(!m)return null;var a=+m[1],b=+m[2];return Math.abs(a)<=90&&Math.abs(b)<=180?[a,b]:null;}
+// Short Google Maps links (maps.app.goo.gl) carry no numbers; the server follows them and reads the place.
+async function resolveLoc(s){var ll=parseLoc(s);if(ll)return ll;s=String(s||'').trim();if(!/^https:\/\//i.test(s)||!SB||!SB.functions)return null;
+try{var r=await SB.functions.invoke('resolve-map',{body:{url:s}});if(r&&r.data&&r.data.lat!=null)return [Number(r.data.lat),Number(r.data.lng)];}catch(e){}return null;}
+function parseLoc(s){s=String(s||'').trim();if(!s)return null;try{s=decodeURIComponent(s);}catch(e){}var p=s.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);if(p){var pa=+p[1],pb=+p[2];if(Math.abs(pa)<=90&&Math.abs(pb)<=180)return [pa,pb];}var m=s.match(/@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/)||s.match(/[?&](?:q|ll|query|destination)=(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/)||s.match(/^\s*(-?\d{1,2}(?:\.\d+)?)\s*[,،\s]\s*(-?\d{1,3}(?:\.\d+)?)\s*$/);if(!m)return null;var a=+m[1],b=+m[2];return Math.abs(a)<=90&&Math.abs(b)<=180?[a,b]:null;}
 // World map: MapLibre with OpenFreeMap streets (rebuilt from OpenStreetMap every week) and Esri satellite.
 var MAP={gl:null,box:null,loading:false,me:null,meMarker:null,pins:[],spot:null,sel:null,style:'streets',trip:null,asked:false};
 var OFM='https://tiles.openfreemap.org';
@@ -1001,7 +1004,7 @@ var steps=String(val('pj_steps')).split('\n').map(function(x){x=x.trim();if(!x)r
 var b=String(val('pj_bld')).replace(/[^0-9]/g,'');
 var r=await SB.rpc('update_project',{p_listing:l.id,p_buildings:b?Number(b):null,p_notes:val('pj_notes'),p_details:val('pj_details'),p_pay_steps:steps,p_add_images:imgs,p_add_videos:vids,p_remove:st.prem||[]});if(r.error)throw r.error;
 if($('pj_pay')){var r4=await SB.rpc('set_pay_mode',{p_listing:l.id,p_mode:$('pj_pay').value});if(r4.error)throw r4.error;}
-if(val('pj_loc')){var ll=parseLoc(val('pj_loc'));if(!ll){m(T('l_locbad'));a.disabled=false;return;}var r5=await SB.rpc('set_project_loc',{p_listing:l.id,p_lat:ll[0],p_lng:ll[1]});if(r5.error)throw r5.error;}
+if(val('pj_loc')){var ll=await resolveLoc(val('pj_loc'));if(!ll){m(T('l_locbad'));a.disabled=false;return;}var r5=await SB.rpc('set_project_loc',{p_listing:l.id,p_lat:ll[0],p_lng:ll[1]});if(r5.error)throw r5.error;}
 if($('pj_ptype')){var r3=await SB.rpc('set_property_type',{p_listing:l.id,p_ptype:$('pj_ptype').value,p_cond:$('pj_cond')?$('pj_cond').value:'new'});if(r3.error)throw r3.error;}
 if(me.role==='owner'&&$('pj_vis')){var r2=await SB.from('listings').update({vis_rank:$('pj_vis').value||null}).eq('id',l.id);if(r2.error)throw r2.error;}
 pmBlobs=[];st.pedit=false;await loadListings();render();}catch(e){a.disabled=false;m(T('p_err'));}},
@@ -1019,7 +1022,7 @@ try{var num_=function(id2){var v=String(val(id2)).replace(/[^0-9.]/g,'');return 
  var steps=$('rq_steps')?String(val('rq_steps')).split('\n').map(function(x){x=x.trim();if(!x)return null;var mm=x.match(/^(.*?)[\s:：\-–]+([\d.]+)\s*%?$/);return mm?{t:mm[1].trim(),pct:Number(mm[2])}:{t:x,pct:null};}).filter(Boolean):null;
  var r=await SB.rpc('update_project',{p_listing:id,p_buildings:$('rq_blds')?num_('rq_blds'):null,p_notes:null,p_details:$('rq_details')&&val('rq_details')?val('rq_details'):null,p_pay_steps:steps&&steps.length?steps:null,p_add_images:[],p_add_videos:[],p_remove:[]});if(r.error)throw r.error;
  if($('rq_pay')&&$('rq_pay').value){var r2=await SB.rpc('set_pay_mode',{p_listing:id,p_mode:$('rq_pay').value});if(r2.error)throw r2.error;}
- if($('rq_loc')&&val('rq_loc')){var ll=parseLoc(val('rq_loc'));if(!ll){m(T('l_locbad'));a.disabled=false;return;}var r3=await SB.rpc('set_project_loc',{p_listing:id,p_lat:ll[0],p_lng:ll[1]});if(r3.error)throw r3.error;}
+ if($('rq_loc')&&val('rq_loc')){var ll=await resolveLoc(val('rq_loc'));if(!ll){m(T('l_locbad'));a.disabled=false;return;}var r3=await SB.rpc('set_project_loc',{p_listing:id,p_lat:ll[0],p_lng:ll[1]});if(r3.error)throw r3.error;}
  if(own){var up={};if($('rq_price')&&val('rq_price'))up.price=val('rq_price');if($('rq_units')&&num_('rq_units'))up.units_total=Math.round(num_('rq_units'));if($('rq_comm')&&num_('rq_comm')!=null)up.commission_pct=num_('rq_comm');if(Object.keys(up).length){var r4=await SB.from('listings').update(up).eq('id',id);if(r4.error)throw r4.error;}
   if($('rq_owner')&&val('rq_owner')){var code=String(val('rq_owner')).toUpperCase(),mm2=(stats||[]).filter(function(x){return String(x.code).toUpperCase()===code;})[0];if(!mm2){m(T('pm_nocode'));a.disabled=false;return;}var r5=await SB.from('project_members').insert({listing_id:id,member_id:mm2.id,role:'owner',name:who(mm2)+' ('+mm2.code+')'});if(r5.error&&!/duplicate/i.test(r5.error.message||''))throw r5.error;}}
  await loadListings();await loadPM(true);refreshReq(id);var e2=$('rqmsg');if(e2){e2.textContent=T('u_saved');e2.style.color='#7FD1A0';}}catch(e){a.disabled=false;m(T('p_err'));}},
@@ -1059,7 +1062,7 @@ addListing:async function(a){
 if(!SB||!me||me.role!=='owner')return;
 var title=val('l_title');if(!title||!lBlobs.length){msg(T('l_need'));return;}
 var lc=Number(String(val('l_comm')).replace(/[^0-9.]/g,''));if(!(lc>=0&&lc<=100))lc=Number(cfg.default_commission_pct)||0;
-var ll=parseLoc(val('l_loc'));if(val('l_loc')&&!ll){msg(T('l_locbad'));return;}
+if(val('l_loc'))msg(T('m_wait'),true);var ll=await resolveLoc(val('l_loc'));if(val('l_loc')&&!ll){msg(T('l_locbad'));return;}
 var tu=String(val('l_tour')).trim();if(tu&&!/^https:\/\//i.test(tu)){msg(T('l_tourbad'));return;}var un=parseInt(String(val('l_units')).replace(/[^0-9]/g,''),10)||0;
 var row={title:title,place:val('l_place'),price:val('l_price'),commission_pct:lc,plot:val('l_plot'),tour_url:tu,units_total:un,lat:ll?ll[0]:null,lng:ll?ll[1]:null,details:val('l_details'),featured:!!($('l_feat')&&$('l_feat').checked),kind:($('l_kind')&&$('l_kind').value)||'sale',offplan:!!($('l_off')&&$('l_off').checked),images:[],ptype:($('l_ptype')&&$('l_ptype').value)||'project',cond:($('l_cond')&&$('l_cond').value)||'new'};
 a.disabled=true;msg(T('m_wait'),true);
@@ -1074,7 +1077,7 @@ locListing:async function(a){
 if(!SB||!me||me.role!=='owner')return;
 var id=a.getAttribute('data-id'),v=prompt(T('l_locask'),'');if(v===null)return;
 var save=async function(ll){a.disabled=true;try{var r=await SB.from('listings').update({lat:ll[0],lng:ll[1]}).eq('id',id);if(r.error)throw r.error;await loadListings();render();msg(T('l_locdone'),true);}catch(e){a.disabled=false;msg(T('p_err'));}};
-if(String(v).trim()){var ll=parseLoc(v);if(!ll){msg(T('l_locbad'));return;}save(ll);return;}
+if(String(v).trim()){var ll=await resolveLoc(v);if(!ll){msg(T('l_locbad'));return;}save(ll);return;}
 if(!navigator.geolocation){msg(T('m_nogeo'));return;}
 navigator.geolocation.getCurrentPosition(function(p){save([+p.coords.latitude.toFixed(6),+p.coords.longitude.toFixed(6)]);},function(e){msg(T(e&&e.code===1?'m_allow':'m_nogeo'));},{enableHighAccuracy:true,timeout:12000});
 },

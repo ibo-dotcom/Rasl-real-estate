@@ -182,3 +182,6 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
   - description, buildings, map location (Google Maps link or numbers), cash/installment and the installment steps;
   - owner only: price, units, commission, and the project owner (member code or "Me").
   **💾 Save project info** saves it all. The photos and videos chosen for the ad count toward the project's 3 and are added to the project. Each project in the list shows ✅ or ⚠.
+
+## Map links
+- Location fields accept **any Google Maps link, also the short `maps.app.goo.gl/...` links** from the Share button, as well as "36.19, 44.01" or 📍 "I'm here". Short links are opened on the server by the Supabase edge function `resolve-map`, which only follows Google hosts. It reads the place's exact pin (`!3d…!4d…`), or `?q=`, `/place/`, `/search/`, `@lat,lng`.
