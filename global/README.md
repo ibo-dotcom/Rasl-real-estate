@@ -211,3 +211,12 @@ Open it from the **📘 Full training** card at the top of the Academy page, or 
 - The owner, project owner and partners get **⬇ Excel** (a CSV with every unit plus one column per payment step), **🖨 PDF** (print-ready page) and **💬 Share**. Members see the list.
 - **On the map:** tapping a project pin shows units left, plus **Open** (project card) and **📄 List**.
 - **Every sale is visible to everyone:** a 🔥 **Latest sales** strip on Home (project · unit · sold/reserved · cash/installment · how long ago). The project card shows that project's latest sales. Buyers' details are not shown. Database function: `recent_sales`.
+
+## Project owners pay first, then work like agents
+- **Listing fee:** set in 📢 Publish → 🏷 (`settings.listing_fee`). The registration form tells the project, villa or land owner the fee. The app owner marks 💵 paid (`listings.fee_paid`) before ✓ approving; until then the project is not public.
+- **🏢 My projects** (round icon and 📢 menu, shown to anyone who registered a project or is a project owner, partner or agreement holder). For each project:
+  - live / waiting, and fee paid or not;
+  - free / reserved / sold counts;
+  - that project's latest sales;
+  - buttons: 📄 sales list (with Excel/PDF), 🏢 units, ✎ info.
+- **Shared sales:** the project owner and partners see who sold or reserved each of their units (approve/cancel stays with the app owner). Every sale, whether by a member, an agent or the project owner, appears in 🔥 Latest sales for everyone.
