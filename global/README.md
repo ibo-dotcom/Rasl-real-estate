@@ -454,3 +454,9 @@ The whole app was restyled without changing any feature, route, database call or
 - Storage: new public bucket `models` (50 MB, glb), each member writes only in their own folder; `listings.model_url` set through `set_project_model` (owner or project members only; only links in the uploader's own models folder are accepted). `model.html` only opens models from the app's own storage.
 - Fixes: project logo upload now matches the avatars bucket (PNG / JPG / WebP, 2 MB); catalogue files limited to the studio bucket's 50 MB.
 - The 3D model card also offers "Automatic 3D from the units" (towers.html) whenever the project has units on its unit board, so every project with units has a 3D view even without a .glb file.
+
+### A way back from everything (2026-11-15)
+- Fixed: the CRM page showed the owner's Team-leadership sheet and its x did nothing. Two functions had the same name (`leadSheet` for the CRM client sheet and for the team-leadership sheet), so the second replaced the first; the CRM client editor (new / edit client) was also unreachable. The CRM sheet is now `crmLeadSheet`; the leadership sheet only shows when opened.
+- Fixed: the offers' "days left" number had been replaced by the ads' version of the same function name; the ads' one is now `adDaysLeft`.
+- The phone's or browser's Back button now closes whatever is open on top first (full-screen ad, member card, side menu, any sheet, CRM client sheet) instead of leaving the page; Escape does the same on computers.
+- Checked in a test browser: every sheet opened from a page button or from a menu item closes with its x and with Back.

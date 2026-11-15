@@ -386,7 +386,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794734951';
+var BUILD='1794735349';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -1037,9 +1037,9 @@ if(ids.length)h+='<span style="'+LAB+'">'+esc(T('crm_perf'))+'</span><div style=
 var q=foldKey(st.crmQ||''),list=all.filter(function(l){return (!st.crmStage||l.stage===st.crmStage)&&(!q||foldKey(l.name+' '+l.phone).indexOf(q)>=0);});
 h+='<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px"><span style="'+LAB+'">'+esc(T('crm_clients'))+(st.crmStage?' · '+esc(T('stg_'+st.crmStage)):'')+'</span>'+(st.crmStage?'<button data-act="crmStage" data-k="'+st.crmStage+'" style="border: 0; background: none; color: #173F63; font: 13px '+FONT+'; cursor: pointer">'+esc(T('h_all'))+'</button>':'')+'</div><input id="crmQ" type="search" value="'+esc(st.crmQ||'')+'" placeholder="'+esc(T('crm_search'))+'" autocomplete="off" style="'+INP+'">';
 h+='<div style="'+card+'; gap: 0; padding: 0 16px">'+(list.length?list.map(function(l){return leadRow(l,!teamView,teamView);}).join('').replace('border-top: 1px solid #EAF1F7','border-top: 0'):'<div style="padding: 18px 0; text-align: center; font-size: 14px; color: #3D5166">'+esc(T(all.length?'h_none':(teamView?'crm_team_none':'crm_none')))+'</div>')+'</div>';
-return h+leadSheet();
+return h+crmLeadSheet()+(st.lead?leadSheet():'');
 }
-function leadSheet(){
+function crmLeadSheet(){
 if(!st.leadEdit)return '';
 var l=st.leadEdit==='new'?{name:'',phone:'',want:'buy',budget:'',listing_id:'',stage:'new',next_follow:addDays(1),lost_reason:'',notes:''}:leads.filter(function(x){return x.id===st.leadEdit;})[0];if(!l)return '';
 var opt=function(v,cur,label){return '<option value="'+esc(v)+'"'+(String(cur||'')===String(v)?' selected':'')+'>'+esc(label)+'</option>';};
@@ -2167,7 +2167,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  return h+'</div></div>';}
 
 // ---- Auto-update: every phone moves to the newest version by itself ----
-var APP_VER='20261115092936';
+var APP_VER='20261115093937';
 (function(){if(APP_VER.indexOf('__')===0)return;var busy=false,shown=false;
  function busyNow(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||!!document.querySelector('.tm-sheet');}
  function go(v){try{var k='rasl_upd_'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
@@ -2614,8 +2614,8 @@ function adm(){return window.__adm||(window.__adm={ok:null,list:null});}
 function canAds(){if(!me)return false;if(me.role==='owner')return true;var A=adm();if(A.ok===null&&SB){A.ok=false;SB.rpc('can_manage_ads').then(function(r){A.ok=!!r.data;if(A.ok&&route()==='Main')render();});}return !!A.ok;}
 function adEnded(a){return a&&a.ends_at&&new Date(a.ends_at).getTime()<=Date.now();}
 function adVisible(a,slot){if(adEnded(a))return false;if(me&&me.role==='owner')return true;return !adProblem(a,slot);}
-function daysLeft(a){if(!a||!a.ends_at)return '';var d=Math.ceil((new Date(a.ends_at).getTime()-Date.now())/864e5);return d<=0?mt6('ended'):d===1?mt6('today'):mt6('left').replace('{n}',d);}
-function adCtl(a,slot){if(!canAds())return '';var left=daysLeft(a);
+function adDaysLeft(a){if(!a||!a.ends_at)return '';var d=Math.ceil((new Date(a.ends_at).getTime()-Date.now())/864e5);return d<=0?mt6('ended'):d===1?mt6('today'):mt6('left').replace('{n}',d);}
+function adCtl(a,slot){if(!canAds())return '';var left=adDaysLeft(a);
 return '<div class="adctl'+(slot==='top'?' big':'')+'" data-stop="1"><button data-act="adAddAsk" data-k="'+slot+'" aria-label="'+esc(mt6('add'))+'" title="'+esc(mt6('add'))+'">'+mIco('plus')+'</button>'+(a?'<button data-act="adRemove" data-id="'+esc(a.post?'':a.id)+'" data-post="'+esc(a.post||'')+'" aria-label="'+esc(mt6('del'))+'" title="'+esc(mt6('del'))+'">'+mIco('x')+'</button>':'')+(left?'<span>'+esc(left)+'</span>':'')+'</div>';}
 function adCard(a,w){return '<div class="adbig">'+adMedia(a)+'<div style="position: absolute; inset: auto 0 0 0; padding: 48px 16px 16px; background: linear-gradient(to top, rgba(16,43,70,0.92), rgba(16,43,70,0)); display: flex; align-items: flex-end; justify-content: space-between; gap: 12px"><div style="min-width: 0; display: flex; flex-direction: column; gap: 4px"><span style="font-family: \'Cormorant Garamond\', \'Noto Sans Arabic\', Georgia, serif; font-size: 28px; font-weight: 600; line-height: 1.05; color: #FFFFFF">'+esc(a.title)+'</span>'+(a.place?'<span style="font-size: 13px; color: rgba(255,255,255,.85)">'+esc(a.place)+'</span>':'')+'</div>'+(a.price?'<span dir="ltr" style="flex-shrink: 0; font-size: 18px; font-weight: 700; color: #FFFFFF">'+esc(a.price)+'</span>':'')+'</div></div>';}
 function adsHtml(){loadPub();var list=topAds();
@@ -2803,6 +2803,18 @@ if(!/\.glb$/i.test(f.name)){m(mt11('bad'));inp.value='';return;}if(f.size>50*102
 m(mt11('wait'));try{var path=me.id+'/model-'+id+'-'+Date.now()+'.glb';var up=await SB.storage.from('models').upload(path,f,{contentType:'model/gltf-binary',cacheControl:'31536000'});if(up.error)throw up.error;
  var url=SB.storage.from('models').getPublicUrl(path).data.publicUrl;var r=await SB.rpc('set_project_model',{p_listing:id,p_url:url});if(r.error)throw r.error;listings.forEach(function(x){if(x.id===id)x.model_url=url;});m('');render();}catch(e){m(errText(e));}inp.value='';}
 app.addEventListener('change',function(e){if(e.target&&e.target.id==='pj_model')modelUp(e.target);});
+
+// Back button (phone or browser) closes whatever is open on top first: ad view, card view, menu, any sheet.
+(function(){var pushed=false,pushedHash='';
+function topOpen(){return document.getElementById('adView')||document.getElementById('cardView')||document.querySelector('.tm-sheet')||document.querySelector('[data-act=closeLead]');}
+function closeTop(){var e=document.querySelector('#adView [data-av=close]')||document.querySelector('#cardView [data-cv=close]')||document.querySelector('[data-act=closeLead]')||document.querySelector('.tm-sheet.mside [data-act=menuClose]')
+ ||document.querySelector('.tm-sheet [data-act$="Close"]')||document.querySelector('.tm-sheet [data-act^="close"]')||document.querySelector('.tm-sheet[data-act]');if(e){e.click();return true;}return false;}
+function check(){var open=!!topOpen();if(open&&!pushed){try{history.pushState({ov:1},'',location.href);pushed=true;pushedHash=location.hash;}catch(e){}}
+ else if(!open&&pushed){pushed=false;if(history.state&&history.state.ov&&location.hash===pushedHash){try{history.back();}catch(e){}}}}
+window.addEventListener('popstate',function(){if(pushed){pushed=false;if(topOpen())closeTop();setTimeout(check,50);}});
+window.addEventListener('hashchange',function(){pushed=false;});
+new MutationObserver(function(){clearTimeout(check._t);check._t=setTimeout(check,30);}).observe(document.body,{childList:true,subtree:true});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&topOpen()){closeTop();}});})();
 
 var isRec=/type=recovery/.test(location.hash||'');
 loadMe().then(function(){if(isRec&&me){location.hash='#Profile';setTimeout(function(){alert(T('fe_setnew'));},350);}else if(me&&(!location.hash||['Welcome','Login','Register'].indexOf(route())>=0)){location.hash='#Main';}render();});
