@@ -386,7 +386,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794734718';
+var BUILD='1794734951';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -2167,7 +2167,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  return h+'</div></div>';}
 
 // ---- Auto-update: every phone moves to the newest version by itself ----
-var APP_VER='20261115092603';
+var APP_VER='20261115092936';
 (function(){if(APP_VER.indexOf('__')===0)return;var busy=false,shown=false;
  function busyNow(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||!!document.querySelector('.tm-sheet');}
  function go(v){try{var k='rasl_upd_'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
@@ -2787,15 +2787,16 @@ app.addEventListener('change',function(e){if(e.target&&e.target.id==='pj_cat')ca
 // Project 3D model (.glb from the architect): owner or project team uploads it; everyone opens it in 3D and AR (model.html).
 function mt11(k){var D={t:['3D model of the building','مۆدێلی 3D ـی بیناکە','نموذج ثلاثي الأبعاد للمبنى','Binanın 3D modeli'],
 d:['Upload the .glb file from the architect (up to 50 MB). Visitors turn it with a finger and can place it in their own space with AR.','فایلی ‎.glb‎ لە ئەندازیارەکەوە بار بکە (تا ٥٠ مێگابایت). بینەران بە پەنجە دەیسوڕێنن و بە AR دەتوانن لە شوێنی خۆیان دایبنێن.','ارفع ملف ‎.glb‎ من المهندس (حتى 50 ميغابايت). يدوّره الزوار بإصبعهم ويمكنهم وضعه في مكانهم عبر AR.','Mimardan gelen .glb dosyasını yükleyin (50 MB). Ziyaretçiler parmakla döndürür, AR ile kendi alanlarına koyabilir.'],
-up:['Upload .glb','بارکردنی ‎.glb‎','رفع ‎.glb‎','.glb yükle'],ch:['Replace','گۆڕین','استبدال','Değiştir'],rm:['Remove','لابردن','إزالة','Kaldır'],open:['Open in 3D / AR','بینین بە 3D / AR','افتح ثلاثي الأبعاد / AR','3D / AR aç'],
+up:['Upload .glb','بارکردنی ‎.glb‎','رفع ‎.glb‎','.glb yükle'],ch:['Replace','گۆڕین','استبدال','Değiştir'],rm:['Remove','لابردن','إزالة','Kaldır'],auto:['Automatic 3D from the units','3D ـی خۆکار لە یەکەکانەوە','ثلاثي الأبعاد تلقائي من الوحدات','Birimlerden otomatik 3D'],auto_d:['Built by the app from the buildings, floors and units on the unit board: free, reserved and sold in colour.','ئەپەکە خۆی لە باڵەخانە، نهۆم و یەکەکانی تەختەی یەکەکان دروستی دەکات: بەتاڵ، گیراو و فرۆشراو بە ڕەنگ.','يبنيه التطبيق من المباني والطوابق والوحدات: الحرة والمحجوزة والمباعة بالألوان.','Uygulama binalar, katlar ve birimlerden oluşturur: boş, rezerve, satılmış renkli.'],open:['Open in 3D / AR','بینین بە 3D / AR','افتح ثلاثي الأبعاد / AR','3D / AR aç'],
 send:['Send','ناردن','إرسال','Gönder'],wait:['Uploading the model… keep this screen open.','مۆدێلەکە بار دەکرێت… ئەم شاشەیە دامەخە.','جارٍ رفع النموذج… أبقِ الشاشة مفتوحة.','Model yükleniyor… ekranı açık tutun.'],
 bad:['Choose a .glb file (one file with everything inside).','فایلێکی ‎.glb‎ هەڵبژێرە (یەک فایل کە هەمووی تێدایە).','اختر ملف ‎.glb‎ (ملف واحد يحتوي كل شيء).','Bir .glb dosyası seçin (her şey tek dosyada).'],big:['File is too large (max 50 MB).','فایلەکە زۆر گەورەیە (زۆرترین ٥٠ مێگابایت).','الملف كبير جداً (50 ميغابايت كحد أقصى).','Dosya çok büyük (en fazla 50 MB).']};var i={en:0,ku:1,ar:2,tr:3}[st.lang];return (D[k]||[''])[i==null?0:i]||D[k][0];}
 function modelLink(l){return LIVE+'/model.html?src='+encodeURIComponent(l.model_url)+'&n='+encodeURIComponent(l.title||'')+'&lang='+st.lang;}
-function modelCard(l,edit){if(!l.model_url&&!edit)return '';
+function modelCard(l,edit){var d=uData[l.id],hasU=!!(d&&d.list&&d.list.length);if(!l.model_url&&!edit&&!hasU)return '';
 var h='<div class="ocard"><div class="mi-row"><span class="gico big">'+mIco('building3d')+'</span><div class="gtx"><b style="white-space: normal">'+esc(mt11('t'))+'</b>'+(edit?'<small style="white-space: normal">'+esc(mt11('d'))+'</small>':'')+'</div></div>';
 if(edit)h+='<div id="mdlmsg" class="ofmsg" role="status" style="color: #173F63"></div>';
 h+='<div style="display: flex; gap: 8px; flex-wrap: wrap">'+(l.model_url?'<a href="'+esc(modelLink(l))+'" class="crm-b gold" style="display: inline-flex; align-items: center; gap: 6px; height: 40px; text-decoration: none; white-space: nowrap">'+mIco('cube')+esc(mt11('open'))+'</a><button data-act="mdlSend" data-id="'+esc(l.id)+'" class="crm-b" style="height: 40px">'+esc(mt11('send'))+'</button>':'')
 +(edit?'<label class="crm-b'+(l.model_url?'':' gold')+'" style="display: inline-flex; align-items: center; height: 40px; cursor: pointer; white-space: nowrap">'+esc(l.model_url?mt11('ch'):mt11('up'))+'<input id="pj_model" data-id="'+esc(l.id)+'" type="file" accept=".glb,model/gltf-binary" style="position: absolute; width: 1px; height: 1px; opacity: 0"></label>'+(l.model_url?'<button data-act="mdlDel" data-id="'+esc(l.id)+'" class="crm-b" style="height: 40px; color: #B42318">'+esc(mt11('rm'))+'</button>':''):'')+'</div>';
+if(hasU)h+='<a href="towers.html?l='+encodeURIComponent(l.id)+'&lang='+st.lang+'" class="catm" style="flex-direction: row; justify-content: flex-start; gap: 10px; padding: 10px 12px; text-align: start">'+mIco('building3d')+'<span style="display: flex; flex-direction: column; gap: 2px"><b style="font-size: 13px">'+esc(mt11('auto'))+'</b><small style="font-weight: 400; color: #5B6B7B">'+esc(mt11('auto_d'))+'</small></span></a>';
 return h+'</div>';}
 async function modelUp(inp){var f=inp.files&&inp.files[0],id=inp.getAttribute('data-id'),m=function(t){var e=$('mdlmsg');if(e)e.textContent=t;};if(!f||!SB||!me)return;
 if(!/\.glb$/i.test(f.name)){m(mt11('bad'));inp.value='';return;}if(f.size>50*1024*1024){m(mt11('big'));inp.value='';return;}
