@@ -371,7 +371,19 @@ img.avm{object-fit:contain;background:#0B1C2E}
 .catth button{position:absolute;top:3px;inset-inline-end:3px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#B42318;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer}.catth button svg{width:11px;height:11px}
 .catmodes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .catm{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border-radius:10px;border:1px solid #DFE7EF;background:#F5F8FB;color:#173F63;text-decoration:none;font:600 11px Inter,'Noto Sans Arabic',system-ui,sans-serif;cursor:pointer;min-height:56px;text-align:center}.catm svg{width:20px;height:20px}.catm span{color:#172B3A}
-</style><style>.catcard .crm-b{white-space:nowrap;flex-shrink:0}</style><style>.ocard .crm-b svg{width:16px;height:16px}</style><style>.fmtrow{display:flex;gap:6px;flex-wrap:wrap}.fmtc{position:relative;min-height:40px;padding:0 14px;border-radius:99px;border:1px solid #DFE7EF;background:#FFFFFF;color:#172B3A;font:600 13px Inter,'Noto Sans Arabic',system-ui,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px}.fmtc.on{background:#173F63;border-color:#173F63;color:#FFFFFF}.fmtc em{font-style:normal;display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 6px;border-radius:99px;background:#FFF4D6;color:#8A5A00}.fmtc em svg{width:10px;height:10px;fill:currentColor}</style></head>
+</style><style>.catcard .crm-b{white-space:nowrap;flex-shrink:0}</style><style>.ocard .crm-b svg{width:16px;height:16px}</style><style>.fmtrow{display:flex;gap:6px;flex-wrap:wrap}.fmtc{position:relative;min-height:40px;padding:0 14px;border-radius:99px;border:1px solid #DFE7EF;background:#FFFFFF;color:#172B3A;font:600 13px Inter,'Noto Sans Arabic',system-ui,sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px}.fmtc.on{background:#173F63;border-color:#173F63;color:#FFFFFF}.fmtc em{font-style:normal;display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 6px;border-radius:99px;background:#FFF4D6;color:#8A5A00}.fmtc em svg{width:10px;height:10px;fill:currentColor}</style><style>.secov{position:fixed;inset:0;z-index:9997;background:rgba(16,43,70,.55);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;font-family:Inter,'Noto Sans Arabic',system-ui,sans-serif;color:#172B3A}
+#frozenView,#bioView{background:#F5F8FB;z-index:9999}
+.secbox{width:100%;max-width:420px;background:#FFFFFF;border:1px solid #DFE7EF;border-radius:16px;padding:24px 18px;display:flex;flex-direction:column;gap:12px;align-items:stretch;text-align:center}
+.secbox b{font-size:18px;color:#102B46}.secbox p{margin:0;font-size:14px;line-height:1.6;color:#3D5166}.secr{color:#B42318!important;font-size:13px!important}
+.secic{align-self:center;width:56px;height:56px;border-radius:50%;background:#EAF1F7;color:#173F63;display:grid;place-items:center}.secic svg{width:28px;height:28px}
+#secView{align-items:stretch;padding:0;background:#F5F8FB}
+.secpage{width:100%;max-width:820px;margin:0 auto;overflow-y:auto;padding:calc(12px + env(safe-area-inset-top)) 14px 24px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box}
+.sechead{display:flex;justify-content:space-between;align-items:center}.sechead b{display:flex;align-items:center;gap:8px;font-size:18px;color:#102B46}.sechead b svg{width:22px;height:22px}
+.secsec{background:#FFFFFF;border:1px solid #DFE7EF;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.secrow{border-top:1px solid #EEF2F6;padding-top:8px;display:flex;flex-direction:column;gap:4px;font-size:13px}.secrow small{color:#5B6B7B}.secrow code{font-size:11px;color:#3D5166;background:#F5F8FB;border-radius:6px;padding:4px 6px;overflow-wrap:anywhere;direction:ltr;text-align:left}
+.secrow.log{display:grid;grid-template-columns:auto 1fr;gap:2px 10px}.secrow.log code{grid-column:1/-1}
+.secacts{display:flex;gap:6px;flex-wrap:wrap}.secacts .crm-b{height:36px}
+</style></head>
 <body>
 <div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -386,7 +398,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794735738';
+var BUILD='1794736546';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -916,7 +928,7 @@ return '';}
 async function resolveLoc(s){var ll=parseLoc(s);if(ll)return ll;s=String(s||'').trim();if(!/^https:\/\//i.test(s)||!SB||!SB.functions)return null;
 try{var r=await SB.functions.invoke('resolve-map',{body:{url:s}});if(r&&r.data&&r.data.lat!=null)return [Number(r.data.lat),Number(r.data.lng)];}catch(e){}return null;}
 // Turn a server error into a sentence the person can act on.
-function errText(e){var s=String((e&&(e.message||e.error_description||e.details))||e||'');var _L={en:0,ku:1,ar:2,tr:3}[st.lang]||0;if(/kyc_doc_unique/.test(s))return ['This ID number is already registered to another account. One person can only have one account.','ئەم ژمارەی ناسنامەیە پێشتر بۆ ئەکاونتێکی تر تۆمار کراوە. هەر کەسێک تەنها یەک ئەکاونتی دەبێت.','رقم الهوية هذا مسجل لحساب آخر. لكل شخص حساب واحد فقط.','Bu kimlik numarası başka bir hesaba kayıtlı. Bir kişinin tek hesabı olabilir.'][_L];if(/office_not_approved/.test(s))return mt3('only');if(/meeting_url_bad/.test(s))return mt3('meet_bad');if(/name_required/.test(s))return mt4('nc_short');
+function errText(e){var s=String((e&&(e.message||e.error_description||e.details))||e||'');if(/account_frozen/.test(s)){if(me){me.frozen=true;frozenCheck();}return mt13('fz_t');}if(/row-level security|not_allowed|permission denied/i.test(s))secReport(s);var _L={en:0,ku:1,ar:2,tr:3}[st.lang]||0;if(/kyc_doc_unique/.test(s))return ['This ID number is already registered to another account. One person can only have one account.','ئەم ژمارەی ناسنامەیە پێشتر بۆ ئەکاونتێکی تر تۆمار کراوە. هەر کەسێک تەنها یەک ئەکاونتی دەبێت.','رقم الهوية هذا مسجل لحساب آخر. لكل شخص حساب واحد فقط.','Bu kimlik numarası başka bir hesaba kayıtlı. Bir kişinin tek hesabı olabilir.'][_L];if(/office_not_approved/.test(s))return mt3('only');if(/meeting_url_bad/.test(s))return mt3('meet_bad');if(/name_required/.test(s))return mt4('nc_short');
 if(/place_check/.test(s))return T('er_place');if(/details_check/.test(s))return T('er_details');if(/title_check/.test(s))return T('er_title');if(/images_check/.test(s))return T('er_images');if(/price_check/.test(s))return T('er_price');
 if(/row-level security|not_allowed|permission/i.test(s))return T('er_perm');if(/Failed to fetch|NetworkError|network/i.test(s))return T('er_net');if(/Payload too large|exceeded|too large/i.test(s))return T('er_big');
 return T('p_err')+(s?' ('+s.slice(0,120)+')':'');}
@@ -1395,6 +1407,7 @@ homeType:function(a){var k=a.getAttribute('data-k');st.homeType=st.homeType===k?
 homeCond:function(a){var k=a.getAttribute('data-k');st.homeCond=st.homeCond===k?'':k;render();},
 homeReset:function(){st.homeKind='';st.homeQ='';st.homeType='';st.homeCond='';st.hf=null;st.hsort='best';render();},
 menuOpen:function(){st.menu=true;render();},
+secOpen:function(){openSec();},bioOpen:function(){bioSheet();},
 mdlFmt:function(a){st.mdlFmt=a.getAttribute('data-k');render();},
 mdlAsk:async function(a){var l=listings.filter(function(x){return x.id===a.getAttribute('data-id');})[0];var t=mt12('askmsg').replace('{p}',(l&&l.title)||'');try{await navigator.clipboard.writeText(t);alert(mt12('copied'));}catch(e){prompt(mt12('ask'),t);}},
 mdlDel:async function(a){var id=a.getAttribute('data-id');if(!confirm(mt11('rm')+'?'))return;try{var r=await SB.rpc('set_project_model',{p_listing:id,p_url:''});if(r.error)throw r.error;listings.forEach(function(x){if(x.id===id)x.model_url=null;});render();}catch(e){alert(errText(e));}},
@@ -2169,7 +2182,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  return h+'</div></div>';}
 
 // ---- Auto-update: every phone moves to the newest version by itself ----
-var APP_VER='20261115094301';
+var APP_VER='20261115095814';
 (function(){if(APP_VER.indexOf('__')===0)return;var busy=false,shown=false;
  function busyNow(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||!!document.querySelector('.tm-sheet');}
  function go(v){try{var k='rasl_upd_'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
@@ -2673,8 +2686,8 @@ function menuSheet(){var own=me&&me.role==='owner';
  if(me)h+='<a href="#Profile" class="mrow" style="padding: 10px 6px"><span style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; border: 1px solid #DFE7EF; flex-shrink: 0; display: grid; place-items: center">'+face(me.avatar_url)+'</span><span style="display: flex; flex-direction: column; min-width: 0"><b style="font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">'+esc(who(me))+'</b><span dir="ltr" style="font-size: 12px; color: #718096; text-align: start">'+esc(me.code||'')+'</span></span></a>';
  if(me)h+='<div class="mgrp"><span class="mgrp-t">'+esc(mt7('dash'))+'</span>'+homeStats()+'<div class="mtiles">'+tile('💳',esc(T('k3')),'href="#Wallet"')+tile('👥',esc(T('nav_team')),'href="#Network"')+tile('📊','CRM','href="#Dashboard"')+tile('🎓',esc(T('ac_short')),'href="#Learn"')+tile('tag',esc(T('of_short')),ma('offOpen'))+tile('crown',esc(T('ld_short')),ma('leadOpen'))+tile('🗺',esc(T('h_map')),'href="#Search"')+tile('🏠',esc(T('nav_home')),'href="#Main"')+'</div></div>';
  h+=grp(T('mn_props')?T('mn_props'):'',row('🏠',esc(T('nav_home')),'href="#Main"')+row('🗺',esc(T('h_map')),'href="#Search"')+[['sale','k11'],['rent','k12'],['offplan','k13'],['invest','k14']].map(function(c){return row('🏢',esc(T(c[1])),ma('kind',' data-k="'+c[0]+'"'));}).join('')+row('sliders',esc(T('f_btn')),ma('filtOpen'))+(me?row('tag',esc(T('of_title')),ma('offOpen')):'')+(me?row('📢',esc(T('pub_title')),ma('pubOpen')):'')+(agentProjects().length?row('🏢',esc(T('ag_title')),ma('agentOpen')):''));
- if(me)h+=grp(T('mn_account'),row('👤',esc(T('p_title')),'href="#Profile"')+row('💳',esc(T('k3')),'href="#Wallet"')+row('crown',esc(T('ld_title')),ma('leadOpen'))+row('👥',esc(T('nav_team')),'href="#Network"')+row('🪪',esc(mt7('card')),'href="#Network"')+(own?row('👤',esc(T('am_title')),ma('amOpen')):'')+row('📊','CRM','href="#Dashboard"')+row('🎓',esc(T('ac_short')),'href="#Learn"'));
- if(me&&(own||canAds()))h+=grp(mt7('manage'),row('📢',esc(T('a_manage')),'href="#Ads"')+(own?row('🏢',esc(T('l_manage')),'href="#Listings"')+row('🧾',esc(T('acc_title')),'href="#Accounts"')+row('🏛',esc(T('tx_short')),ma('govOpen')):''));
+ if(me)h+=grp(T('mn_account'),row('👤',esc(T('p_title')),'href="#Profile"')+row('💳',esc(T('k3')),'href="#Wallet"')+row('crown',esc(T('ld_title')),ma('leadOpen'))+row('👥',esc(T('nav_team')),'href="#Network"')+row('🪪',esc(mt7('card')),'href="#Network"')+(own?row('👤',esc(T('am_title')),ma('amOpen')):'')+row('📊','CRM','href="#Dashboard"')+row('🎓',esc(T('ac_short')),'href="#Learn"')+row('shield',esc(mt13('bio')),ma('bioOpen')));
+ if(me&&(own||canAds()))h+=grp(mt7('manage'),(own?row('shield',esc(mt13('sec')),ma('secOpen')):'')+row('📢',esc(T('a_manage')),'href="#Ads"')+(own?row('🏢',esc(T('l_manage')),'href="#Listings"')+row('🧾',esc(T('acc_title')),'href="#Accounts"')+row('🏛',esc(T('tx_short')),ma('govOpen')):''));
  if(me)h+=grp(T('mn_company'),row('💵',esc(T('pm_short')),ma('payOpen'))+row('🤲',esc(T('ch_short')),ma('charityOpen')));
  h+=grp(T('mn_tools'),row('🏢',esc(T('tour_btn')),'href="tour.html"')+row('📷','Studio 360° · 3D · VR','href="studio.html"')+row('🎵',esc(T('mu_title')),ma('musicOpen'))+row('globe',esc(T('h_lang')),'data-act="cycle"'));
  h+=me?'<button data-act="menuAct" data-a="signout" class="mrow" style="color: #B42318; margin-top: 4px; border-top: 1px solid #DFE7EF; padding-top: 14px">'+icoIn('logout')+'<span>'+esc(T('mn_signout'))+'</span></button>':'<a href="#Login" class="crm-b gold" style="min-height: 48px; display: flex; align-items: center; justify-content: center; text-decoration: none">'+esc(T('signin'))+'</a>';
@@ -2808,8 +2821,8 @@ app.addEventListener('change',function(e){if(e.target&&e.target.id==='pj_model')
 
 // Back button (phone or browser) closes whatever is open on top first: ad view, card view, menu, any sheet.
 (function(){var pushed=false,pushedHash='';
-function topOpen(){return document.getElementById('adView')||document.getElementById('cardView')||document.querySelector('.tm-sheet')||document.querySelector('[data-act=closeLead]');}
-function closeTop(){var e=document.querySelector('#adView [data-av=close]')||document.querySelector('#cardView [data-cv=close]')||document.querySelector('[data-act=closeLead]')||document.querySelector('.tm-sheet.mside [data-act=menuClose]')
+function topOpen(){return document.getElementById('secView')||document.getElementById('bioSet')||document.getElementById('adView')||document.getElementById('cardView')||document.querySelector('.tm-sheet')||document.querySelector('[data-act=closeLead]');}
+function closeTop(){var e=document.querySelector('#secView [data-sx=close]')||document.querySelector('#bioSet [data-sx=close]')||document.querySelector('#adView [data-av=close]')||document.querySelector('#cardView [data-cv=close]')||document.querySelector('[data-act=closeLead]')||document.querySelector('.tm-sheet.mside [data-act=menuClose]')
  ||document.querySelector('.tm-sheet [data-act$="Close"]')||document.querySelector('.tm-sheet [data-act^="close"]')||document.querySelector('.tm-sheet[data-act]');if(e){e.click();return true;}return false;}
 function check(){var open=!!topOpen();if(open&&!pushed){try{history.pushState({ov:1},'',location.href);pushed=true;pushedHash=location.hash;}catch(e){}}
  else if(!open&&pushed){pushed=false;if(history.state&&history.state.ov&&location.hash===pushedHash){try{history.back();}catch(e){}}}}
@@ -2856,6 +2869,77 @@ try{if(fmt!=='glb'){m(mt12('conv'));try{f=await toGlb(f,fmt);}catch(e){m(mt12('c
  m(mt11('wait'));var path=me.id+'/model-'+id+'-'+Date.now()+'.glb';var up=await SB.storage.from('models').upload(path,f,{contentType:'model/gltf-binary',cacheControl:'31536000'});if(up.error)throw up.error;
  var url=SB.storage.from('models').getPublicUrl(path).data.publicUrl;var r=await SB.rpc('set_project_model',{p_listing:id,p_url:url});if(r.error)throw r.error;listings.forEach(function(x){if(x.id===id)x.model_url=url;});m('');render();}catch(e){m(errText(e));}inp.value='';}
 window.__toGlb=toGlb;
+
+// Protection: frozen-account lock screen, blocked actions reported to the owner, owner security page
+// (alerts, freeze / unfreeze, permanent change record) and an optional Face ID / fingerprint app lock.
+function mt13(k){var D={
+fz_t:['Your account is on hold','ئەکاونتەکەت ڕاگیراوە','حسابك معلّق','Hesabınız beklemede'],
+fz_d:['Some actions on this account need to be checked by the company. Until then nothing can be changed. The company will contact you; your earnings and team stay safe.','هەندێک کردار لەسەر ئەم ئەکاونتە پێویستیان بە پشکنینی کۆمپانیا هەیە. تا ئەو کاتە هیچ شتێک ناگۆڕدرێت. کۆمپانیا پەیوەندیت پێوە دەکات؛ داهات و تیمەکەت پارێزراون.','بعض الإجراءات على هذا الحساب تحتاج مراجعة الشركة. حتى ذلك الحين لا يمكن تغيير شيء. ستتواصل الشركة معك؛ أرباحك وفريقك بأمان.','Bu hesaptaki bazı işlemler şirket tarafından kontrol edilmeli. O zamana kadar hiçbir şey değiştirilemez.'],
+out:['Sign out','دەرچوون','تسجيل الخروج','Çıkış'],sec:['Security','ئاسایش','الأمان','Güvenlik'],
+alerts:['Alerts','ئاگادارکردنەوەکان','التنبيهات','Uyarılar'],none:['No open alerts.','هیچ ئاگادارکردنەوەیەکی کراوە نییە.','لا تنبيهات مفتوحة.','Açık uyarı yok.'],
+denied:['Blocked action','کرداری ڕێگەپێنەدراو','إجراء محظور','Engellenen işlem'],tamper:['Tried to change protected data','هەوڵی گۆڕینی زانیاریی پارێزراو','محاولة تغيير بيانات محمية','Korunan veriyi değiştirme denemesi'],frozen:['Account frozen','ئەکاونت ڕاگیرا','تم تعليق الحساب','Hesap donduruldu'],unfrozen:['Freeze lifted','ڕاگرتن لابرا','رفع التعليق','Dondurma kaldırıldı'],
+ok:['Checked','پشکنرا','تمت المراجعة','Kontrol edildi'],freeze:['Freeze','ڕاگرتن','تعليق','Dondur'],unfreeze:['Lift freeze','لابردنی ڕاگرتن','رفع التعليق','Dondurmayı kaldır'],
+frozenlist:['Frozen accounts','ئەکاونتە ڕاگیراوەکان','الحسابات المعلقة','Dondurulmuş hesaplar'],log:['Permanent change record','تۆماری هەمیشەیی گۆڕانکارییەکان','سجل التغييرات الدائم','Kalıcı değişiklik kaydı'],
+log_d:['Every change to members, IDs, sales, wallet, withdrawals, projects, ads and settings. Nobody can edit or delete it, not even the owner.','هەموو گۆڕانکارییەک لە ئەندامان، ناسنامە، فرۆشتن، جزدان، ڕاکێشان، پرۆژە، ڕیکلام و ڕێکخستنەکان. کەس ناتوانێت دەستکاری یان سڕینەوەی بکات، تەنانەت خاوەنیش.','كل تغيير على الأعضاء والهويات والمبيعات والمحفظة والسحب والمشاريع والإعلانات والإعدادات. لا يمكن لأحد تعديله أو حذفه، حتى المالك.','Üyeler, kimlikler, satışlar, cüzdan, çekimler, projeler, reklamlar ve ayarlardaki her değişiklik. Kimse düzenleyemez veya silemez.'],
+all:['All','هەموو','الكل','Tümü'],more:['Show more','زیاتر','المزيد','Daha fazla'],close:['Close','داخستن','إغلاق','Kapat'],reason:['Reason (shown to the member)','هۆکار (بۆ ئەندامەکە دەردەکەوێت)','السبب','Neden'],
+ins:['added','زیادکرا','أُضيف','eklendi'],upd:['changed','گۆڕدرا','عُدّل','değişti'],del:['removed','لابرا','حُذف','silindi'],sys:['system','سیستەم','النظام','sistem'],
+bio:['Face ID / fingerprint lock','قفڵ بە Face ID / پەنجەمۆر','قفل بالوجه / البصمة','Face ID / parmak izi kilidi'],bio_d:['The app asks for your face or fingerprint every time it opens on this phone.','هەر جارێک ئەپەکە لەسەر ئەم مۆبایلە دەکرێتەوە، ڕووخسار یان پەنجەمۆرت داوا دەکات.','يطلب التطبيق وجهك أو بصمتك في كل مرة يُفتح على هذا الهاتف.','Uygulama bu telefonda her açılışta yüz veya parmak izi ister.'],
+bio_on:['Turn on','چالاککردن','تفعيل','Aç'],bio_off:['Turn off','ناچالاککردن','إيقاف','Kapat'],bio_is:['On for this phone','بۆ ئەم مۆبایلە چالاکە','مفعّل لهذا الهاتف','Bu telefonda açık'],
+bio_no:['This phone or browser cannot use Face ID / fingerprint here.','ئەم مۆبایلە یان وێبگەڕە لێرە ناتوانێت Face ID / پەنجەمۆر بەکاربهێنێت.','هذا الهاتف أو المتصفح لا يدعم ذلك هنا.','Bu telefon veya tarayıcı bunu desteklemiyor.'],
+lock_t:['Rasl Estate Global is locked','Rasl Estate Global قفڵ کراوە','التطبيق مقفل','Uygulama kilitli'],unlock:['Unlock with Face ID / fingerprint','کردنەوە بە Face ID / پەنجەمۆر','افتح بالوجه / البصمة','Face ID / parmak iziyle aç'],
+lock_fail:['Not recognised. Try again, or sign out and sign in with your password.','نەناسرایەوە. دووبارە هەوڵ بدەرەوە، یان دەربچۆ و بە وشەی نهێنی بچۆرەوە ژوورەوە.','لم يتم التعرف. حاول مجدداً أو سجّل الخروج وادخل بكلمة المرور.','Tanınmadı. Tekrar deneyin veya çıkıp şifreyle girin.']};
+var i={en:0,ku:1,ar:2,tr:3}[st.lang];return (D[k]||[''])[i==null?0:i]||D[k][0];}
+function ovEl(id){var o=document.getElementById(id);if(!o){o=document.createElement('div');o.id=id;o.className='secov';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');document.body.appendChild(o);}o.dir=st.lang==='en'||st.lang==='tr'?'ltr':'rtl';return o;}
+// 1) frozen account
+function frozenCheck(){if(!me||!me.frozen||me.role==='owner'){var x=document.getElementById('frozenView');if(x)x.remove();return;}var o=ovEl('frozenView');
+o.innerHTML='<div class="secbox"><span class="secic">'+mIco('shield')+'</span><b>'+esc(mt13('fz_t'))+'</b><p>'+esc(mt13('fz_d'))+'</p>'+(me.frozen_reason&&me.frozen_reason!=='auto'?'<p class="secr">'+esc(me.frozen_reason)+'</p>':'')+'<button data-sx="out" class="crm-b" style="height: 46px">'+esc(mt13('out'))+'</button></div>';
+o.onclick=function(e){if(e.target.closest('[data-sx=out]'))actions.signout();};}
+// 2) report blocked actions (at most one every 15 s)
+var _secLast=0;function secReport(s){if(!SB||!me||me.role==='owner'||Date.now()-_secLast<15000)return;_secLast=Date.now();try{SB.rpc('report_security_event',{p_detail:{msg:String(s).slice(0,200),route:route()}});}catch(e){}}
+// 3) owner security page
+function secS(){return window.__sec||(window.__sec={ev:[],fz:[],log:[],names:{},tbl:'',n:60});}
+async function loadSec(){var S=secS();try{var a=await SB.from('security_events').select('*').order('at',{ascending:false}).limit(150);S.ev=a.data||[];
+var b=await SB.from('profiles').select('id,full_name,last_name,code,frozen,frozen_reason,frozen_at').eq('frozen',true);S.fz=b.data||[];
+var q=SB.from('audit_log').select('*').order('at',{ascending:false}).limit(S.n);if(S.tbl)q=q.eq('tbl',S.tbl);var c=await q;S.log=c.data||[];
+var ids={};S.ev.forEach(function(x){if(x.member_id)ids[x.member_id]=1;});S.log.forEach(function(x){if(x.actor)ids[x.actor]=1;});var k=Object.keys(ids).filter(function(id){return !S.names[id];});
+if(k.length){var d=await SB.from('profiles').select('id,full_name,last_name,code').in('id',k);(d.data||[]).forEach(function(p){S.names[p.id]=[p.full_name,p.last_name].filter(Boolean).join(' ')+' · '+p.code;});}}catch(e){}drawSec();}
+function whoN(id){var S=secS();return id?(S.names[id]||String(id).slice(0,8)):mt13('sys');}
+function tAgo(ts){try{return new Date(ts).toLocaleString(st.lang==='en'?'en-GB':st.lang==='tr'?'tr-TR':'ar-IQ',{dateStyle:'short',timeStyle:'short'});}catch(e){return ts;}}
+function openSec(){secS();drawSec();loadSec();}
+function drawSec(){var S=secS(),o=ovEl('secView'),open=S.ev.filter(function(x){return !x.resolved;});
+var h='<div class="secpage"><div class="sechead"><b>'+mIco('shield')+esc(mt13('sec'))+'</b><button data-sx="close" class="cv-x" style="position: static" aria-label="'+esc(mt13('close'))+'">'+mIco('x')+'</button></div>';
+h+='<div class="secsec"><div class="glist-h"><b>'+esc(mt13('alerts'))+'</b><span class="ochip '+(open.length?'no':'ok')+'" dir="ltr">'+open.length+'</span></div>';
+if(!open.length)h+='<p class="ofp">'+esc(mt13('none'))+'</p>';
+open.slice(0,60).forEach(function(x){var mem=S.fz.some(function(f){return f.id===x.member_id;});h+='<div class="secrow"><span class="ochip '+(x.kind==='tamper'||x.kind==='frozen'?'no':'wait')+'">'+esc(mt13(x.kind))+'</span><b>'+esc(whoN(x.member_id))+'</b><small dir="ltr">'+esc(tAgo(x.at))+'</small><code>'+esc(JSON.stringify(x.detail||{}).slice(0,160))+'</code><div class="secacts"><button data-sx="ok" data-id="'+x.id+'" class="crm-b">'+esc(mt13('ok'))+'</button>'+(x.member_id?(mem?'<button data-sx="unfz" data-m="'+esc(x.member_id)+'" class="crm-b">'+esc(mt13('unfreeze'))+'</button>':'<button data-sx="fz" data-m="'+esc(x.member_id)+'" class="crm-b" style="color: #B42318">'+esc(mt13('freeze'))+'</button>'):'')+'</div></div>';});
+h+='</div><div class="secsec"><div class="glist-h"><b>'+esc(mt13('frozenlist'))+'</b><span dir="ltr">'+S.fz.length+'</span></div>';
+S.fz.forEach(function(f){h+='<div class="secrow"><b>'+esc([f.full_name,f.last_name].filter(Boolean).join(' ')+' · '+f.code)+'</b><small>'+esc(f.frozen_reason||'')+' · <span dir="ltr">'+esc(tAgo(f.frozen_at))+'</span></small><div class="secacts"><button data-sx="unfz" data-m="'+esc(f.id)+'" class="crm-b gold">'+esc(mt13('unfreeze'))+'</button></div></div>';});
+h+='</div><div class="secsec"><div class="glist-h"><b>'+esc(mt13('log'))+'</b></div><p class="ofp" style="font-size: 12px">'+esc(mt13('log_d'))+'</p><select data-sx="tbl" style="'+INP+'; height: 44px"><option value="">'+esc(mt13('all'))+'</option>'+['profiles','kyc','sales','wallet_entries','payouts','withdrawal_requests','offices','ads','listings','units','ad_managers','settings','leader_requests','offers','project_members','point_awards','contract_taxes'].map(function(t){return '<option'+(S.tbl===t?' selected':'')+'>'+t+'</option>';}).join('')+'</select>';
+S.log.forEach(function(x){h+='<div class="secrow log"><small dir="ltr">'+esc(tAgo(x.at))+'</small><b>'+esc(whoN(x.actor))+'</b><span>'+esc(x.tbl)+' · '+esc(mt13(x.op==='INSERT'?'ins':x.op==='DELETE'?'del':'upd'))+'</span><code>'+esc(logDiff(x))+'</code></div>';});
+h+='<button data-sx="more" class="hlink" style="min-height: 44px">'+esc(mt13('more'))+'</button></div></div>';
+o.innerHTML=h;o.onclick=secClick;o.onchange=function(e){if(e.target.matches('[data-sx=tbl]')){S.tbl=e.target.value;loadSec();}};}
+function logDiff(x){if(x.op!=='UPDATE')return JSON.stringify(x.new||x.old||{}).slice(0,180);var o=x.old||{},n=x.new||{},out=[];Object.keys(n).forEach(function(k){if(JSON.stringify(o[k])!==JSON.stringify(n[k])&&!/updated_at/.test(k))out.push(k+': '+JSON.stringify(o[k])+' → '+JSON.stringify(n[k]));});return out.join(' · ').slice(0,240);}
+async function secClick(e){var b=e.target.closest('[data-sx]');if(!b||b.matches('select'))return;var k=b.getAttribute('data-sx'),S=secS();
+ if(k==='close'){var o=document.getElementById('secView');if(o)o.remove();return;}
+ if(k==='more'){S.n+=100;loadSec();return;}
+ try{if(k==='ok')await SB.rpc('resolve_security_event',{p_id:Number(b.getAttribute('data-id'))});
+  if(k==='fz'){var r=prompt(mt13('reason'),'');if(r===null)return;await SB.rpc('set_member_frozen',{p_member:b.getAttribute('data-m'),p_frozen:true,p_reason:r||null});}
+  if(k==='unfz')await SB.rpc('set_member_frozen',{p_member:b.getAttribute('data-m'),p_frozen:false,p_reason:null});}catch(x){alert(errText(x));}loadSec();}
+// 4) Face ID / fingerprint app lock (per phone)
+function bioId(){try{return localStorage.getItem('rasl_bio')||'';}catch(e){return '';}}
+function b64u(buf){return btoa(String.fromCharCode.apply(null,new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function unb64u(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a;}
+async function bioCan(){try{return !!(window.PublicKeyCredential&&await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());}catch(e){return false;}}
+async function bioEnable(){if(!(await bioCan())){alert(mt13('bio_no'));return false;}try{var c=await navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:'Rasl Estate Global',id:location.hostname},user:{id:new TextEncoder().encode(me.id),name:me.code||'member',displayName:who(me)},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required',residentKey:'preferred'},timeout:60000}});
+ localStorage.setItem('rasl_bio',b64u(c.rawId));return true;}catch(e){alert(mt13('bio_no'));return false;}}
+async function bioCheck(){var id=bioId();if(!id)return true;try{await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:[{type:'public-key',id:unb64u(id)}],userVerification:'required',rpId:location.hostname,timeout:60000}});return true;}catch(e){return false;}}
+var _bioOk=false,_hiddenAt=0;
+function bioLock(){if(!me||!bioId()||_bioOk)return;var o=ovEl('bioView');o.innerHTML='<div class="secbox"><span class="secic">'+mIco('shield')+'</span><b>'+esc(mt13('lock_t'))+'</b><button data-sx="unlock" class="crm-b gold" style="height: 50px">'+esc(mt13('unlock'))+'</button><p id="biomsg" class="secr" style="min-height: 18px"></p><button data-sx="out" class="hlink" style="min-height: 44px">'+esc(mt13('out'))+'</button></div>';
+o.onclick=async function(e){var b=e.target.closest('[data-sx]');if(!b)return;if(b.getAttribute('data-sx')==='out'){try{localStorage.removeItem('rasl_bio');}catch(x){}o.remove();actions.signout();return;}
+ if(await bioCheck()){_bioOk=true;o.remove();}else{var m=document.getElementById('biomsg');if(m)m.textContent=mt13('lock_fail');}};}
+document.addEventListener('visibilitychange',function(){if(document.hidden)_hiddenAt=Date.now();else if(_hiddenAt&&Date.now()-_hiddenAt>180000){_bioOk=false;bioLock();}});
+function bioSheet(){var o=ovEl('bioSet'),on=!!bioId();o.innerHTML='<div class="secbox"><span class="secic">'+mIco('shield')+'</span><b>'+esc(mt13('bio'))+'</b><p>'+esc(mt13('bio_d'))+'</p>'+(on?'<span class="ochip ok">'+esc(mt13('bio_is'))+'</span>':'')+'<button data-sx="tog" class="crm-b '+(on?'':'gold')+'" style="height: 46px">'+esc(on?mt13('bio_off'):mt13('bio_on'))+'</button><button data-sx="close" class="hlink" style="min-height: 44px">'+esc(mt13('close'))+'</button></div>';
+o.onclick=async function(e){var b=e.target.closest('[data-sx]');if(!b)return;if(b.getAttribute('data-sx')==='close'){o.remove();return;}if(bioId()){try{localStorage.removeItem('rasl_bio');}catch(x){}}else{if(await bioEnable())_bioOk=true;}bioSheet();};}
+setInterval(function(){if(me){frozenCheck();bioLock();}},1500);
 
 var isRec=/type=recovery/.test(location.hash||'');
 loadMe().then(function(){if(isRec&&me){location.hash='#Profile';setTimeout(function(){alert(T('fe_setnew'));},350);}else if(me&&(!location.hash||['Welcome','Login','Register'].indexOf(route())>=0)){location.hash='#Main';}render();});
