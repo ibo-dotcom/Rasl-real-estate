@@ -495,3 +495,4 @@ The whole app was restyled without changing any feature, route, database call or
   - Publish sheet: Manage ads, Manage projects, My projects, Studio (all in the menu) and Invite (Share on My card).
 - Fixed: the menu's Security and Face ID rows showed the word "shield" instead of the icon.
 - Tests: every page except Home must show a back arrow.
+- App visits in the menu opens Security again for the owner (members see the number only); Back from Security returns to the menu. Builds now apply the other session's menu and back-arrow changes on top (one combined version).
