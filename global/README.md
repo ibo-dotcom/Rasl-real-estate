@@ -389,3 +389,11 @@ The whole app was restyled without changing any feature, route, database call or
 - Every picked place offers Walk / Car / Plane: road route from your location (OSRM car, FOSSGIS foot), distance and time, alternative car routes in grey, plane as a great-circle line (800 km/h + 30 min), and an arrow that moves along the line showing direction.
 - Small coloured dots for shops, schools, mosques, hospitals etc. on both map styles at close zoom.
 - "Safest" route is not measurable from open data; the car route is the fastest one, which uses main roads.
+
+### Counts, licensed offices and team board (2026-11-15)
+- Home shows four separate counts: members, projects, app visits (total and today) and approved offices/companies (`app_stats()`, public).
+- Visits are logged once per device per day (`log_visit(key)` → `app_visits`, readable only through `app_stats`).
+- A member can register an office or a company (`offices`): licensed name, licence number, licence photo/PDF (private `kyc` bucket), logo (`avatars` bucket), city, phone. It starts as pending; the owner checks the licence and approves or rejects with a reason (`decide_office`). Changing the name, type or licence sends it back to pending.
+- An approved office brands the member and their whole downline (logo + name + team size bar on Home and Team; `my_office()` picks the nearest approved upline).
+- Approved offices get a team meeting link and a team board (`office_posts`) visible only to their own team. Meeting links must be https Zoom, Google Meet, Teams, Jitsi or Whereby; unapproved offices cannot set a link or post (enforced by triggers).
+- Owner sees "Office and company requests" on the Team page with the licence document.
