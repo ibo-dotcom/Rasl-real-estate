@@ -1,0 +1,7 @@
+{
+  "name": "rasl-app-tests",
+  "private": true,
+  "description": "Browser tests for the Rasl Estate Global member app (global/index.html).",
+  "scripts": { "serve": "node serve.js", "test": "node run.js", "test:quick": "node run.js --quick" },
+  "devDependencies": { "playwright": "1.48.2" }
+}

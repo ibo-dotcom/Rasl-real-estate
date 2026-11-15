@@ -1,0 +1,37 @@
+# Runs the member-app browser tests (tests/run.js) on every push, on pull requests, once a day, and on demand.
+# The app is served locally and talks to a fake database (tests/stub.js), so the tests never touch real data.
+name: App tests
+on:
+  push:
+    branches: [claude/awesome-goldberg-8ji8zs, claude/eager-ramanujan-1ewuff]
+  pull_request:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: app-tests-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Playwright
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Start the test server
+        run: |
+          node serve.js &
+          for i in $(seq 1 20); do curl -sf http://localhost:8766/index.html >/dev/null && break; sleep 1; done
+      - name: Run the tests
+        run: node run.js

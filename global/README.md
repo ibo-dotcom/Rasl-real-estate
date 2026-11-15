@@ -471,3 +471,6 @@ The whole app was restyled without changing any feature, route, database call or
 - Not possible: recording or storing members' screens (browsers do not allow it, and it would breach privacy); the permanent change record is the stored evidence instead.
 - Passwords now need at least 8 characters everywhere in the app (sign-up, new password, owner adding or editing a member), matching Supabase Auth's minimum password length set to 8. Leaked-password protection is a Supabase Pro feature and stays off on the free plan.
 - Back from anything opened in the side menu returns to the menu, one step at a time: a page (page arrow, phone or browser Back), a sheet (x or Back), and separate pages such as the 3D tour and the studio. Checked for all 35 menu items in a test browser.
+
+### Automatic tests (2026-11-15)
+- `tests/` holds the browser tests for the member app; `.github/workflows/app-tests.yml` runs them on every push, on pull requests, every day at 03:17 UTC and on demand (GitHub → Actions → App tests). They use a fake database (`tests/stub.js`), never the real one. See `tests/README.md`.
