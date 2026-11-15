@@ -437,3 +437,4 @@ The whole app was restyled without changing any feature, route, database call or
 - Side menu is a dashboard: counts, eight shortcut tiles, then separate sections: Properties (incl. buy / rent / off-plan / invest / filter), My account (incl. My card / QR), Management (ads, projects, accounts, tax; owner and ad managers), Company, Tools.
 - Project logo: owner or the project's team uploads it from the project sheet (`listings.logo_url`, `set_project_logo`, stored under the uploader's folder in the avatars bucket).
 - Every running ad is now shown to every member in the same board style. Before, ads not linked to a project were hidden from members (10 of the 11 current ads), so only the owner saw them; a project link now only adds the "Open project" button in the full-screen view.
+- Slide dots on the 2- and 3-per-row ad places moved to the top of the pictures so they no longer cover the city name or the + / x icons.
