@@ -500,3 +500,5 @@ The whole app was restyled without changing any feature, route, database call or
 - Project link card on the project sheet: the project's own page is saved with https only (set_project_link); members can open it, share it with a client with the sales message, or Record a sale (opens the Sales form with the project chosen). Commission  0x0p+0nd the points estimate are shown.
 - Owner's private notebook (دەفتەری تایبەت) in the menu for the owner only: table owner_notes, row-level security owner only. Add, tick done, delete.
 - Full-screen ad: the main button is now "View project and buy" (opens project.html for the linked project); the website link is a secondary button. Ads with no linked project show only the website link.
+- Buy page: reserving asks for the payment method and receipt number; the deposit shown is the unit's deposit; a unit with no price is reserved for its deposit.
+- Project page: the owner sets each unit's price (empty for a villa not yet priced) and deposit (default 1000) in the unit editor (set_unit_price).

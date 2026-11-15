@@ -156,8 +156,13 @@ function openUnit(m){sel=m;var u=m.userData.u,k=stOf(u),c=COL[k];selBox.visible=
  $('uBody').innerHTML=body;[].forEach.call($('uBody').querySelectorAll('[data-k]'),function(bt){bt.onclick=function(){deal(u,bt.dataset.k,bt)}});$('sheet').classList.add('open')}
 function closeSheet(){$('sheet').classList.remove('open');if(selBox)selBox.visible=false;sel=null}
 $('uX').onclick=closeSheet;
-async function deal(u,k,bt){var um=$('um');[].forEach.call($('uBody').querySelectorAll('button'),function(b){b.disabled=true});um.style.color='#FFFFFF';um.textContent=t('wait');
- try{var r=await SB.from('sales').insert({title:L.title+' · '+uLabel(u),amount:Number(u.price),listing_id:L.id,deal:k,unit:uLabel(u),unit_id:u.id});if(r.error)throw r.error;
+function resForm(u){var dep=Number(u.deposit!=null?u.deposit:1000);$('uBody').innerHTML='<div class="note">عەربون / Deposit: <b dir="ltr">$'+dep.toLocaleString('en-US')+'</b> — حجز بە پارەی عەربون دروست دەبێت. پاش پشتڕاستکردنی کۆمپانیا ئەو شوقەیە دەگیرێت.</div>'+
+ '<label style="display:block;margin-top:10px;font-size:12px">جۆری پارەدان<select id="pmM" style="width:100%;height:44px;margin-top:4px;border-radius:8px;border:1px solid #2a3a52;background:#0c1321;color:#fff"><option value="cash">Cash · نەقد</option><option value="bank">Bank · بانک</option><option value="wallet">Wallet · واڵێت</option><option value="card">Card · ڤیزا</option></select></label>'+
+ '<label style="display:block;margin-top:8px;font-size:12px">ژمارەی وەسڵ / مامەڵە<input id="pmR" maxlength="120" dir="ltr" style="width:100%;height:44px;margin-top:4px;border-radius:8px;border:1px solid #2a3a52;background:#0c1321;color:#fff;padding:0 10px"></label>'+
+ '<div class="btns"><button class="res" id="pmGo">📌 '+esc(t('res'))+'</button></div>';
+ $('pmGo').onclick=function(){var r=($('pmR').value||'').trim();if(r.length<3){$('um').style.color='#ff9b8a';$('um').textContent=t('err');return}deal(u,'reserve',null,$('pmM').value,r)};}
+async function deal(u,k,bt,pm,pr){var um=$('um');if(k==='reserve'&&!pr){resForm(u);return}[].forEach.call($('uBody').querySelectorAll('button'),function(b){b.disabled=true});um.style.color='#FFFFFF';um.textContent=t('wait');
+ try{var row={title:L.title+' · '+uLabel(u),amount:(Number(u.price)>0?Number(u.price):Number(u.deposit)||1000),listing_id:L.id,deal:k,unit:uLabel(u),unit_id:u.id};if(k==='reserve'){row.pay_method=pm;row.pay_ref=pr}var r=await SB.from('sales').insert(row);if(r.error)throw r.error;
    STATE[u.id]={unit_id:u.id,state:k==='sale'?'sold':'reserved',mine:true};applyFilter();legend();var m=sel;if(m){m.material=unitMat(stOf(u));pulse=1}
    openUnit(m);var um2=$('um');um2.style.color='#7fd1a0';um2.textContent=t(k==='sale'?'sentS':'sentR')}
  catch(e){var taken=/unit_taken/.test((e&&e.message)||'');um.style.color='#ff9b8a';um.textContent=t(taken?'taken':'err');if(taken){var s=await SB.rpc('unit_states',{p_listing:L.id});STATE={};(s.data||[]).forEach(function(x){STATE[x.unit_id]=x});applyFilter();legend()}else [].forEach.call($('uBody').querySelectorAll('button'),function(b){b.disabled=false})}}
