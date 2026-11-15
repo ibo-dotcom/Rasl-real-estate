@@ -373,3 +373,11 @@ The whole app was restyled without changing any feature, route, database call or
 - While an offer runs, its project's cards show an "Offers" badge, the unit card shows the offer and the purchase is recorded at the discounted price (`sales.offer_id`).
 - When a sale made during the offer is approved, the extra points (`points × (multiplier − 1) + extra points`) are added for the seller and the buyer (`point_awards`, source `offer`) and flow up the whole line like all points. Verified (rolled back): ×2 and +5 on a 100-point sale → +105, so 205 points for everyone above, counted once for the owner.
 - Charity and activities stay as they are.
+
+### Home members row and smarter world map (2026-11-15)
+- Home "My members" is now one compact row that scrolls sideways; the owner's "Add member" is a small link next to "See all".
+- World map search respells Kurdish typed with Arabic letters (قه لاي هه ولير → قەلای هەولیر), tries Kurdish, Arabic and English forms, and shows a list of other matches to pick from.
+- Places are suggested while typing (Photon, OpenStreetMap data).
+- A number with a city (e.g. "هەولێر 120") first looks for plots registered in the app, then house numbers on OpenStreetMap; if the number is not on the public map, the area is shown with a note.
+- Satellite view now shows names of cities, neighbourhoods, streets, places and house numbers (OpenFreeMap labels); the street view also shows house numbers at close zoom.
+- Government land-registry plot numbers are not public data, so only plots entered in the app can be found by number.

@@ -225,7 +225,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794697436';
+var BUILD='1794716350';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -645,14 +645,14 @@ return h+'</div></div>';}
 function homeTeam(){if(!me)return '';var list=(team||[]).filter(function(m){return m.id!==me.id;});
 var direct=list.filter(function(m){return m.sponsor_id===me.id;}).length;
 list=list.slice().sort(function(a,b){return (a.sponsor_id===me.id?0:1)-(b.sponsor_id===me.id?0:1)||(a.lvl||0)-(b.lvl||0)||String(who(a)).localeCompare(String(who(b)));});
-var max=11,shown=list.slice(0,max);
+var max=40,shown=list.slice(0,max);
 var tile=function(m){var d=m.sponsor_id===me.id,lv=m.lvl!=null&&me.role!=='owner'?m.lvl:null;
- return '<button data-act="memberInfo" data-id="'+esc(m.id)+'" style="display: flex; flex-direction: column; align-items: center; gap: 5px; min-width: 0; padding: 0; border: 0; background: transparent; color: #172B3A; cursor: pointer; font: inherit"><span style="position: relative; width: 58px; height: 58px"><span style="position: absolute; inset: 0; border-radius: 50%; overflow: hidden; border: 2px solid '+(d?'#173F63':'#C9D6E3')+'; background: #EAF1F7; color: #718096; display: flex; align-items: center; justify-content: center">'+face(m.avatar_url)+'</span>'+(m.rank_name?'<span style="position: absolute; bottom: -3px; inset-inline-end: -3px; width: 20px; height: 20px; border-radius: 50%; background: #173F63; color: #FFFFFF; font-size: 11px; display: grid; place-items: center; border: 2px solid #F5F8FB">★</span>':'')+'</span><b style="font-size: 12px; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">'+esc(who(m))+'</b><span dir="ltr" style="font-size: 10px; color: #718096; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">'+esc(m.code||'')+'</span></button>';};
-var h='<div style="padding: 14px; background: #FFFFFF; border: 1px solid #DFE7EF; border-radius: 10px; display: flex; flex-direction: column; gap: 14px; flex-shrink: 0"><div style="display: flex; align-items: center; justify-content: space-between; gap: 10px"><b style="font-size: 16px">'+icoIn('👥')+' '+esc(T('h_members'))+' <span dir="ltr" style="color: #173F63">'+list.length+'</span></b><a href="#Network" style="font-size: 12px; color: #173F63; text-decoration: none">'+esc(T('h_seeall'))+' ›</a></div>';
-h+='<div style="display: flex; gap: 8px"><span style="flex: 1; padding: 8px 10px; border-radius: 8px; background: #F5F8FB; font-size: 12px; color: #718096">'+esc(T('h_direct'))+' <b dir="ltr" style="color: #172B3A; unicode-bidi: isolate; display: inline-block">'+direct+(me.role==='owner'?'':' / 10')+'</b></span><span style="flex: 1; padding: 8px 10px; border-radius: 8px; background: #F5F8FB; font-size: 12px; color: #718096">'+esc(T('h_whole'))+' <b dir="ltr" style="color: #172B3A">'+list.length+'</b></span></div>';
-if(me.role==='owner')h+=addMemberBtn();if(!list.length)h+='<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 6px 0 4px; text-align: center"><span style="font-size: 13px; color: #718096; line-height: 1.5">'+esc(T('h_noteam'))+'</span><a href="#Network" style="height: 40px; padding: 0 16px; border-radius: 10px; background: #173F63; color: #FFFFFF; font-weight: 600; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center">＋ '+esc(T('h_invite'))+'</a></div>';
-else{h+='<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 8px">'+shown.map(tile).join('');
- h+=list.length>max?'<a href="#Network" style="display: flex; flex-direction: column; align-items: center; gap: 5px; text-decoration: none; color: #173F63"><span style="width: 58px; height: 58px; border-radius: 50%; border: 2px dashed #173F63; display: grid; place-items: center; font-weight: 700; font-size: 14px" dir="ltr">+'+(list.length-max)+'</span><b style="font-size: 12px">'+esc(T('h_seeall'))+'</b></a>':'<a href="#Network" style="display: flex; flex-direction: column; align-items: center; gap: 5px; text-decoration: none; color: #173F63"><span style="width: 58px; height: 58px; border-radius: 50%; border: 2px dashed #173F63; display: grid; place-items: center; font-size: 24px">＋</span><b style="font-size: 12px">'+esc(T('h_invite'))+'</b></a>';
+ return '<button data-act="memberInfo" data-id="'+esc(m.id)+'" style="display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 0 0 58px; width: 58px; min-width: 0; padding: 0; border: 0; background: transparent; color: #172B3A; cursor: pointer; font: inherit"><span style="position: relative; width: 40px; height: 40px"><span style="position: absolute; inset: 0; border-radius: 50%; overflow: hidden; border: 2px solid '+(d?'#173F63':'#C9D6E3')+'; background: #EAF1F7; color: #718096; display: flex; align-items: center; justify-content: center">'+face(m.avatar_url)+'</span>'+(m.rank_name?'<span style="position: absolute; bottom: -3px; inset-inline-end: -3px; width: 20px; height: 20px; border-radius: 50%; background: #173F63; color: #FFFFFF; font-size: 11px; display: grid; place-items: center; border: 2px solid #F5F8FB">★</span>':'')+'</span><b style="font-size: 11px; font-weight: 500; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">'+esc(who(m))+'</b><span dir="ltr" style="font-size: 10px; color: #718096; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">'+esc(m.code||'')+'</span></button>';};
+var h='<div style="padding: 10px 12px; background: #FFFFFF; border: 1px solid #DFE7EF; border-radius: 10px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0"><div style="display: flex; align-items: center; justify-content: space-between; gap: 10px"><b style="font-size: 14px; font-weight: 600">'+icoIn('👥')+' '+esc(T('h_members'))+' <span dir="ltr" style="color: #718096; font-weight: 500">'+direct+' / '+list.length+'</span></b><span style="display: flex; gap: 14px; align-items: center">'+(me.role==='owner'?'<button data-act="amOpen" class="hlink" style="min-height: 36px; font-size: 12px">＋ '+esc(T('am_title'))+'</button>':'')+'<a href="#Network" style="font-size: 12px; color: #173F63; text-decoration: none; min-height: 36px; display: inline-flex; align-items: center">'+esc(T('h_seeall'))+' ›</a></span></div>';
+
+if(!list.length)h+='<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 6px 0 4px; text-align: center"><span style="font-size: 13px; color: #718096; line-height: 1.5">'+esc(T('h_noteam'))+'</span><a href="#Network" style="height: 40px; padding: 0 16px; border-radius: 10px; background: #173F63; color: #FFFFFF; font-weight: 600; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center">＋ '+esc(T('h_invite'))+'</a></div>';
+else{h+='<div class="hscroll" style="gap: 10px; margin: 0 -12px; padding: 2px 12px">'+shown.map(tile).join('');
+ h+=list.length>max?'<a href="#Network" style="display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 0 0 58px; width: 58px; text-decoration: none; color: #173F63"><span style="width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #173F63; display: grid; place-items: center; font-weight: 700; font-size: 12px" dir="ltr">+'+(list.length-max)+'</span><b style="font-size: 11px; font-weight: 500">'+esc(T('h_seeall'))+'</b></a>':'<a href="#Network" style="display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 0 0 58px; width: 58px; text-decoration: none; color: #173F63"><span style="width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #173F63; display: grid; place-items: center; font-size: 18px">＋</span><b style="font-size: 11px; font-weight: 500">'+esc(T('h_invite'))+'</b></a>';
  h+='</div>';}
 return h+'</div>';}
 function adsHtml(){
@@ -837,7 +837,7 @@ mapInfo('<div class="mi-row"><div style="min-width: 0"><b class="mi-name">'+esc(
 }
 function mapPage(){
 if(MAP.failed)return '<div style="padding: 16px; background: #FFFFFF; border: 1px solid #DFE7EF; border-radius: 10px; text-align: center; font-size: 14px; color: #3D5166">'+esc(T('m_failed'))+'</div>';
-return '<form id="mapForm" style="display: flex; gap: 8px"><input id="mapQ" type="search" enterkeyhint="search" autocomplete="off" placeholder="'+esc(T('m_ph'))+'" style="'+INP+'; flex: 1; min-width: 0"><button type="submit" aria-label="'+esc(T('m_find'))+'" style="width: 52px; height: 52px; border-radius: 10px; border: 0; background: #173F63; color: #FFFFFF; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg></button><button type="button" data-act="mapMe" aria-label="'+esc(T('m_me'))+'" style="width: 52px; height: 52px; border-radius: 10px; border: 1px solid #DFE7EF; background: #FFFFFF; color: #2F6FD0; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="6.5"></circle><circle cx="12" cy="12" r="2"></circle><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"></path></svg></button></form>'
+return '<form id="mapForm" style="display: flex; gap: 8px"><input id="mapQ" type="search" enterkeyhint="search" autocomplete="off" placeholder="'+esc(mt('ph'))+'" style="'+INP+'; flex: 1; min-width: 0"><button type="submit" aria-label="'+esc(T('m_find'))+'" style="width: 52px; height: 52px; border-radius: 10px; border: 0; background: #173F63; color: #FFFFFF; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg></button><button type="button" data-act="mapMe" aria-label="'+esc(T('m_me'))+'" style="width: 52px; height: 52px; border-radius: 10px; border: 1px solid #DFE7EF; background: #FFFFFF; color: #2F6FD0; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="6.5"></circle><circle cx="12" cy="12" r="2"></circle><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"></path></svg></button></form>'
 +'<div style="display: flex; gap: 6px"><button data-act="mapStyle" data-k="streets" class="mi-seg'+(MAP.style!=='sat'?' on':'')+'">'+esc(T('m_streets'))+'</button><button data-act="mapStyle" data-k="sat" class="mi-seg'+(MAP.style==='sat'?' on':'')+'">'+esc(T('m_sat'))+'</button></div>'
 +'<div id="mapSlot" class="mapslot"></div><div id="mapInfo" class="mapinfo" aria-live="polite"></div>';
 }
@@ -1233,6 +1233,7 @@ homeType:function(a){var k=a.getAttribute('data-k');st.homeType=st.homeType===k?
 homeCond:function(a){var k=a.getAttribute('data-k');st.homeCond=st.homeCond===k?'':k;render();},
 homeReset:function(){st.homeKind='';st.homeQ='';st.homeType='';st.homeCond='';st.hf=null;st.hsort='best';render();},
 menuOpen:function(){st.menu=true;render();},
+geoPick:function(a){geoShow(Number(a.getAttribute('data-i')),'');},
 offOpen:function(){st.off=true;st.offEdit=null;render();loadOffers(true);},offClose:function(){st.off=false;st.offEdit=null;render();},
 offEdit:function(a){st.offEdit=a.getAttribute('data-id')||null;render();},
 offDel:async function(a){if(!SB||!me||me.role!=='owner'||!confirm(T('pp_delq')))return;try{await SB.from('offers').delete().eq('id',a.getAttribute('data-id'));await loadOffers(true);}catch(e){}},
@@ -1595,7 +1596,7 @@ else if(act==='save'){put('reg_plan',JSON.stringify(st.plan));st.saved=true;save
 else return;
 render();
 });
-app.addEventListener('input',function(e){
+app.addEventListener('input',function(e){if(e.target&&e.target.id==='mapQ')mapSuggest(e.target.value);
 var t=e.target,n=+t.getAttribute('data-i');
 if(t.id==='code'){checkCodeSoon(t.value);return;}
 if(t.hasAttribute('data-rf')){st.plan.ranks[n][t.getAttribute('data-rf')]=t.value;}
@@ -1974,7 +1975,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  return h+'</div></div>';}
 
 // ---- Auto-update: every phone moves to the newest version by itself ----
-var APP_VER='20261114230615';
+var APP_VER='20261115042102';
 (function(){if(APP_VER.indexOf('__')===0)return;var busy=false,shown=false;
  function busyNow(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||!!document.querySelector('.tm-sheet');}
  function go(v){try{var k='rasl_upd_'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
@@ -1993,6 +1994,80 @@ var APP_VER='20261114230615';
  try{if(/[?&]v=/.test(location.search))history.replaceState(null,'',location.pathname+location.hash);}catch(e){}})();
 
 try{PMI={bank:icoIn('🏦'),wallet:icoIn('👛'),card:icoIn('💳'),cash:icoIn('💵')};}catch(e){}
+// Map search v2. Kurdish typed with Arabic letters is respelled (قه لاي هه ولير -> قەلای هەولیر),
+// several spellings are tried, a number searches plots in the app and house numbers on the map,
+// places are suggested while typing, and the satellite view shows place, street and house labels.
+function mtData(){return {ph:['Place, area, street or number (Erbil 120)','ناوی شوێن، گەڕەک، شەقام یان ژمارە (هەولێر 120)','مكان، حي، شارع أو رقم (أربيل 120)','Yer, mahalle, sokak veya numara (Erbil 120)'],
+more:['Other matches','ئەنجامی تر','نتائج أخرى','Diğer sonuçlar'],
+nonum:['Number {n} is not on the public map yet. Showing {p}.','ژمارە {n} هێشتا لەسەر نەخشەی گشتی تۆمار نەکراوە. {p} پیشان دەدرێت.','الرقم {n} غير مسجل على الخريطة العامة بعد. يتم عرض {p}.','{n} numarası henüz haritada yok. {p} gösteriliyor.'],
+none:['Nothing found for “{q}”. Try e.g. Erbil Citadel, Azadi, Erbil 120.','«{q}» نەدۆزرایەوە. وەک ئەمە بنووسە: قەڵای هەولێر، ئازادی، هەولێر 120.','لم يتم العثور على «{q}». جرّب: قلعة أربيل، أزادي، أربيل 120.','“{q}” bulunamadı. Örnek: Erbil Kalesi, Azadi, Erbil 120.'],
+plot:['Plot','پارچەزەوی','قطعة','Parsel']};}
+function mt(k){var M=mtData(),i={en:0,ku:1,ar:2,tr:3}[st.lang];return (M[k]||[])[i==null?0:i]||M[k][0];}
+function kuSpell(q,merge){var t=String(q||'').replace(/[يى]/g,'ی').replace(/ك/g,'ک').replace(/ة/g,'ە').replace(/ه‌/g,'ە ').replace(/\s+/g,' ').trim().split(' '),out=[],glue=false;
+t.forEach(function(w){if(!w)return;var ar=/^[؀-ۿ]+$/.test(w),endH=ar&&w.length>=2&&/ه$/.test(w);var x=endH?w.slice(0,-1)+'ە':w;
+if(glue&&ar&&merge)out[out.length-1]+=x;else out.push(x);glue=endH;});return out.join(' ');}
+function kuAr(){return {'قەلای':'قلعة','قەلا':'قلعة','گەرەکی':'حي','گەرەک':'حي','شەقامی':'شارع','شەقام':'شارع','بازاری':'سوق','نەخۆشخانەی':'مستشفى','زانکۆی':'جامعة','پارکی':'منتزه'};}
+function geoVariants(q){var v=[q],a=kuSpell(q,true),b=kuSpell(q,false),k=foldKey(q);v.push(a,b);
+var ar=a.split(' ').map(function(w){return kuAr()[w.replace(/ڵ/g,'ل').replace(/ڕ/g,'ر')]||(PLACES[foldKey(w)]||w);}).join(' ');v.push(ar);
+var en=a.split(' ').map(function(w){return PLACES[foldKey(w)]||w;}).join(' ');v.push(en);if(PLACES[k])v.unshift(PLACES[k]);
+var seen={};return v.filter(function(x){x=String(x||'').trim();if(!x||seen[x])return false;seen[x]=1;return true;}).slice(0,5);}
+function geoName(x){return String(x.name||x.display_name||'').split(',')[0];}
+function photonToGeo(f){var p=f.properties||{},c=f.geometry.coordinates,e=p.extent;var parts=[p.name,p.housenumber&&p.street?p.street+' '+p.housenumber:p.street,p.district||p.locality,p.city,p.state,p.country].filter(Boolean);
+return {lat:c[1],lon:c[0],name:p.name||(p.street?p.street+(p.housenumber?' '+p.housenumber:''):parts[0]),display_name:parts.join(', '),category:p.osm_key,boundingbox:e?[e[3],e[1],e[0],e[2]]:null};}
+
+async function geoFindAll(q,lang){var vars=geoVariants(q);
+for(var i=0;i<vars.length;i++){try{var r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=8&accept-language='+lang+'&viewbox=38.7,37.6,48.8,29.0&bounded=0'+'&q='+encodeURIComponent(vars[i]));var j=r.ok?await r.json():[];if(!j.length)continue;
+var score=function(x){var c=x.category||x.class||'',big=(c==='place'||c==='boundary')?1:0;return big*10+(Number(x.importance)||0);};
+if(!/\d/.test(q))j.sort(function(a,b){return score(b)-score(a);});return j;}catch(e){}}
+var c=MAP.gl?MAP.gl.getCenter():{lat:36.19,lng:44.01};
+for(var k=1;k<vars.length&&k<3;k++){try{var r2=await fetch('https://photon.komoot.io/api/?limit=8&lat='+c.lat+'&lon='+c.lng+'&q='+encodeURIComponent(vars[k]));var j2=r2.ok?await r2.json():null;if(j2&&j2.features&&j2.features.length)return j2.features.map(photonToGeo);}catch(e){}}
+return [];}
+async function geoFind(q,lang){var a=await geoFindAll(q,lang);return a[0]||null;}
+function geoList(cur){var res=MAP.res||[];if(res.length<2)return '';var h='<div style="margin-top: 10px; border-top: 1px solid #DFE7EF; padding-top: 8px"><p class="mi-t" style="font-size: 12px; margin-bottom: 4px">'+esc(mt('more'))+'</p>';
+res.slice(0,6).forEach(function(x,i){if(i===cur)return;h+='<button data-act="geoPick" data-i="'+i+'" style="display: block; width: 100%; text-align: start; background: transparent; border: 0; border-bottom: 1px solid #EEF2F6; padding: 9px 2px; min-height: 44px; cursor: pointer; font: inherit; color: #172B3A"><b style="display: block; font-size: 14px; font-weight: 600">'+esc(geoName(x))+'</b><span style="display: block; font-size: 12px; color: #5B6B7B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">'+esc(x.display_name||'')+'</span></button>';});
+return h+'</div>';}
+function geoShow(i,note){var x=(MAP.res||[])[i];if(!x)return;var lat=+x.lat,lng=+x.lon,bb=(x.boundingbox||[]).map(Number);spotAt(lat,lng,geoName(x));
+if(MAP.gl){if(bb.length===4&&bb[1]-bb[0]>0.01)MAP.gl.fitBounds([[bb[2],bb[0]],[bb[3],bb[1]]],{padding:40,duration:1000});else MAP.gl.flyTo({center:[lng,lat],zoom:/\d/.test(geoName(x))?18:16,duration:1000});}
+MAP.dest={lat:lat,lng:lng,label:geoName(x)};
+mapInfo((note?'<p class="mi-t" style="font-size: 13px; color: #8A5A00; margin-bottom: 8px">'+esc(note)+'</p>':'')+'<div class="mi-row"><div style="min-width: 0"><b class="mi-name">'+esc(MAP.dest.label)+'</b><span class="mi-sub">'+esc(x.display_name||'')+'</span></div></div><div class="mi-acts"><button data-act="tripSpot" class="mi-btn gold">'+esc(T('m_way'))+'</button></div>'+geoList(i));}
+function geoLang(){return st.lang==='ku'?'ckb,ku,ar,en':st.lang==='ar'?'ar,en':st.lang==='tr'?'tr,en':'en';}
+async function mapSearch(q){
+q=stripCmd(String(q||'').trim());if(!q)return;clearTimeout(MAP.sugT);MAP.sugQ=null;
+var low=q.toLowerCase().replace(/\s+/g,''),hit=listings.filter(function(l){return l.lat!=null&&((l.plot&&String(l.plot).toLowerCase().replace(/\s+/g,'')===low)||String(l.title||'').toLowerCase().indexOf(q.toLowerCase())>=0);});
+var num=(q.match(/\d+(?:[\/\-]\d+)?/)||[''])[0],rest=q.replace(num,' ').replace(/\s+/g,' ').trim();
+if(!hit.length&&num){var fr=foldKey(rest);hit=listings.filter(function(l){if(l.lat==null||!l.plot)return false;var p=String(l.plot).replace(/[^0-9\/\-]/g,'');if(p.indexOf(num)<0&&String(l.plot).indexOf(num)<0)return false;if(!fr)return true;var where=foldKey([l.city,l.area,l.address,l.title].join(' '));var en=PLACES[fr];return where.indexOf(fr)>=0||(en&&where.indexOf(foldKey(en))>=0);});}
+if(!hit.length)hit=listings.filter(function(l){return l.lat!=null&&l.plot&&String(l.plot).toLowerCase().replace(/[^a-z0-9]/g,'').indexOf(low.replace(/[^a-z0-9]/g,''))>=0&&/\d/.test(low);});
+if(hit.length){focusListing(hit[0].id);return;}
+var ll=parseLoc(q);if(ll){spotAt(ll[0],ll[1],q);MAP.gl&&MAP.gl.flyTo({center:[ll[1],ll[0]],zoom:16});MAP.dest={lat:ll[0],lng:ll[1],label:q};mapInfo('<div class="mi-acts"><button data-act="tripSpot" class="mi-btn gold">'+esc(T('m_way'))+'</button></div>');return;}
+mapInfo('<p class="mi-t">'+esc(T('m_searching'))+'</p>');
+try{var res=await geoFindAll(q,geoLang()),note='';
+if(num&&rest){var exact=res.filter(function(x){var t=String(x.display_name||'');return t.indexOf(num)>=0&&!/^(city|town|village|administrative|state|county)$/.test(x.addresstype||x.type||'');});
+if(exact.length)res=exact;else{var area=await geoFindAll(rest,geoLang());if(area.length){res=area;note=mt('nonum').replace('{n}',num).replace('{p}',geoName(area[0]));}}}
+if(!res.length){mapInfo('<p class="mi-t">'+esc(mt('none').replace('{q}',q))+'</p>');return;}
+MAP.res=res;geoShow(0,note);
+}catch(e){mapInfo('<p class="mi-t">'+esc(T('m_offline'))+'</p>');}
+}
+// Suggestions while typing (Photon allows type-ahead; Nominatim does not).
+function mapSuggest(q){clearTimeout(MAP.sugT);q=String(q||'').trim();if(q.length<3||parseLoc(q)){return;}
+MAP.sugT=setTimeout(async function(){MAP.sugQ=q;var c=MAP.gl?MAP.gl.getCenter():{lat:36.19,lng:44.01};
+try{var r=await fetch('https://photon.komoot.io/api/?limit=6&lat='+c.lat+'&lon='+c.lng+'&q='+encodeURIComponent(kuSpell(stripCmd(q),true)));var j=r.ok?await r.json():null;
+if(MAP.sugQ!==q||!j||!j.features||!j.features.length)return;var el=$('mapQ');if(!el||String(el.value).trim()!==q)return;
+MAP.res=j.features.map(photonToGeo);var h='';MAP.res.forEach(function(x,i){h+='<button data-act="geoPick" data-i="'+i+'" style="display: block; width: 100%; text-align: start; background: transparent; border: 0; border-bottom: 1px solid #EEF2F6; padding: 9px 2px; min-height: 44px; cursor: pointer; font: inherit; color: #172B3A"><b style="display: block; font-size: 14px; font-weight: 600">'+esc(geoName(x))+'</b><span style="display: block; font-size: 12px; color: #5B6B7B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">'+esc(x.display_name||'')+'</span></button>';});
+mapInfo(h);}catch(e){}},550);}
+// Satellite view with names of cities, areas, streets, places and house numbers on top.
+function labelLayers(src){var halo={'text-color':'#FFFFFF','text-halo-color':'rgba(16,43,70,.85)','text-halo-width':1.6};var F=['Noto Sans Regular'],FB=['Noto Sans Bold'];
+return [
+{id:'x-road',type:'symbol',source:src,'source-layer':'transportation_name',minzoom:13,layout:{'symbol-placement':'line','text-field':['get','name'],'text-font':F,'text-size':12},paint:halo},
+{id:'x-poi',type:'symbol',source:src,'source-layer':'poi',minzoom:15,filter:['has','name'],layout:{'text-field':['get','name'],'text-font':F,'text-size':11,'text-max-width':8},paint:{'text-color':'#FFF4D6','text-halo-color':'rgba(16,43,70,.85)','text-halo-width':1.4}},
+{id:'x-house',type:'symbol',source:src,'source-layer':'housenumber',minzoom:17,layout:{'text-field':['get','housenumber'],'text-font':F,'text-size':11},paint:halo},
+{id:'x-place-s',type:'symbol',source:src,'source-layer':'place',minzoom:11,filter:['in',['get','class'],['literal',['suburb','neighbourhood','quarter','hamlet','isolated_dwelling']]],layout:{'text-field':['get','name'],'text-font':F,'text-size':['interpolate',['linear'],['zoom'],11,11,16,14],'text-max-width':8},paint:halo},
+{id:'x-place',type:'symbol',source:src,'source-layer':'place',filter:['in',['get','class'],['literal',['city','town','village','state','country']]],layout:{'text-field':['get','name'],'text-font':FB,'text-size':['interpolate',['linear'],['zoom'],4,11,12,17],'text-max-width':8},paint:halo}];}
+function mapStyle(kind){if(kind!=='sat')return OFM+'/styles/positron';return {version:8,glyphs:OFM+'/fonts/{fontstack}/{range}.pbf',sources:{sat:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imagery © Esri'},om:{type:'vector',url:OFM+'/planet',attribution:'© OpenStreetMap'}},layers:[{id:'sat',type:'raster',source:'sat'}].concat(labelLayers('om'))};}
+function addHouseNumbers(){var m=MAP.gl;if(!m||MAP.style==='sat')return;try{if(m.getLayer('x-house')||!m.getSource('openmaptiles'))return;m.addLayer({id:'x-house',type:'symbol',source:'openmaptiles','source-layer':'housenumber',minzoom:17,layout:{'text-field':['get','housenumber'],'text-font':['Noto Sans Regular'],'text-size':11},paint:{'text-color':'#3D5166','text-halo-color':'#FFFFFF','text-halo-width':1.2}});}catch(e){}}
+function labelsInLang(){var m=MAP.gl;if(!m)return;addHouseNumbers();var keys={ku:['name:ckb','name:ku','name:ar'],ar:['name:ar'],tr:['name:tr','name:latin','name:en'],en:['name:en','name:latin']}[st.lang]||['name:en'];
+var field=['coalesce'].concat(keys.map(function(k){return ['get',k];})).concat([['get','name']]);
+try{(m.getStyle().layers||[]).forEach(function(l){if(l.type!=='symbol'||!l.layout||!l.layout['text-field']||l.id==='x-house')return;if(JSON.stringify(l.layout['text-field']).indexOf('name')<0)return;m.setLayoutProperty(l.id,'text-field',field);});}catch(e){}}
+
 var isRec=/type=recovery/.test(location.hash||'');
 loadMe().then(function(){if(isRec&&me){location.hash='#Profile';setTimeout(function(){alert(T('fe_setnew'));},350);}else if(me&&(!location.hash||['Welcome','Login','Register'].indexOf(route())>=0)){location.hash='#Main';}render();});
 })();
