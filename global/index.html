@@ -398,7 +398,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 if(!get('reg_ku_v1')){if(!get('reg_lang')||get('reg_lang')==='en')put('reg_lang','ku');put('reg_ku_v1','1');}var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794765206';
+var BUILD='1794768293';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -554,6 +554,11 @@ if(base){var steps=Array.isArray(l.pay_steps)?l.pay_steps:[];
  +'<label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #718096">'+esc(st.lang==='ku'?'توانای کڕیار بۆ هەر پارەدانێک $':'Your budget for one payment $')+'<input id="cc_b" type="number" min="0" value="'+(bud||'')+'" style="'+INP+'"></label>'
  +(bud?'<b style="font-size: 12px">'+esc(st.lang==='ku'?'ئەو پرۆژانە نزیکن لە توانای تۆ (±١٥٪):':'Close to your budget (±15%):')+'</b>'+(near.length?near.slice(0,6).map(function(x){return '<div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; padding: 6px 8px; border-radius: 8px; background: #F5F8FB"><span>'+esc(x.title)+' · '+esc(x.place||'')+'</span></div>';}).join(''):'<span style="font-size: 12px; color: #718096">'+esc(st.lang==='ku'?'هیچ پرۆژەیەک نزیک نییە':'No close match')+'</span>'):'')
  +'</div>';}
+if(base){var cmPct=Number(l.commission_pct!=null?l.commission_pct:cfg.default_commission_pct)||0;var cm=base*cmPct/100,dsc=cm*25/100,spn=cm*10/100,pts=Math.floor(base/1000);
+h+='<div style="padding: 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #173F63; display: flex; flex-direction: column; gap: 8px"><b style="font-size: 13px">'+esc(st.lang==='ku'?'بۆ تۆ (کڕیار)':'For you (buyer)')+'</b>'
+ +'<div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px"><span>'+esc(st.lang==='ku'?'داشکاندنی تۆ لەم پرۆژەیەدا':'Your discount on this project')+'</span><b dir="ltr" style="color: #173F63">'+money(dsc)+'</b></div>'
+ +'<div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px"><span>'+esc(st.lang==='ku'?'خاڵی تۆ لەم کڕینەدا':'Your points for this purchase')+'</span><b dir="ltr" style="color: #173F63">'+num(pts)+'</b></div>'
+ +'<span style="font-size: 12px; color: #718096">'+esc(st.lang==='ku'?'بۆ هەر ١٬٠٠٠ دۆلار یەک خاڵ. ئەم ژمارانە لەسەر نرخی ئەم پرۆژەیە حیساب دەکرێن.':'One point for every $1,000. These numbers are based on this project price.')+'</span></div>';}
 var nbs=Array.isArray(l.nearby)?l.nearby:[];if(nbs.length)h+='<div style="padding: 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DFE7EF; display: flex; flex-direction: column; gap: 6px"><b style="font-size: 13px">📍 '+esc(st.lang==='ku'?'شوێنە نزیکەکان':'Nearby places')+'</b>'+nbs.map(function(x){return '<div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px"><span>'+esc(x.t||'')+'</span><b dir="ltr" style="color: #173F63">'+esc(x.d||'')+'</b></div>';}).join('')+'</div>';
 var steps=Array.isArray(l.pay_steps)?l.pay_steps:[];if(steps.length)h+='<div style="padding: 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DFE7EF; display: flex; flex-direction: column; gap: 6px"><b style="font-size: 13px">'+icoIn('💳')+' '+esc(T('pj_steps'))+'</b>'+steps.map(function(s,i){return '<div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px"><span><b style="color: #173F63">'+(i+1)+'.</b> '+esc(s.t||'')+'</span>'+(s.pct!=null?'<b dir="ltr">'+num(s.pct)+'%'+(base?' · '+money(base*s.pct/100):'')+'</b>':'')+'</div>';}).join('')+'</div>';
 if(l.details)h+='<p style="margin: 0; font-size: 14px; line-height: 1.6; color: #3D5166; white-space: pre-wrap">'+esc(l.details)+'</p>';
@@ -2198,7 +2203,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  return h+'</div></div>';}
 
 // ---- Auto-update: every phone moves to the newest version by itself ----
-var APP_VER='20261115175326';
+var APP_VER='20261115184453';
 (function(){if(APP_VER.indexOf('__')===0)return;var busy=false,shown=false;
  function busyNow(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||!!document.querySelector('.tm-sheet');}
  function go(v){try{var k='rasl_upd_'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
