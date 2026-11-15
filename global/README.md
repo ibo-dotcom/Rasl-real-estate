@@ -412,3 +412,8 @@ The whole app was restyled without changing any feature, route, database call or
 - Register page shows the same summary and rules; sign-up is blocked until the box is ticked.
 - Database: `member_card(code)` (public), `set_show_income(bool)`, `profiles.show_income`; unique index on KYC document type + number so the same ID cannot register twice.
 - Button sweep: every `data-act` button on 14 screens (and the sheets on Home) clicked one by one in a test browser; no runtime errors.
+
+### Integrity check (2026-11-15)
+- Confirmed in the database: members can only change their own full name, phone and country directly (column grants); sponsor, code, role, active state, name verification and income visibility cannot be changed by members.
+- A second account with an ID number already in KYC now gets a clear message ("This ID number is already registered to another account") instead of a generic error; office and meeting-link errors are also explained.
+- Added the missing index on `sales.offer_id` (performance advisor).
