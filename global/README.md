@@ -426,3 +426,13 @@ The whole app was restyled without changing any feature, route, database call or
 - Bigger ads: top ad up to 460px tall, the middle place shows one ad at a time at full width, the bottom place two per row.
 - Every ad has a number of days (`ads.days`, `ads.ends_at`, `ads.starts_at`); the add form shows the rent = slot price per day x days. Slot prices in settings are now per day. Ended ads disappear for everyone (RLS on `ads_read` plus a client filter).
 - Owner chooses ad managers on the Team page ("Who can add and remove ads", table `ad_managers`, `private.can_ads()`); ads and the ads storage bucket accept writes from the owner and those managers; managers can also remove member posts shown as ads.
+
+### Home redesign: board-style ads, full-screen ad view, dashboard menu (2026-11-15)
+- Home has three ad places: top = one big ad at a time (swipe for more), second = two per row, third = three per row. Ads run edge to edge like a printed board: no frame, no rounded corners, no shade; slide dots sit on the picture.
+- On each ad: project logo on top with the project name in fine small letters under it (Latin names in spaced capitals), the city small at the bottom; no prices, no backgrounds behind any text.
+- Owner and allowed ad managers see tiny + and x icons at the bottom of each ad; both ask for confirmation.
+- Tapping any ad (picture or video) opens it full screen with all its details on the picture: name, city, type, new/used, units left, price, description, and buttons for the project page, 3D tour, map, and (for managers) add / remove. Swipe or arrows move between all ads; x closes.
+- Project listings on Home are big picture cards in the same style (one per row on phones, three on computers); the section title, deal/type chips, filter/sort row and badges were removed from Home and moved into the menu.
+- On computers Home now uses the full screen width (up to 1180px).
+- Side menu is a dashboard: counts, eight shortcut tiles, then separate sections: Properties (incl. buy / rent / off-plan / invest / filter), My account (incl. My card / QR), Management (ads, projects, accounts, tax; owner and ad managers), Company, Tools.
+- Project logo: owner or the project's team uploads it from the project sheet (`listings.logo_url`, `set_project_logo`, stored under the uploader's folder in the avatars bucket).
