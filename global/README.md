@@ -381,3 +381,11 @@ The whole app was restyled without changing any feature, route, database call or
 - A number with a city (e.g. "هەولێر 120") first looks for plots registered in the app, then house numbers on OpenStreetMap; if the number is not on the public map, the area is shown with a note.
 - Satellite view now shows names of cities, neighbourhoods, streets, places and house numbers (OpenFreeMap labels); the street view also shows house numbers at close zoom.
 - Government land-registry plot numbers are not public data, so only plots entered in the app can be found by number.
+
+### World map v3 (2026-11-15)
+- Suggestions are a short list (up to 4) inside a panel capped at 38% of the screen, so the map stays visible; only names that really contain what was typed are suggested.
+- An exact name (e.g. «قه لاي هه ولير» → Citadel of Erbil) goes straight to the place with no extra list.
+- Typing a type of place (hospital / نەخۆشخانە / خەستەخانە, clinic, pharmacy, school, university, mosque, church, restaurant, café, hotel, bank, fuel, park, market, police, airport, gym), optionally with a city, lists every one found (up to 40, nearest first) with small icons on the map; tapping one shows address, phone, opening hours.
+- Every picked place offers Walk / Car / Plane: road route from your location (OSRM car, FOSSGIS foot), distance and time, alternative car routes in grey, plane as a great-circle line (800 km/h + 30 min), and an arrow that moves along the line showing direction.
+- Small coloured dots for shops, schools, mosques, hospitals etc. on both map styles at close zoom.
+- "Safest" route is not measurable from open data; the car route is the fastest one, which uses main roads.
