@@ -440,3 +440,10 @@ The whole app was restyled without changing any feature, route, database call or
 - Slide dots on the 2- and 3-per-row ad places moved to the top of the pictures so they no longer cover the city name or the + / x icons.
 - The three ad places fit on one screen together (1 / 2 / 3): top about 44%, second row about 30%, third row about 26% of the screen height, on phones and computers.
 - Home is now only the three ad rows, filling the screen exactly from under the header to the bottom edge. The project cards appear on Home only while searching or filtering; the My members box (Team page) and the recent sales strip were removed from Home.
+
+### Project catalogue → 3D / 360° / VR (2026-11-15)
+- Every project page has a "Project catalogue" card. The owner and the project's team add any number of pictures or videos at once (no limit; 60 MB per file), see them as thumbnails and remove any with x.
+- Buttons 3D, 360° and VR open the catalogue in the studio (`studio.html?catalog=<project id>&m=3d|360|vr&n=<title>`): normal pictures move slowly in 3D on a curved surface, 2:1 panoramas turn all the way round, VR is split-screen for a headset. The studio can also record a turn as a video.
+- "Send to a client" shares one link to the catalogue (WhatsApp, etc.), usable from CRM conversations; anyone can open it without an account.
+- Database: `project_catalog` (listing, url, kind, position); everyone can read, only the owner or that project's members can add, reorder or remove. Files go to the public `studio` bucket in the uploader's folder.
+- Limitation: flat catalogue pictures are shown with 3D movement, not rebuilt as a walkable 3D model of the building; that needs a 3D model file from the architect.

@@ -309,6 +309,14 @@ resize();drawMark();requestAnimationFrame(loop);
 var v=QS.get('v'),src=QS.get('src');
 if(v){try{var d=JSON.parse(decodeURIComponent(escape(atob(v.replace(/-/g,'+').replace(/_/g,'/')))));if(d.s)$('speed').value=d.s;if(d.n){$('titleIn').value=d.n;drawMark()}(d.i||[]).forEach(function(x){items.push({type:x.t==='v'?'video':'image',src:x.u,remote:true,uploaded:x.u})});if(items.length){openStage();select(0)}}catch(e){console.error(e)}}
 else if(src)addUrl(src);
+// ?catalog=<project id>: load that project's catalog pictures; ?m=360|3d|vr picks the view; ?n= shows a title.
+var cat=QS.get('catalog'),qm=QS.get('m'),qn=QS.get('n');
+if(qn){$('titleIn').value=qn.slice(0,80);drawMark()}
+if(cat&&/^[0-9a-f-]{36}$/i.test(cat)){(function wait(n){if(!SB){if(n<40)setTimeout(function(){wait(n+1)},150);return}
+ SB.from('project_catalog').select('url,kind').eq('listing_id',cat).order('position').order('created_at').then(function(r){var rows=(r&&r.data)||[];
+  rows.forEach(function(x){items.push({type:x.kind==='video'?'video':'image',src:x.url,remote:true,uploaded:x.url})});
+  if(items.length){openStage();select(0);if(qm&&/^(360|3d|vr)$/.test(qm))setTimeout(function(){setMode(qm)},300)}else toast(t('bad'))})})(0)}
+else if(qm&&items.length&&/^(360|3d|vr)$/.test(qm))setTimeout(function(){setMode(qm)},300);
 window.__studio={get items(){return items},get mode(){return mode},addUrl:addUrl,select:select,camera:camera};
 })();
 </script>
