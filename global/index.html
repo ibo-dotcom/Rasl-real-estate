@@ -361,7 +361,12 @@ img.avm{object-fit:contain;background:#0B1C2E}
 .av-btn{min-height:38px;padding:0 14px;border-radius:99px;border:1px solid rgba(255,255,255,.75);background:rgba(0,0,0,.18);color:#FFFFFF;font:600 12px Inter,'Noto Sans Arabic',system-ui,sans-serif;display:inline-flex;align-items:center;gap:5px;cursor:pointer;text-decoration:none}
 .av-btn svg{width:13px;height:13px}.av-btn.main{background:#FFFFFF;color:#102B46;border-color:#FFFFFF}
 @media (min-width:900px){.av-info{max-width:640px}.av-title{font-size:24px}.av-line,.av-det{font-size:14px}}
-</style><style>img.avm{object-fit:cover!important;background:#000!important}</style><style>.pjlogo{width:48px;height:48px;border-radius:10px;background:#173F63;display:grid;place-items:center;flex-shrink:0;overflow:hidden}.pjlogo img{width:100%;height:100%;object-fit:contain;background:#F5F8FB}.pjlogo b{color:#FFFFFF;font:500 24px 'Cormorant Garamond',Georgia,serif}</style><style>.adedge:not(.top) .cz-dots{bottom:auto!important;top:4px!important}</style></head>
+</style><style>img.avm{object-fit:cover!important;background:#000!important}</style><style>.pjlogo{width:48px;height:48px;border-radius:10px;background:#173F63;display:grid;place-items:center;flex-shrink:0;overflow:hidden}.pjlogo img{width:100%;height:100%;object-fit:contain;background:#F5F8FB}.pjlogo b{color:#FFFFFF;font:500 24px 'Cormorant Garamond',Georgia,serif}</style><style>.adedge:not(.top) .cz-dots{bottom:auto!important;top:4px!important}</style><style>:root{--adh:calc(100dvh - 128px)}
+.adedge.top .adbig{height:calc(var(--adh) * .44)!important;min-height:0!important}
+.adedge .adposter.p2{aspect-ratio:auto!important;height:calc(var(--adh) * .30)}
+.adedge .adposter.p3{aspect-ratio:auto!important;height:calc(var(--adh) * .26)}
+@media (min-width:900px){body.home-wide .adedge.top .adbig{height:calc(var(--adh) * .46)!important}body.home-wide .adedge .adposter.p2{height:calc(var(--adh) * .29)}body.home-wide .adedge .adposter.p3{height:calc(var(--adh) * .25)}}
+</style></head>
 <body>
 <div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -376,7 +381,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794732431';
+var BUILD='1794732498';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -2153,7 +2158,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  return h+'</div></div>';}
 
 // ---- Auto-update: every phone moves to the newest version by itself ----
-var APP_VER='20261115084711';
+var APP_VER='20261115085009';
 (function(){if(APP_VER.indexOf('__')===0)return;var busy=false,shown=false;
  function busyNow(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||!!document.querySelector('.tm-sheet');}
  function go(v){try{var k='rasl_upd_'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
