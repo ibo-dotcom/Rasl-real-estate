@@ -417,3 +417,6 @@ The whole app was restyled without changing any feature, route, database call or
 - Confirmed in the database: members can only change their own full name, phone and country directly (column grants); sponsor, code, role, active state, name verification and income visibility cannot be changed by members.
 - A second account with an ID number already in KYC now gets a clear message ("This ID number is already registered to another account") instead of a generic error; office and meeting-link errors are also explained.
 - Added the missing index on `sales.offer_id` (performance advisor).
+
+### Home: more room for ads (2026-11-15)
+- Removed the row of shortcut circles and the four count tiles from Home; every shortcut is already in the side menu (☰), and the counts (members, projects, app visits, offices/companies) now sit at the top of the side menu under the profile.
