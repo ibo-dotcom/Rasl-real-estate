@@ -483,3 +483,15 @@ The whole app was restyled without changing any feature, route, database call or
 - Database: `units.kind`, `units.view`, `units.plan_url`, `units.tour_url`; `project_showcase(id)` (public: project, units with status, catalogue — no prices, no buyers); `set_unit_info(...)` (owner or project members).
 - Menu dashboard counts are now buttons: members and offices open the Team page, projects shows all project cards on Home, app visits opens the owner's Security page.
 - Fixed the screen jumping: the office/team data reload re-drew the whole screen every 20 seconds even when nothing changed; it now redraws only when the data changed, and the side menu keeps its scroll position when the screen is redrawn.
+
+### Back arrow on every page, one button per job (2026-11-15)
+- The Team page had no back arrow, and the app opened from the phone's home screen has no browser Back, so there was no way out of it except the bottom bar. It now has the arrow, in place of the "+" invite button.
+- The page arrow now returns to the screen the person came from (Team → CRM → arrow → Team; anything opened from the menu → arrow → Home with the menu open again). A page opened directly from a link still goes to Home.
+- Duplicate buttons removed, so every job has one button:
+  - Side menu: Home and Map tiles (the menu opens from Home, and Home's header has the map pin), and the rows that repeated a tile (Home, Map, Offers, Publish, My profile, Wallet, Team leadership, Team, My card, CRM, Academy). The profile line at the top of the menu opens My profile. My card / QR and Publish are now tiles.
+  - Menu counts: Members opens the Team page at the team map, Offices & companies opens it at the office card (both return to the menu with the arrow); App visits is a number only, since Security is in Management.
+  - Team page: "+" invite (the same job as Share on "My card and QR", which also shows the rules before joining), Sign out (it is in the menu), and the second Sales button: members see Record a sale, the owner sees Sales (with the number waiting).
+  - Wallet: the Accounts button (it is in the menu under Management).
+  - Publish sheet: Manage ads, Manage projects, My projects, Studio (all in the menu) and Invite (Share on My card).
+- Fixed: the menu's Security and Face ID rows showed the word "shield" instead of the icon.
+- Tests: every page except Home must show a back arrow.

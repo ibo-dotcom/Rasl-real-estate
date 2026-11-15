@@ -28,6 +28,10 @@ const ROUTES=QUICK?['Main','Dashboard','Network']:['Main','Search','Network','Le
   for(const a of acts.slice(0,60)){p=await mk(route);await p.evaluate(i=>{const e=document.querySelectorAll('[data-act]')[i];e&&e.click();},a.i);await p.waitForTimeout(600);
    const errs=p._errs.filter(e=>!/functions\.invoke|reading 'invoke'/.test(e));if(errs.length)problems.push(route+' ['+a.k+'] '+errs.join(' ; '));nb++;await p.close();}}
  log('2) buttons clicked:',nb);
+ // 2b) every page other than Home has a way back on the screen itself (the app on the phone's home screen has no browser Back)
+ for(const route of ROUTES.filter(r=>!r.endsWith('!')&&r!=='Main')){const p=await mk(route);
+  if(!(await p.evaluate(()=>[...document.querySelectorAll('a[href^="#"]')].some(a=>a.querySelector('path[d="M15 5l-7 7 7 7"]')&&a.getClientRects().length))))problems.push(route+': no back arrow on the page');await p.close();}
+ log('2b) back arrows checked');
  // 3) sheets close with x
  const isOpen=p=>p.evaluate(()=>!!(document.querySelector('.tm-sheet:not(.mside)')||document.getElementById('adView')||document.querySelector('[data-act=closeLead]')));
  let ns=0;for(const route of ROUTES.filter(r=>!r.endsWith('!'))){let p=await mk(route);const acts=await p.evaluate(()=>[...new Set([...document.querySelectorAll('[data-act]')].map(e=>e.getAttribute('data-act')))]);await p.close();
