@@ -447,3 +447,9 @@ The whole app was restyled without changing any feature, route, database call or
 - "Send to a client" shares one link to the catalogue (WhatsApp, etc.), usable from CRM conversations; anyone can open it without an account.
 - Database: `project_catalog` (listing, url, kind, position); everyone can read, only the owner or that project's members can add, reorder or remove. Files go to the public `studio` bucket in the uploader's folder.
 - Limitation: flat catalogue pictures are shown with 3D movement, not rebuilt as a walkable 3D model of the building; that needs a 3D model file from the architect.
+
+### 3D model of the building (2026-11-15)
+- Project page → "3D model of the building": the owner or the project's team uploads one `.glb` file from the architect (up to 50 MB), can replace or remove it.
+- "Open in 3D / AR" opens `model.html` (Google model-viewer 3.5.0): the building turns slowly, drag to turn, pinch to zoom; on phones that support it, "View in your space (AR)" places the building on a table or the floor. "Send" shares the link; anyone can open it.
+- Storage: new public bucket `models` (50 MB, glb), each member writes only in their own folder; `listings.model_url` set through `set_project_model` (owner or project members only; only links in the uploader's own models folder are accepted). `model.html` only opens models from the app's own storage.
+- Fixes: project logo upload now matches the avatars bucket (PNG / JPG / WebP, 2 MB); catalogue files limited to the studio bucket's 50 MB.

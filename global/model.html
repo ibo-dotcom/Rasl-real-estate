@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3D Model · Rasl Estate Global</title>
+<meta name="theme-color" content="#0B1C2E">
+<style>
+html,body{margin:0;height:100%;background:#0B1C2E;color:#FFFFFF;font-family:Inter,'Noto Sans Arabic',system-ui,sans-serif}
+model-viewer{position:fixed;inset:0;width:100%;height:100%;background:radial-gradient(circle at 50% 40%,#1E3A57,#0B1C2E 70%);--poster-color:transparent}
+.top{position:fixed;top:calc(12px + env(safe-area-inset-top));inset-inline:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:3}
+.ttl{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ttl b{font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl small{font-size:11px;opacity:.75;letter-spacing:.18em}
+.btn{min-height:44px;padding:0 16px;border-radius:99px;border:1px solid rgba(255,255,255,.7);background:rgba(0,0,0,.25);color:#FFFFFF;font:600 13px Inter,'Noto Sans Arabic',system-ui,sans-serif;display:inline-flex;align-items:center;gap:6px;cursor:pointer;text-decoration:none}
+.btn.main{background:#FFFFFF;color:#102B46;border-color:#FFFFFF}
+.bar{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));inset-inline:12px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;z-index:3}
+.hint{position:fixed;bottom:calc(76px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;font-size:12px;opacity:.75;z-index:2;padding:0 16px}
+.msg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:15px;line-height:1.6}
+.bar-prog{position:fixed;top:0;left:0;height:3px;background:#FFFFFF;width:0;z-index:4;transition:width .2s}
+model-viewer::part(default-ar-button){display:none}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div id="prog" class="bar-prog"></div>
+<div class="top"><div class="ttl"><b id="ttl"></b><small>RASL ESTATE GLOBAL · 3D</small></div><a id="back" class="btn" href="./">‹ <span id="tBack"></span></a></div>
+<div id="stage"></div>
+<div class="hint" id="hint"></div>
+<div class="bar"><button id="ar" class="btn main" hidden></button><button id="rot" class="btn"></button><button id="share" class="btn"></button></div>
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<script>
+(function(){
+var Q=new URLSearchParams(location.search),L=Q.get('lang');try{L=L||localStorage.getItem('reg_lang')}catch(e){}L=L||'ku';
+var TX={en:['Back','View in your space (AR)','Stop turning','Turn','Share','Drag to turn · pinch to zoom · two fingers to move','No 3D model was found for this link.','Link copied'],
+ku:['گەڕانەوە','لە شوێنی خۆت ببینە (AR)','ڕاگرتنی سوڕانەوە','سوڕانەوە','ناردن','بە پەنجە بیسوڕێنە · بە دوو پەنجە گەورە و بچووکی بکە','هیچ مۆدێلێکی 3D بۆ ئەم لینکە نەدۆزرایەوە.','لینک کۆپی کرا'],
+ar:['رجوع','شاهد في مكانك (AR)','إيقاف الدوران','دوران','مشاركة','اسحب للتدوير · قرّب بإصبعين','لم يُعثر على نموذج ثلاثي الأبعاد لهذا الرابط.','تم نسخ الرابط'],
+tr:['Geri','Kendi alanında gör (AR)','Dönmeyi durdur','Döndür','Paylaş','Döndürmek için sürükle · yakınlaştırmak için iki parmak','Bu bağlantı için 3D model bulunamadı.','Bağlantı kopyalandı']};
+var t=TX[L]||TX.en;document.documentElement.lang=L;document.documentElement.dir=(L==='en'||L==='tr')?'ltr':'rtl';
+var $=function(i){return document.getElementById(i)};
+var src=Q.get('src')||'',n=(Q.get('n')||'').slice(0,80);
+$('ttl').textContent=n;$('tBack').textContent=t[0];$('rot').textContent=t[2];$('share').textContent=t[4];$('hint').textContent=t[5];
+// Only models stored in the app's own storage are opened.
+if(!/^https:\/\/wmdegnafpgzhnpplnxqo\.supabase\.co\/storage\/v1\/object\/public\/models\//.test(src)){document.body.insertAdjacentHTML('beforeend','<div class="msg">'+t[6]+'</div>');$('hint').hidden=true;return}
+var mv=document.createElement('model-viewer');
+mv.setAttribute('src',src);mv.setAttribute('alt',n||'3D');mv.setAttribute('camera-controls','');mv.setAttribute('auto-rotate','');mv.setAttribute('auto-rotate-delay','0');
+mv.setAttribute('rotation-per-second','18deg');mv.setAttribute('shadow-intensity','1');mv.setAttribute('exposure','1');mv.setAttribute('environment-image','neutral');
+mv.setAttribute('ar','');mv.setAttribute('ar-modes','webxr scene-viewer quick-look');mv.setAttribute('ar-scale','auto');mv.setAttribute('touch-action','pan-y');
+$('stage').appendChild(mv);
+mv.addEventListener('progress',function(e){var p=e.detail.totalProgress||0;$('prog').style.width=(p*100)+'%';if(p>=1)setTimeout(function(){$('prog').style.width='0'},400)});
+mv.addEventListener('load',function(){if(mv.canActivateAR){$('ar').hidden=false;$('ar').textContent=t[1]}});
+mv.addEventListener('error',function(){document.body.insertAdjacentHTML('beforeend','<div class="msg">'+t[6]+'</div>')});
+$('ar').onclick=function(){try{mv.activateAR()}catch(e){}};
+$('rot').onclick=function(){if(mv.hasAttribute('auto-rotate')){mv.removeAttribute('auto-rotate');$('rot').textContent=t[3]}else{mv.setAttribute('auto-rotate','');$('rot').textContent=t[2]}};
+$('share').onclick=async function(){var u=location.href;try{if(navigator.share){await navigator.share({title:n||'3D',url:u});return}}catch(e){if(e&&e.name==='AbortError')return}try{await navigator.clipboard.writeText(u);alert(t[7])}catch(e){prompt(t[4],u)}};
+if(document.referrer&&/ibo-dotcom\.github\.io|localhost/.test(document.referrer))$('back').onclick=function(e){e.preventDefault();history.back()};
+})();
+</script>
+</body>
+</html>
