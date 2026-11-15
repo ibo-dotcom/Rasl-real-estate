@@ -397,3 +397,11 @@ The whole app was restyled without changing any feature, route, database call or
 - An approved office brands the member and their whole downline (logo + name + team size bar on Home and Team; `my_office()` picks the nearest approved upline).
 - Approved offices get a team meeting link and a team board (`office_posts`) visible only to their own team. Meeting links must be https Zoom, Google Meet, Teams, Jitsi or Whereby; unapproved offices cannot set a link or post (enforced by triggers).
 - Owner sees "Office and company requests" on the Team page with the licence document.
+
+### Name check and Academy confirmations (2026-11-15)
+- Team page (owner): "Check member names" lists every member with flags (no last name, name too short, differs from the ID/passport name in KYC, not verified). The owner edits first/last name, can copy the ID name with one tap, and saves with or without marking it verified (`name_review()`, `owner_set_name()`).
+- `profiles.name_verified`: only the owner can set it; if a member changes their own name it is cleared automatically (trigger `profiles_name_guard`).
+- Academy (Learn): every company meeting and lesson has "I have seen it"; team posts also have "I will attend" (`content_acks`).
+- A sponsor can share a company meeting or lesson with their team with a note (`team_shares`); it appears at the top of Learn for their whole team under "From your sponsor".
+- "My team" on each item shows how many of the sponsor's own team saw it and how many will attend, with a progress bar and names (`team_reach(kind, id)`, only the caller's downline).
+- Approved office posts (with Zoom/Meet time) also appear in Learn under "Team meetings and messages".
