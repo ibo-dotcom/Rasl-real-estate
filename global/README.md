@@ -439,3 +439,4 @@ The whole app was restyled without changing any feature, route, database call or
 - Every running ad is now shown to every member in the same board style. Before, ads not linked to a project were hidden from members (10 of the 11 current ads), so only the owner saw them; a project link now only adds the "Open project" button in the full-screen view.
 - Slide dots on the 2- and 3-per-row ad places moved to the top of the pictures so they no longer cover the city name or the + / x icons.
 - The three ad places fit on one screen together (1 / 2 / 3): top about 44%, second row about 30%, third row about 26% of the screen height, on phones and computers.
+- Home is now only the three ad rows, filling the screen exactly from under the header to the bottom edge. The project cards appear on Home only while searching or filtering; the My members box (Team page) and the recent sales strip were removed from Home.
