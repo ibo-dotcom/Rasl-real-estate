@@ -241,6 +241,19 @@ html,body{overflow-x:hidden}
 .akbar{position:relative;height:8px;border-radius:99px;background:#DFE7EF;overflow:hidden}.akbar i{position:absolute;inset-block:0;inset-inline-start:0;background:#8FB3D9}.akbar i.g{background:#1F8A5B}
 .akrow{display:grid;grid-template-columns:10px minmax(0,1fr) auto auto;gap:8px;align-items:center;font-size:12px;min-height:28px}.akrow b{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.akrow small{color:#5B6B7B}
 .akdot{width:8px;height:8px;border-radius:50%;background:#C9D4DF}.akdot.s{background:#8FB3D9}.akdot.g{background:#1F8A5B}
+</style><style>.mc{display:flex;flex-direction:column;gap:10px;background:linear-gradient(160deg,#102B46,#173F63);color:#FFFFFF;border-radius:14px;padding:14px}
+.mc .gtx b,.mc .gtx small{color:#FFFFFF}.mc .gtx small{opacity:.8}.mc .obrand{background:rgba(255,255,255,.95)}.mc .obrand .gtx b{color:#172B3A}.mc .obrand .gtx small{color:#5B6B7B;opacity:1}
+.mc-top{display:flex;gap:12px;align-items:center}.mc-av{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.7);flex-shrink:0}
+.mc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.mcs{background:rgba(255,255,255,.1);border-radius:8px;padding:8px 4px;text-align:center;display:flex;flex-direction:column;gap:2px;min-width:0}.mcs b{font-size:15px;overflow-wrap:anywhere}.mcs small{font-size:10px;opacity:.85}
+.mc-qr{background:#FFFFFF;border:1px solid #DFE7EF;border-radius:12px;padding:10px;width:200px;max-width:70%;align-self:center}.mc-qr svg{display:block;width:100%;height:auto}
+.mc-link{margin:0;font-size:11px;color:#5B6B7B;text-align:center;overflow-wrap:anywhere}
+.mc-tog{display:flex;gap:10px;align-items:center;font-size:13px;color:#172B3A;min-height:44px;cursor:pointer}.mc-tog input{width:20px;height:20px;accent-color:#173F63;flex-shrink:0}
+.mc-intro{background:#F5F8FB;border:1px solid #DFE7EF;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}.mc-intro b{font-size:15px;color:#102B46}.mc-intro p{margin:0;font-size:13px;line-height:1.6;color:#3D5166}
+.mc-rules{background:#FFF8E6;border:1px solid #F1D9A0;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}.mc-rules b{font-size:14px;color:#8A5A00}.mc-rules ul{margin:0;padding-inline-start:18px;font-size:13px;line-height:1.6;color:#172B3A}
+.cv{position:fixed;inset:0;z-index:9999;background:rgba(16,43,70,.55);display:flex;align-items:flex-end;justify-content:center}
+.cv-in{position:relative;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;background:#FFFFFF;border-radius:16px 16px 0 0;padding:44px 16px 20px;display:flex;flex-direction:column;gap:12px;font-family:Inter,'Noto Sans Arabic',system-ui,sans-serif;color:#172B3A;box-sizing:border-box}
+.cv-x{position:absolute;top:8px;inset-inline-end:8px;width:44px;height:44px;border-radius:50%;border:0;background:#F5F8FB;color:#172B3A;display:flex;align-items:center;justify-content:center;cursor:pointer}.cv-x svg{width:20px;height:20px}
+@media (min-width:640px){.cv{align-items:center}.cv-in{border-radius:16px}}
 </style></head>
 <body>
 <div id="app"></div>
@@ -256,7 +269,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794720361';
+var BUILD='1794722263';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -1137,6 +1150,7 @@ if(!SB){msg(T('m_offline'));return;}
 var code=val('code'),name=val('name'),email=val('email'),pass=$('pass')?$('pass').value:'';
 if(!name||!email||pass.length<6){msg(T('m_fields'));return;}
 if(pass!==($('pass2')?$('pass2').value:'')){msg(T('m_pass2'));return;}
+if($('reg_ok')&&!$('reg_ok').checked){msg(mt5('must'));return;}
 msg(T('m_wait'),true);
 try{
 var need=await SB.rpc('needs_owner');if(need.error)throw need.error;
@@ -1264,6 +1278,10 @@ homeType:function(a){var k=a.getAttribute('data-k');st.homeType=st.homeType===k?
 homeCond:function(a){var k=a.getAttribute('data-k');st.homeCond=st.homeCond===k?'':k;render();},
 homeReset:function(){st.homeKind='';st.homeQ='';st.homeType='';st.homeCond='';st.hf=null;st.hsort='best';render();},
 menuOpen:function(){st.menu=true;render();},
+cardIncome:async function(a){var on=!!a.checked;try{var r=await SB.rpc('set_show_income',{p_on:on});if(r.error)throw r.error;var Q=window.__myc;if(Q){var x=await SB.rpc('member_card',{p_code:me.code});Q.c=x.data||Q.c;}}catch(e){a.checked=!on;alert(errText(e));}render();},
+cardShare:async function(){var link=cardLink(me.code),text=mt5('my_d');try{if(navigator.share){await navigator.share({title:'Rasl Estate Global',text:text,url:link});return;}}catch(e){if(e&&e.name==='AbortError')return;}try{await navigator.clipboard.writeText(link);alert(mt5('copied'));}catch(e){prompt(mt5('copy'),link);}},
+cardCopy:async function(a){var link=cardLink(me.code);try{await navigator.clipboard.writeText(link);a.textContent=mt5('copied');}catch(e){prompt(mt5('copy'),link);}},
+cardSave:function(){loadQR(function(){try{var q=qrcode(0,'M');q.addData(cardLink(me.code));q.make();var u=q.createDataURL(10,20),l=document.createElement('a');l.href=u;l.download='Rasl-'+me.code+'-QR.gif';document.body.appendChild(l);l.click();l.remove();}catch(e){}});},
 ackSeen:async function(a){var A=aks(),k=a.getAttribute('data-k'),id=a.getAttribute('data-id'),key=k+':'+id;a.disabled=true;try{if(A.mine[key]){await SB.from('content_acks').delete().eq('kind',k).eq('item_id',id).eq('member_id',me.id);delete A.mine[key];}else{var r=await SB.from('content_acks').insert({kind:k,item_id:id});if(r.error)throw r.error;A.mine[key]={seen:true,going:false};}}catch(e){}render();},
 ackGo:async function(a){var A=aks(),id=a.getAttribute('data-id'),key='post:'+id,cur=A.mine[key];a.disabled=true;try{var r=await SB.from('content_acks').upsert({kind:'post',item_id:id,member_id:me.id,going:!(cur&&cur.going)},{onConflict:'kind,item_id,member_id'});if(r.error)throw r.error;A.mine[key]={seen:true,going:!(cur&&cur.going)};}catch(e){}render();},
 shareTeam:async function(a){var A=aks(),k=a.getAttribute('data-k'),id=a.getAttribute('data-id'),n=prompt(mt4('note_q'),'');if(n===null)return;a.disabled=true;try{var r=await SB.from('team_shares').insert({kind:k,item_id:id,note:String(n).trim().slice(0,500)||null});if(r.error)throw r.error;await loadAcks();}catch(e){alert(errText(e));}render();},
@@ -1592,7 +1610,7 @@ map.SAVE=esc(D[st.saved?KSAVED:KSAVE][i]);
 if(r==='Welcome'){
 map.MENU=st.open?sub(X.MENU,{LROWS:LANGS.map(function(id,n){var on=n===i;return sub(X.LROW,{'l.id':id,'l.bg':on?'#173F63':'transparent','l.color':on?'#FFFFFF':'#172B3A','l.name':NAMES[n],'l.code':id.toUpperCase()});}).join('')}):'';
 }
-if(r==='Network'){map.TEAM=brandBar()+nameCheckCard()+officeCard()+teamHtml(i);if(me&&SB&&!st.teamBusy&&Date.now()-(st.teamAt||0)>5000){st.teamBusy=true;st.teamAt=Date.now();var before=JSON.stringify(stats);loadStats().then(function(){st.teamBusy=false;if(JSON.stringify(stats)!==before&&route()==='Network')render();},function(){st.teamBusy=false;});}}
+if(r==='Network'){map.TEAM=brandBar()+nameCheckCard()+myCardBox()+officeCard()+teamHtml(i);if(me&&SB&&!st.teamBusy&&Date.now()-(st.teamAt||0)>5000){st.teamBusy=true;st.teamAt=Date.now();var before=JSON.stringify(stats);loadStats().then(function(){st.teamBusy=false;if(JSON.stringify(stats)!==before&&route()==='Network')render();},function(){st.teamBusy=false;});}}
 if(r==='Main'){map.HOMEQ=esc(st.homeQ||'');map.CHIPS=[['sale','k11'],['rent','k12'],['offplan','k13'],['invest','k14']].map(function(c){var on=st.homeKind===c[0];return '<button data-act="homeKind" data-k="'+c[0]+'" aria-pressed="'+on+'" style="height: 44px; padding: 0 18px; border-radius: 14px; border: '+(on?'0':'1px solid #DFE7EF')+'; background: '+(on?'#173F63':'transparent')+'; color: '+(on?'#FFFFFF':'#172B3A')+'; font: inherit; font-size: 13px; font-weight: '+(on?'600':'400')+'; cursor: pointer; flex-shrink: 0">'+esc(T(c[1]))+'</button>';}).join('');}
 if(r==='Main'&&me&&!st.acHome){st.acHome=1;loadAcademy().then(function(){if(route()==='Main')render();});}
 if(r==='Main'){map.ADS=adsHtml();map.QUICK='<a href="studio.html" aria-label="'+esc(T('st_btn'))+'" title="'+esc(T('st_btn'))+'" style="width: 40px; height: 40px; margin-inline-start: 6px; border-radius: 50%; border: 1px solid #173F63; background: #FFFFFF; color: #173F63; display: flex; align-items: center; justify-content: center; text-decoration: none; font: 700 11px Inter, system-ui, sans-serif; flex-shrink: 0">360°</a>'+'<a href="tour.html" aria-label="'+esc(T('tour_btn'))+'" title="'+esc(T('tour_btn'))+'" style="width: 40px; height: 40px; margin-inline-start: 6px; border-radius: 50%; border: 1px solid #173F63; background: #FFFFFF; color: #173F63; display: flex; align-items: center; justify-content: center; text-decoration: none; font: 700 13px Inter, system-ui, sans-serif; flex-shrink: 0">3D</a>';map.CITIES=citiesHtml();var filt=!!(st.homeQ||st.homeKind);map.LISTTOP=filt?'':listingsHtml();map.RESULTS=filt?listingsHtml():'';map.EXTRA=(st.off?offerSheet():'')+(st.mEdit?meSheet():'')+(st.lead?leadSheet():'')+(st.kyc?kycSheet():'')+(st.am?amSheet():'')+(st.pay?paySheet():'')+(st.filt?filtSheet():'')+(st.charity?charitySheet():'')+(st.gov?govSheet():'')+(st.agent?agentSheet():'')+(st.ptax?ptaxSheet():'')+(st.pid?projSheet():'')+(st.slist?salesListSheet():'')+(st.pub?pubSheet():'')+homeTeam()+(st.mid?memberSheet():'')+(st.menu?menuSheet():'');map.ADS=map.ADS+(me&&me.role!=='owner'?slotAdd('top',!!String(map.ADS||'').trim()):'');map.HDR=homeHdr2();map.QROW=brandBar()+allCircles(map.code)+leadBanner()+offersStrip()+homeStats();map.CITIES=slotGrid('mid',2);map.BEST=slotGrid('bottom',3)+feedStrip()+'<div id="homeRes" style="display: flex; flex-direction: column; gap: inherit; flex-shrink: 0">'+bestHtml()+'</div>';map.AVATAR=face(me&&me.avatar_url);}
@@ -1626,7 +1644,7 @@ app.querySelectorAll('.cz-track[data-cz]').forEach(function(t){var i=(st.cz||{})
 if(r==='Register')initRegister();
 if(r==='Welcome')welcomeState();
 if(r==='Login'){var em=$('email'),last=get('reg_email');if(em&&last&&!em.value)em.value=last;if(st.loginMsg){msg(T(st.loginMsg),true);st.loginMsg='';}}
-if(r==='Register'){var cf=$('code'),ref=get('reg_ref');if(cf&&ref&&!cf.value){cf.value=ref;checkCodeSoon(ref);}}
+if(r==='Register'){regIntro();var cf=$('code'),ref=get('reg_ref');if(cf&&ref&&!cf.value){cf.value=ref;checkCodeSoon(ref);}}
 }
 function setLang(l){st.lang=l;put('reg_lang',l);if(MAP.gl)setTimeout(labelsInLang,0);}
 app.addEventListener('click',function(e){
@@ -2022,7 +2040,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  return h+'</div></div>';}
 
 // ---- Auto-update: every phone moves to the newest version by itself ----
-var APP_VER='20261115052710';
+var APP_VER='20261115060115';
 (function(){if(APP_VER.indexOf('__')===0)return;var busy=false,shown=false;
  function busyNow(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||!!document.querySelector('.tm-sheet');}
  function go(v){try{var k='rasl_upd_'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
@@ -2149,7 +2167,7 @@ function mapCats(){return [
 {id:'police',en:'police',ic:'shield',t:['police stations','بنکەکانی پۆلیس','مراكز الشرطة','karakollar'],k:['پۆلیس','شرطة','police','polis']},
 {id:'airport',en:'airport',ic:'plane',t:['airports','فڕۆکەخانەکان','المطارات','havalimanları'],k:['فڕۆکەخانە','فرۆکەخانە','مطار','airport','havalimanı']},
 {id:'gym',en:'gym',ic:'gym',t:['gyms','هۆڵەکانی وەرزش','الأندية الرياضية','spor salonları'],k:['جیم','هۆڵی وەرزش','نادي','gym']}];}
-function mIco(n){var P={cross:'M12 5v14M5 12h14',pill:'M8.5 15.5l7-7a3.5 3.5 0 0 0-5-5l-7 7a3.5 3.5 0 0 0 5 5zM7 9l8 8',cap:'M2 9l10-5 10 5-10 5zM6 11v5c3 2 9 2 12 0v-5',dome:'M4 20h16M6 20v-7a6 6 0 0 1 12 0v7M12 3v4',fork:'M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M16 3c-2 2-2 7 0 8v10',cup:'M5 8h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4zM16 10h2a2 2 0 0 1 0 4h-2',bed:'M3 18V8M3 14h18v4M21 14v-3a3 3 0 0 0-3-3h-7v6',bank:'M3 10l9-6 9 6M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18',fuel:'M5 20V5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v15M4 20h11M14 9h2l2 2v6a1.5 1.5 0 0 0 3 0V9l-3-3M7 8h5',tree:'M12 21v-6M7 15h10l-5-11z',cart:'M3 4h2l2 11h11l2-8H6M9 20h.01M17 20h.01',shield:'M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z',plane:'M10 21l2-1 2 1v-2l-1.5-1v-5l8 3v-2l-8-5V4a1.5 1.5 0 0 0-3 0v5l-8 5v2l8-3v5L8 19z',gym:'M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12',walk:'M13 5.5a1.5 1.5 0 1 0 0-.01M10 21l2-6 3 3v3M8 12l3-4 4 2 2 3M11 8l-2 5',car:'M5 16v-5l2-5h10l2 5v5M3 16h18M7 19v-3M17 19v-3M5 11h14',pin:'M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11zM12 10h.01',team:'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20c.6-3.5 3.4-5.5 7-5.5s6.4 2 7 5.5M16 4.5a3.5 3.5 0 0 1 0 6.5M18.5 14.8c2 .8 3.2 2.6 3.5 5.2',home:'M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6',eye:'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',check:'M5 12.5l4.5 4.5L19 7.5',share:'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.6 13.5l6.8 4M15.4 6.5l-6.8 4',idcard:'M3 5h18v14H3zM8.5 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM5.5 16c.5-1.8 1.6-2.7 3-2.7s2.5.9 3 2.7M14 9h4M14 13h4'};
+function mIco(n){var P={cross:'M12 5v14M5 12h14',pill:'M8.5 15.5l7-7a3.5 3.5 0 0 0-5-5l-7 7a3.5 3.5 0 0 0 5 5zM7 9l8 8',cap:'M2 9l10-5 10 5-10 5zM6 11v5c3 2 9 2 12 0v-5',dome:'M4 20h16M6 20v-7a6 6 0 0 1 12 0v7M12 3v4',fork:'M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M16 3c-2 2-2 7 0 8v10',cup:'M5 8h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4zM16 10h2a2 2 0 0 1 0 4h-2',bed:'M3 18V8M3 14h18v4M21 14v-3a3 3 0 0 0-3-3h-7v6',bank:'M3 10l9-6 9 6M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18',fuel:'M5 20V5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v15M4 20h11M14 9h2l2 2v6a1.5 1.5 0 0 0 3 0V9l-3-3M7 8h5',tree:'M12 21v-6M7 15h10l-5-11z',cart:'M3 4h2l2 11h11l2-8H6M9 20h.01M17 20h.01',shield:'M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z',plane:'M10 21l2-1 2 1v-2l-1.5-1v-5l8 3v-2l-8-5V4a1.5 1.5 0 0 0-3 0v5l-8 5v2l8-3v5L8 19z',gym:'M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12',walk:'M13 5.5a1.5 1.5 0 1 0 0-.01M10 21l2-6 3 3v3M8 12l3-4 4 2 2 3M11 8l-2 5',car:'M5 16v-5l2-5h10l2 5v5M3 16h18M7 19v-3M17 19v-3M5 11h14',pin:'M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11zM12 10h.01',team:'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM2 20c.6-3.5 3.4-5.5 7-5.5s6.4 2 7 5.5M16 4.5a3.5 3.5 0 0 1 0 6.5M18.5 14.8c2 .8 3.2 2.6 3.5 5.2',home:'M3 11l9-7 9 7M5 10v10h14V10M10 20v-6h4v6',eye:'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',check:'M5 12.5l4.5 4.5L19 7.5',share:'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.6 13.5l6.8 4M15.4 6.5l-6.8 4',idcard:'M3 5h18v14H3zM8.5 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM5.5 16c.5-1.8 1.6-2.7 3-2.7s2.5.9 3 2.7M14 9h4M14 13h4',qr:'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2M14 18h2v2M18 18h2v2h-2',x:'M6 6l12 12M18 6L6 18'};
 return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="'+(P[n]||P.pin)+'"/></svg>';}
 function catName(c){var i={en:0,ku:1,ar:2,tr:3}[st.lang];return c.t[i==null?0:i];}
 function catDetect(q){var a=kuSpell(stripCmd(q),true),toks=a.split(' ').filter(Boolean),cats=mapCats();
@@ -2389,6 +2407,72 @@ show.forEach(function(x){var is=nameIssues(x);h+='<div class="opost"><div style=
 +(x.legal_name?'<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px"><span style="color: #3D5166">'+esc(mt4('nc_id'))+' ('+esc(x.doc_type||'')+'):</span><b>'+esc(x.legal_name)+'</b><button data-act="ncUse" data-id="'+esc(x.id)+'" data-n="'+esc(x.legal_name)+'" class="hlink" style="min-height: 36px; font-size: 12px">'+esc(mt4('nc_use'))+'</button></div>':'<small style="color: #718096">'+esc(mt4('nc_noid'))+'</small>')
 +'<div id="nm_'+esc(x.id)+'" class="ofmsg" role="status"></div><div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px"><button data-act="ncSave" data-id="'+esc(x.id)+'" data-v="1" class="crm-b gold" style="height: 44px">'+esc(mt4('nc_save'))+'</button><button data-act="ncSave" data-id="'+esc(x.id)+'" data-v="0" class="crm-b" style="height: 44px">'+esc(mt4('nc_saveonly'))+'</button></div></div>';});
 return h+'</div>';}
+
+// Member card + QR: a link with the member's rank, points, team and (if they choose) this month's income.
+// Whoever opens it reads what the company is and the joining rules, then decides to join that team or not.
+function mt5(k){var D={
+my:['My card and QR code','کارت و QR کۆدی من','بطاقتي ورمز QR','Kartım ve QR kodum'],
+my_d:['Send it to anyone. They see your card, read about the company, and decide whether to join your team.','بۆ هەر کەسێک بینێرە. کارتەکەت دەبینێت، زانیاری کۆمپانیا دەخوێنێتەوە و خۆی بڕیار دەدات لە تیمەکەت تۆمار بێت یان نا.','أرسلها لأي شخص. يرى بطاقتك ويقرأ عن الشركة ويقرر الانضمام لفريقك أم لا.','Herkese gönderin. Kartınızı görür, şirketi okur ve ekibinize katılıp katılmamaya karar verir.'],
+inc:['Show my income this month on the card','داهاتی ئەم مانگەم لەسەر کارتەکە پیشان بدە','أظهر دخلي لهذا الشهر على البطاقة','Bu ayki gelirimi kartta göster'],
+share:['Share','ناردن','مشاركة','Paylaş'],copy:['Copy link','کۆپی لینک','نسخ الرابط','Bağlantıyı kopyala'],copied:['Copied','کۆپی کرا','تم النسخ','Kopyalandı'],save:['Save QR','پاشەکەوتی QR','حفظ QR','QR kaydet'],
+rank:['Rank','پلە','الرتبة','Rütbe'],pts:['Points','خاڵ','النقاط','Puan'],tpts:['Team points','خاڵی تیم','نقاط الفريق','Ekip puanı'],team:['Team','تیم','الفريق','Ekip'],direct:['Direct','ڕاستەوخۆ','مباشر','Doğrudan'],income:['Income this month','داهاتی ئەم مانگە','دخل هذا الشهر','Bu ayki gelir'],joined:['Joined','بەشداربوون','انضم','Katıldı'],
+verified:['Name verified','ناو پشتڕاستکراوە','الاسم موثّق','Ad doğrulandı'],norank:['Starter','دەستپێک','مبتدئ','Başlangıç'],
+co_t:['Rasl Estate Global','Rasl Estate Global','Rasl Estate Global','Rasl Estate Global'],
+co_1:['A real-estate marketplace where members sell projects, apartments, villas and land, and earn a commission on every sale.','بازاڕێکی خانووبەرەیە. ئەندامان پرۆژە، شوقە، ڤێلا و زەوی دەفرۆشن و لە هەر فرۆشتنێک کۆمیسیۆن وەردەگرن.','سوق عقاري يبيع فيه الأعضاء المشاريع والشقق والفلل والأراضي ويكسبون عمولة عن كل بيع.','Üyelerin proje, daire, villa ve arsa sattığı ve her satıştan komisyon kazandığı bir emlak pazarı.'],
+co_2:['You work with a team: your sponsor trains and helps you, and you build your own team the same way.','بە تیم کار دەکەیت: سپۆنسەرەکەت فێرت دەکات و یارمەتیت دەدات، تۆش بە هەمان شێوە تیمی خۆت دروست دەکەیت.','تعمل ضمن فريق: الراعي يدربك ويساعدك، وتبني فريقك بنفس الطريقة.','Bir ekiple çalışırsınız: sponsorunuz sizi eğitir, siz de kendi ekibinizi kurarsınız.'],
+co_3:['Profit comes only from real work: sales you and your team make. Nothing is earned just by joining.','قازانج تەنها لە کاری ڕاستەقینەوە دێت: ئەو فرۆشتنانەی خۆت و تیمەکەت دەیکەن. تەنها بە تۆماربوون هیچ قازانجێک نییە.','الربح يأتي فقط من العمل الحقيقي: المبيعات التي تحققها أنت وفريقك. لا ربح بمجرد التسجيل.','Kazanç yalnızca gerçek işten gelir: sizin ve ekibinizin satışları. Sadece katılarak kazanılmaz.'],
+co_4:['Full training (videos and team meetings) explains everything after you join.','دوای تۆماربوون، فێرکاری تەواو (ڤیدیۆ و کۆبوونەوەی تیم) هەموو شتێک ڕوون دەکاتەوە.','بعد التسجيل، التدريب الكامل (فيديوهات واجتماعات الفريق) يشرح كل شيء.','Katıldıktan sonra tam eğitim (video ve ekip toplantıları) her şeyi açıklar.'],
+rules:['Before you decide','پێش ئەوەی بڕیار بدەیت','قبل أن تقرر','Karar vermeden önce'],
+r1:['Your sponsor cannot be changed later.','دواتر ناتوانیت سپۆنسەرەکەت بگۆڕیت.','لا يمكن تغيير الراعي لاحقاً.','Sponsorunuz sonradan değiştirilemez.'],
+r2:['One person, one account: you cannot be in two teams.','یەک کەس، یەک ئەکاونت: ناتوانیت لە دوو تیمدا بیت.','شخص واحد، حساب واحد: لا يمكنك أن تكون في فريقين.','Bir kişi, bir hesap: iki ekipte olamazsınız.'],
+r3:['Registering twice is not allowed; duplicate accounts are found by ID and removed.','دوو جار تۆماربوون ڕێگەپێدراو نییە؛ ئەکاونتی دووبارە بە ناسنامە دەدۆزرێتەوە و لادەبرێت.','لا يُسمح بالتسجيل مرتين؛ الحسابات المكررة تُكتشف بالهوية وتُحذف.','İki kez kayıt yasaktır; mükerrer hesaplar kimlikle bulunup silinir.'],
+r4:['Write your full name exactly as on your national ID or passport.','ناوی تەواوت وەک خۆی لەسەر کارتی نیشتمانی یان پاسپۆرت بنووسە.','اكتب اسمك الكامل كما في البطاقة الوطنية أو جواز السفر.','Tam adınızı kimlik veya pasaporttaki gibi yazın.'],
+agree:['I have read this and decide myself.','ئەمەم خوێندەوە و خۆم بڕیار دەدەم.','قرأت هذا وأقرر بنفسي.','Bunu okudum ve kendim karar veriyorum.'],
+join:['Join {n}’s team','لە تیمی {n} تۆمار بە','انضم إلى فريق {n}','{n} ekibine katıl'],later:['Not now','ئێستا نا','ليس الآن','Şimdi değil'],
+has:['You already have an account. One person can only be in one team.','تۆ ئەکاونتت هەیە. هەر کەسێک تەنها دەتوانێت لە یەک تیمدا بێت.','لديك حساب بالفعل. يمكن للشخص أن يكون في فريق واحد فقط.','Zaten hesabınız var. Bir kişi yalnızca bir ekipte olabilir.'],
+nocard:['This card link is not valid.','ئەم لینکی کارتە دروست نییە.','رابط البطاقة غير صالح.','Bu kart bağlantısı geçersiz.'],
+must:['Read the rules and tick the box to continue.','یاساکان بخوێنەوە و نیشانەی ڕازیبوون دابنێ بۆ بەردەوامبوون.','اقرأ القواعد وضع علامة للمتابعة.','Devam etmek için kuralları okuyup kutuyu işaretleyin.'],
+inactive:['This member’s code is not active yet, so new members cannot join under it.','کۆدی ئەم ئەندامە هێشتا چالاک نییە، بۆیە ئەندامی نوێ ناتوانێت لە ژێریدا تۆمار بێت.','رمز هذا العضو غير مفعّل بعد، فلا يمكن الانضمام تحته.','Bu üyenin kodu henüz aktif değil, altına katılım yapılamaz.']};
+var i={en:0,ku:1,ar:2,tr:3}[st.lang];return (D[k]||[''])[i==null?0:i]||D[k][0];}
+function cardLink(code){return LIVE+'/?card='+encodeURIComponent(code);}
+function loadQR(cb){if(window.qrcode)return cb();var s=document.createElement('script');s.src=new URL('../vendor/qrcode.js',location.href).href;s.onload=cb;s.onerror=function(){};document.head.appendChild(s);}
+function qrSvg(text){try{var q=qrcode(0,'M');q.addData(text);q.make();return q.createSvgTag({cellSize:4,margin:3,scalable:true});}catch(e){return '';}}
+function cardBody(c){var nm=c.name||c.code,mon=function(v){return '$'+Number(v||0).toLocaleString('en-US',{maximumFractionDigits:0});};
+var stat=function(l,v){return '<div class="mcs"><b dir="ltr">'+v+'</b><small>'+esc(l)+'</small></div>';};
+return '<div class="mc"><div class="mc-top">'+(c.avatar_url?'<img src="'+esc(c.avatar_url)+'" alt="" class="mc-av">':'<span class="mc-av gico big">'+mIco('team')+'</span>')+'<div class="gtx"><b style="font-size: 17px; white-space: normal">'+esc(nm)+'</b><small dir="ltr">'+esc(c.code)+'</small>'+(c.verified?'<span class="ochip ok" style="align-self: flex-start; margin-top: 4px">'+esc(mt5('verified'))+'</span>':'')+'</div></div>'
++(c.office?'<div class="obrand" style="padding: 8px 10px">'+(c.office.logo_url?'<img src="'+esc(c.office.logo_url)+'" alt="">':'<span class="gico">'+mIco('bank')+'</span>')+'<div class="gtx"><b>'+esc(c.office.name)+'</b><small>'+esc(mt3(c.office.kind==='company'?'company':'office'))+'</small></div></div>':'')
++'<div class="mc-grid">'+stat(mt5('rank'),esc(c.rank||mt5('norank')))+stat(mt5('pts'),nfmt(c.points))+stat(mt5('tpts'),nfmt(c.team_points))+stat(mt5('team'),nfmt(c.team))+stat(mt5('direct'),nfmt(c.direct))+(c.income_month!=null?stat(mt5('income'),mon(c.income_month)):stat(mt5('joined'),new Date(c.joined).toLocaleDateString('en-GB',{month:'short',year:'numeric'})))+'</div></div>';}
+// "My card" on the Team page
+function myCardBox(){if(!me)return '';var Q=window.__myc||(window.__myc={c:null,at:0});
+if(!Q.at&&SB){Q.at=1;SB.rpc('member_card',{p_code:me.code}).then(function(r){Q.c=r.data||null;loadQR(function(){if(route()==='Network')render();});});}
+var c=Q.c,link=cardLink(me.code),svg=window.qrcode?qrSvg(link):'';
+var h='<div class="ocard"><div class="mi-row"><span class="gico big">'+mIco('qr')+'</span><div class="gtx"><b style="white-space: normal">'+esc(mt5('my'))+'</b><small style="white-space: normal">'+esc(mt5('my_d'))+'</small></div></div>';
+if(c)h+=cardBody(c);if(svg)h+='<div class="mc-qr">'+svg+'</div>';h+='<p dir="ltr" class="mc-link">'+esc(link)+'</p>';
+h+='<label class="mc-tog"><input type="checkbox" data-act="cardIncome"'+(c&&c.income_month!=null?' checked':'')+'><span>'+esc(mt5('inc'))+'</span></label>';
+h+='<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px"><button data-act="cardShare" class="crm-b gold" style="height: 44px">'+esc(mt5('share'))+'</button><button data-act="cardCopy" class="crm-b" style="height: 44px">'+esc(mt5('copy'))+'</button><button data-act="cardSave" class="crm-b" style="height: 44px">'+esc(mt5('save'))+'</button></div></div>';
+return h;}
+// Page that opens from the QR code / link (shown over whatever screen the app starts on)
+function introHtml(){return '<div class="mc-intro"><b>'+esc(mt5('co_t'))+'</b><p>'+esc(mt5('co_1'))+'</p><p>'+esc(mt5('co_2'))+'</p><p>'+esc(mt5('co_3'))+'</p><p>'+esc(mt5('co_4'))+'</p></div>';}
+function rulesHtml(id){return '<div class="mc-rules"><b>'+esc(mt5('rules'))+'</b><ul><li>'+esc(mt5('r1'))+'</li><li>'+esc(mt5('r2'))+'</li><li>'+esc(mt5('r3'))+'</li><li>'+esc(mt5('r4'))+'</li></ul><label class="mc-tog"><input type="checkbox" id="'+id+'"><span>'+esc(mt5('agree'))+'</span></label></div>';}
+async function openCardView(code){var ov=document.getElementById('cardView');if(!ov){ov=document.createElement('div');ov.id='cardView';ov.className='cv';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');document.body.appendChild(ov);}
+ov.innerHTML='<div class="cv-in"><p class="mi-t">'+esc(T('m_wait'))+'</p></div>';
+var tries=0;while(typeof SB==='undefined'||!SB){if(++tries>40)break;await new Promise(function(r){setTimeout(r,250);});}
+var c=null;try{var r=await SB.rpc('member_card',{p_code:code});c=r.data;}catch(e){}
+var dir=st.lang==='en'||st.lang==='tr'?'ltr':'rtl',h='<div class="cv-in" dir="'+dir+'"><button data-cv="close" class="cv-x" aria-label="'+esc(mt5('later'))+'">'+mIco('x')+'</button>';
+if(!c){h+='<p class="mi-t">'+esc(mt5('nocard'))+'</p>';}
+else{var first=String(c.name||c.code).split(' ')[0];h+=cardBody(c)+introHtml();
+ if(me)h+='<p class="ofp" style="font-weight: 600">'+esc(mt5('has'))+'</p>';
+ else if(c.active===false)h+='<p class="ofp" style="color: #B42318">'+esc(mt5('inactive'))+'</p>';
+ else h+=rulesHtml('cv_ok')+'<div id="cv_msg" class="ofmsg" role="status"></div><button data-cv="join" data-code="'+esc(c.code)+'" class="crm-b gold" style="height: 50px; font-size: 14px">'+esc(mt5('join').replace('{n}',first))+'</button>';
+ h+='<button data-cv="close" class="crm-b" style="height: 46px">'+esc(mt5('later'))+'</button>';}
+ov.innerHTML=h+'</div>';
+ov.onclick=function(e){var b=e.target.closest('[data-cv]');if(!b)return;var k=b.getAttribute('data-cv');
+ if(k==='close'){ov.remove();return;}
+ if(k==='join'){var ok=document.getElementById('cv_ok');if(!ok||!ok.checked){var m=document.getElementById('cv_msg');if(m)m.textContent=mt5('must');return;}put('reg_ref',b.getAttribute('data-code'));put('reg_agreed','1');ov.remove();location.hash='#Register';var cf=$('code');if(cf){cf.value=b.getAttribute('data-code');if(typeof checkCodeSoon==='function')checkCodeSoon(cf.value);}}};}
+// Register page: company summary and the rules must be read before signing up
+function regIntro(){if(document.getElementById('regIntro'))return;var m=$('msg');if(!m)return;var d=document.createElement('div');d.id='regIntro';d.style.cssText='display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px';
+d.innerHTML=introHtml()+rulesHtml('reg_ok');var foot=m.parentNode,body=foot.previousElementSibling;if(body)body.appendChild(d);else foot.insertBefore(d,m);var ok=document.getElementById('reg_ok');try{if(ok&&localStorage.getItem('reg_agreed')==='1')ok.checked=true;}catch(e){}}
+(function(){try{var cq=new URLSearchParams(location.search).get('card');if(cq){var code=cq.toUpperCase().slice(0,60);history.replaceState(null,'',location.pathname+(location.hash||'#Welcome'));setTimeout(function(){openCardView(code);},300);}}catch(e){}})();
 
 var isRec=/type=recovery/.test(location.hash||'');
 loadMe().then(function(){if(isRec&&me){location.hash='#Profile';setTimeout(function(){alert(T('fe_setnew'));},350);}else if(me&&(!location.hash||['Welcome','Login','Register'].indexOf(route())>=0)){location.hash='#Main';}render();});

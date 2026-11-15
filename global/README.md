@@ -405,3 +405,10 @@ The whole app was restyled without changing any feature, route, database call or
 - A sponsor can share a company meeting or lesson with their team with a note (`team_shares`); it appears at the top of Learn for their whole team under "From your sponsor".
 - "My team" on each item shows how many of the sponsor's own team saw it and how many will attend, with a progress bar and names (`team_reach(kind, id)`, only the caller's downline).
 - Approved office posts (with Zoom/Meet time) also appear in Learn under "Team meetings and messages".
+
+### Member card with QR, join page, one-account rules (2026-11-15)
+- Team page: "My card and QR code" shows the member's public card (name, code, name-verified badge, office/company, rank, points, team points, team size, direct members, and this month's income only if the member ticks the box) with a QR code (vendor/qrcode.js) and Share / Copy link / Save QR buttons. Link: `/?card=CODE`.
+- Opening the link shows the card over the app, a short company summary (what the app is, team work, profit only from real sales, training after joining) and the rules: sponsor cannot be changed, one person one account, no two teams, duplicates found by ID and removed, name as on ID. The visitor must tick "I have read this and decide myself" before "Join X's team", which opens Register with the sponsor code filled in. Signed-in visitors are told they already have an account.
+- Register page shows the same summary and rules; sign-up is blocked until the box is ticked.
+- Database: `member_card(code)` (public), `set_show_income(bool)`, `profiles.show_income`; unique index on KYC document type + number so the same ID cannot register twice.
+- Button sweep: every `data-act` button on 14 screens (and the sheets on Home) clicked one by one in a test browser; no runtime errors.
