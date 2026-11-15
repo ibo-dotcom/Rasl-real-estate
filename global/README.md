@@ -496,3 +496,4 @@ The whole app was restyled without changing any feature, route, database call or
 - Fixed: the menu's Security and Face ID rows showed the word "shield" instead of the icon.
 - Tests: every page except Home must show a back arrow.
 - App visits in the menu opens Security again for the owner (members see the number only); Back from Security returns to the menu. Builds now apply the other session's menu and back-arrow changes on top (one combined version).
+- Ads: linking a project is optional now (the project picker was required, so an ad for a project not yet in the app, like Aram Towers, could not be published). The link field accepts a YouTube link or a website link (ads.link_url); a website link shows an "Open website" button in the full-screen ad.
