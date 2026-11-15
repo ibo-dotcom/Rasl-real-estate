@@ -398,7 +398,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794750707';
+var BUILD='1794754207';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -1404,6 +1404,7 @@ homeType:function(a){var k=a.getAttribute('data-k');st.homeType=st.homeType===k?
 homeCond:function(a){var k=a.getAttribute('data-k');st.homeCond=st.homeCond===k?'':k;render();},
 homeReset:function(){st.homeKind='';st.homeQ='';st.homeType='';st.homeCond='';st.hf=null;st.hsort='best';render();},
 menuOpen:function(){st.menu=true;render();},
+notesOpen:function(){notesOpen();},
 linkSave:async function(a){var id=a.getAttribute('data-id'),u=val('pl_url'),m=$('plmsg');if(u&&!/^https:\/\//i.test(u)){if(m)m.textContent=mt15('bad');return;}a.disabled=true;try{var r=await SB.rpc('set_project_link',{p_listing:id,p_url:u});if(r.error)throw r.error;listings.forEach(function(x){if(x.id===id)x.site_url=u||null;});render();}catch(e){a.disabled=false;if(m)m.textContent=errText(e);}},
 linkShare:async function(a){var l=listings.filter(function(x){return x.id===a.getAttribute('data-id');})[0];if(!l||!l.site_url)return;var t=mt15('msg').replace('{p}',l.title).replace('{u}',l.site_url).replace('{n}',(me?who(me)+' · '+me.code:''));try{if(navigator.share){await navigator.share({title:l.title,text:t});return;}}catch(e){if(e&&e.name==='AbortError')return;}try{await navigator.clipboard.writeText(t);alert(mt10('copied'));}catch(e){prompt(mt15('share'),t);}},
 linkSell:function(a){st.sellId=a.getAttribute('data-id');st.pid=null;location.hash='#Sales';render();},
@@ -2184,7 +2185,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  return h+'</div></div>';}
 
 // ---- Auto-update: every phone moves to the newest version by itself ----
-var APP_VER='20261115135146';
+var APP_VER='20261115145007';
 (function(){if(APP_VER.indexOf('__')===0)return;var busy=false,shown=false;
  function busyNow(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||!!document.querySelector('.tm-sheet');}
  function go(v){try{var k='rasl_upd_'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
@@ -2692,7 +2693,8 @@ function menuSheet(){var own=me&&me.role==='owner';
  if(me)h+='<div class="mgrp"><span class="mgrp-t">'+esc(mt7('dash'))+'</span>'+homeStats()+'<div class="mtiles">'+tile('💳',esc(T('k3')),'href="#Wallet"')+tile('👥',esc(T('nav_team')),'href="#Network"')+tile('📊','CRM','href="#Dashboard"')+tile('🎓',esc(T('ac_short')),'href="#Learn"')+tile('tag',esc(T('of_short')),ma('offOpen'))+tile('crown',esc(T('ld_short')),ma('leadOpen'))+tile('🪪',esc(mt7('card')),'href="#Network" data-go="card"')+tile('📢',esc(T('pub_title')),ma('pubOpen'))+'</div></div>';
  h+=grp(T('mn_props')?T('mn_props'):'',[['sale','k11'],['rent','k12'],['offplan','k13'],['invest','k14']].map(function(c){return row('🏢',esc(T(c[1])),ma('kind',' data-k="'+c[0]+'"'));}).join('')+row('sliders',esc(T('f_btn')),ma('filtOpen'))+(agentProjects().length?row('🏢',esc(T('ag_title')),ma('agentOpen')):''));
  if(me)h+=grp(T('mn_account'),(own?row('👤',esc(T('am_title')),ma('amOpen')):'')+row('shield',esc(mt13('bio')),ma('bioOpen')));
- if(me&&(own||canAds()))h+=grp(mt7('manage'),(own?row('shield',esc(mt13('sec')),ma('secOpen')):'')+row('📢',esc(T('a_manage')),'href="#Ads"')+(own?row('🏢',esc(T('l_manage')),'href="#Listings"')+row('🧾',esc(T('acc_title')),'href="#Accounts"')+row('🏛',esc(T('tx_short')),ma('govOpen')):''));
+ if(own)h+=grp('دەفتەری تایبەت',row('shield','دەفتەری تایبەت',ma('notesOpen')));
+if(me&&(own||canAds()))h+=grp(mt7('manage'),(own?row('shield',esc(mt13('sec')),ma('secOpen')):'')+row('📢',esc(T('a_manage')),'href="#Ads"')+(own?row('🏢',esc(T('l_manage')),'href="#Listings"')+row('🧾',esc(T('acc_title')),'href="#Accounts"')+row('🏛',esc(T('tx_short')),ma('govOpen')):''));
  if(me)h+=grp(T('mn_company'),row('💵',esc(T('pm_short')),ma('payOpen'))+row('🤲',esc(T('ch_short')),ma('charityOpen')));
  h+=grp(T('mn_tools'),row('🏢',esc(T('tour_btn')),'href="tour.html"')+row('📷','Studio 360° · 3D · VR','href="studio.html"')+row('🎵',esc(T('mu_title')),ma('musicOpen'))+row('globe',esc(T('h_lang')),'data-act="cycle"'));
  h+=me?'<button data-act="menuAct" data-a="signout" class="mrow" style="color: #B42318; margin-top: 4px; border-top: 1px solid #DFE7EF; padding-top: 14px">'+icoIn('logout')+'<span>'+esc(T('mn_signout'))+'</span></button>':'<a href="#Login" class="crm-b gold" style="min-height: 48px; display: flex; align-items: center; justify-content: center; text-decoration: none">'+esc(T('signin'))+'</a>';
@@ -2996,6 +2998,20 @@ var h='<div class="ocard"><div class="mi-row"><span class="gico big">'+mIco('sha
 if(l.site_url)h+='<p dir="ltr" class="ofp" style="font-size: 12px; overflow-wrap: anywhere">'+esc(l.site_url)+'</p><p class="ofp" style="font-size: 12px; color: #1F8A5B; font-weight: 600">'+esc(mt15('comm').replace('{p}',pct).replace('{n}',pts||'—'))+'</p><div style="display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px"><a href="'+esc(l.site_url)+'" target="_blank" rel="noopener" class="catm">'+mIco('cube')+'<span>'+esc(mt15('open'))+'</span></a><button data-act="linkShare" data-id="'+esc(l.id)+'" class="catm">'+mIco('share')+'<span>'+esc(mt15('share'))+'</span></button><button data-act="linkSell" data-id="'+esc(l.id)+'" class="catm" style="background: #173F63; border-color: #173F63; color: #FFFFFF">'+mIco('plus')+'<span style="color: #FFFFFF">'+esc(mt15('sell'))+'</span></button></div>';
 if(edit)h+='<div style="display: flex; gap: 6px"><input id="pl_url" type="url" dir="ltr" inputmode="url" placeholder="'+esc(mt15('add'))+'" value="'+esc(l.site_url||'')+'" style="'+INP+'; flex: 1; min-width: 0; height: 44px"><button data-act="linkSave" data-id="'+esc(l.id)+'" class="crm-b gold" style="height: 44px; white-space: nowrap">'+esc(mt15('save'))+'</button></div><div id="plmsg" class="ofmsg" role="status"></div>';
 return h+'</div>';}
+
+// Owner's private notebook: only the owner can read or write it (RLS owner_notes_all).
+function notesOpen(){var N=window.__notes||(window.__notes={list:[]});loadNotes();noteSheet();}
+async function loadNotes(){var N=window.__notes||(window.__notes={list:[]});if(!SB||!me||me.role!=='owner')return;try{var r=await SB.from('owner_notes').select('*').order('created_at',{ascending:false});N.list=r.data||[];}catch(e){N.list=[];}noteSheet();}
+function noteSheet(){var N=window.__notes||{list:[]},o=document.getElementById('noteView');if(!o){o=document.createElement('div');o.id='noteView';o.className='secov';document.body.appendChild(o);}
+ var rows=N.list.map(function(n){return '<div class="secrow"><span style="white-space:pre-wrap;'+(n.done?'text-decoration:line-through;opacity:.6':'')+'">'+esc(n.body)+'</span><small dir="ltr">'+esc(new Date(n.created_at).toLocaleString('en-GB'))+'</small><div class="secacts"><button data-nt="toggle" data-id="'+n.id+'" class="crm-b">'+(n.done?'↺':'✓')+'</button><button data-nt="del" data-id="'+n.id+'" class="crm-b" style="color:#B42318">×</button></div></div>';}).join('');
+ o.innerHTML='<div class="secpage"><div class="sechead"><b>دەفتەری تایبەت</b><button data-nt="close" class="cv-x" style="position:static">×</button></div><div class="secsec"><textarea id="ntIn" rows="3" maxlength="4000" class="inp" style="height:auto;padding:10px"></textarea><button data-nt="add" class="crm-b gold" style="height:44px">زیادکردن</button></div><div class="secsec">'+(rows||'<p class="ofp">هیچ تێبینییەک نییە.</p>')+'</div></div>';
+ o.onclick=noteClick;}
+async function noteClick(e){var b=e.target.closest('[data-nt]');if(!b)return;var k=b.getAttribute('data-nt'),N=window.__notes;
+ if(k==='close'){document.getElementById('noteView').remove();return;}
+ try{if(k==='add'){var t=(document.getElementById('ntIn').value||'').trim();if(!t)return;var r=await SB.from('owner_notes').insert({body:t});if(r.error)throw r.error;}
+ if(k==='toggle'){var n=N.list.find(function(x){return x.id===b.dataset.id});await SB.from('owner_notes').update({done:!n.done}).eq('id',b.dataset.id);}
+ if(k==='del'){await SB.from('owner_notes').delete().eq('id',b.dataset.id);}}catch(x){alert(errText(x));}
+ loadNotes();}
 
 var isRec=/type=recovery/.test(location.hash||'');
 loadMe().then(function(){if(isRec&&me){location.hash='#Profile';setTimeout(function(){alert(T('fe_setnew'));},350);}else if(me&&(!location.hash||['Welcome','Login','Register'].indexOf(route())>=0)){location.hash='#Main';}render();});
