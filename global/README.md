@@ -420,3 +420,9 @@ The whole app was restyled without changing any feature, route, database call or
 
 ### Home: more room for ads (2026-11-15)
 - Removed the row of shortcut circles and the four count tiles from Home; every shortcut is already in the side menu (☰), and the counts (members, projects, app visits, offices/companies) now sit at the top of the side menu under the profile.
+
+### Ads: controls inside the frame, periods, managers, bigger (2026-11-15)
+- Each ad shows small + (add an ad in this place) and x (remove) buttons in its corner, plus "N days left", only for the owner and members the owner allows. The separate "+ add here" buttons and the "manage ads" link are gone; empty places show a compact "add an ad here" box only to those people.
+- Bigger ads: top ad up to 460px tall, the middle place shows one ad at a time at full width, the bottom place two per row.
+- Every ad has a number of days (`ads.days`, `ads.ends_at`, `ads.starts_at`); the add form shows the rent = slot price per day x days. Slot prices in settings are now per day. Ended ads disappear for everyone (RLS on `ads_read` plus a client filter).
+- Owner chooses ad managers on the Team page ("Who can add and remove ads", table `ad_managers`, `private.can_ads()`); ads and the ads storage bucket accept writes from the owner and those managers; managers can also remove member posts shown as ads.
