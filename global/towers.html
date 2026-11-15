@@ -86,7 +86,7 @@ async function load(){var lid=QS.get('l');
  UNITS=r[0].data||[];STATE={};(r[1].data||[]).forEach(function(x){STATE[x.unit_id]=x});if(r[2].data)CFG=r[2].data;LV=(r[3].data||[]).map(function(x){return Number(x.pct)});
  $('tName').textContent=L.title;$('tSub').textContent=(L.place||'')+' · '+UNITS.length+' '+t('units');
  if(!UNITS.length){fail(esc(t('none')));return}
- $('msgBox').classList.add('hide');build();legend();hint(t('hint'))}
+ $('msgBox').classList.add('hide');build();legend();hint(t('hint'));var pu=QS.get('u');if(pu){var pm=PICK.filter(function(m){return m.userData.u.id===pu})[0];if(pm)openUnit(pm)}}
 function fail(h){$('msgBox').innerHTML=h;$('msgBox').classList.remove('hide')}
 function stOf(u){var x=STATE[u.id];return x?x.state:'free'}
 

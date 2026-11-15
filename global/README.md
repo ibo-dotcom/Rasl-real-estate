@@ -474,3 +474,10 @@ The whole app was restyled without changing any feature, route, database call or
 
 ### Automatic tests (2026-11-15)
 - `tests/` holds the browser tests for the member app; `.github/workflows/app-tests.yml` runs them on every push, on pull requests, every day at 03:17 UTC and on demand (GitHub → Actions → App tests). They use a fake database (`tests/stub.js`), never the real one. See `tests/README.md`.
+
+### Interactive project page (`project.html?l=<project id>`) (2026-11-15)
+- A full-screen showcase for each project, opened from the dark "Interactive project page" card on the project sheet (Open / Send to a client). Anyone with the link can open it, no account needed.
+- **3D buildings** built from the unit board, every apartment coloured free / reserved / sold, drag to turn, pinch to zoom, tap an apartment; **Day / Night** switch (night: dark sky, stars, lit windows).
+- Bottom tabs: **Home** (picture, description, counts of buildings, floors, units, available, area range, bedrooms; buttons for the 3D model, 3D · 360° · VR catalogue, interior tour, share), **Filtering** (floor, area and bedroom sliders, unit type, status; non-matching units fade out), **Details** (code, building, floor, type, bedrooms, area, view; price for signed-in members; 3D plan picture and interior tour; Buy / reserve opens that unit in towers.html), **Surroundings** (hospitals, schools, universities, malls, parks, mosques, restaurants, markets, fuel near the project with distance, drive time and directions), **Brochure** (catalogue pictures, full-screen viewer, 3D / 360° / VR).
+- Owner and project team edit each unit from Details: type (apartment, duplex, penthouse, office, shop, villa), view, 3D plan picture and interior tour link.
+- Database: `units.kind`, `units.view`, `units.plan_url`, `units.tour_url`; `project_showcase(id)` (public: project, units with status, catalogue — no prices, no buyers); `set_unit_info(...)` (owner or project members).
