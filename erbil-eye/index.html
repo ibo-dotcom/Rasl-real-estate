@@ -115,7 +115,7 @@ h2{font-size:clamp(28px,4.6vw,44px);line-height:1.15;margin:0 0 14px;font-weight
 <header class="nav" id="nav"><div class="wrap">
   <a class="brand" href="#top"><svg viewBox="0 0 32 32" fill="none" stroke="#E3C78C" stroke-width="1.8"><circle cx="16" cy="13" r="10"/><circle cx="16" cy="13" r="2"/><path d="M16 3v20M6 13h20M9 6l14 14M23 6L9 20"/><path d="M12 29l4-14 4 14"/></svg><span data-t="brand"></span></a>
   <nav class="links">
-    <a href="#why" data-t="n_why"></a><a href="#project" data-t="n_proj"></a><a href="#inside" data-t="n_in"></a><a href="#ride" data-t="n_3d"></a><a href="#where" data-t="n_loc"></a>
+    <a href="#why" data-t="n_why"></a><a href="#project" data-t="n_proj"></a><a href="#inside" data-t="n_in"></a><a href="#ride" data-t="n_3d"></a><a href="#mall3d">VR</a><a href="#where" data-t="n_loc"></a>
   </nav>
   <button class="lang" id="lang">EN</button>
 </div></header>
@@ -188,6 +188,16 @@ h2{font-size:clamp(28px,4.6vw,44px);line-height:1.15;margin:0 0 14px;font-weight
   <a class="full" href="../global/wheel.html" target="_blank" rel="noopener" data-t="full"></a>
 </div></section>
 
+<section class="s dark" id="mall3d" style="padding-top:0"><div class="wrap">
+  <p class="eyebrow" data-t="e_m3"></p>
+  <h2 data-t="h_m3"></h2>
+  <p class="sub" data-t="s_m3"></p>
+  <div class="stage" id="stage2" style="background-image:url(g2.jpg)">
+    <div class="play"><button class="btn gold" id="open3d2" data-t="open3d"></button><p data-t="p_m3"></p></div>
+  </div>
+  <a class="full" href="../global/mall.html" target="_blank" rel="noopener" data-t="full"></a>
+</div></section>
+
 <section class="s"><div class="wrap">
   <p class="eyebrow" data-t="e_cmp"></p>
   <h2 data-t="h_cmp"></h2>
@@ -236,12 +246,12 @@ var TX={
  w2t:['لەناو پارکدا','Inside the park'],w2:['لە پارکی سامی عەبدولڕەحمان، گەورەترین پارکی هەولێر، شوێنێک بۆ خێزان و گەشتیاران.','In Sami Abdulrahman Park, Erbil\'s largest park: a place for families and visitors.'],
  w3t:['شەوان ڕووناک','Lit at night'],w3:['ڕووناکیی LED لەسەر بازنەکە ڕەنگ دەگۆڕێت و لە هەموو شارەوە دیار دەبێت.','LED lights on the rim change colour and can be seen from across the city.'],
  e_proj:['پرۆژەکە','The project'],h_proj:['سامی پارک دیستریکت','Sami Park District'],
- s_proj:['بازاڕێکی هاوچەرخی بازنەیی (تیرە 120 م) لە تەنیشت چەرخوفەلەکەکە: سێ نهۆم بە دەوری باخچەیەکی ناوەوە و فوارە، بە دەروازەیەکی شووشەیی و تەرازی سەربان.','A round modern mall (120 m across) beside the wheel: three floors around an inner garden and fountain, with a glass entrance hall and rooftop terraces.'],
+ s_proj:['بازاڕێکی هاوچەرخی بازنەیی (تیرە 120 م) لە تەنیشت چەرخوفەلەکەکە: 5 نهۆم بە دەوری باخچەیەکی ناوەوە و ئەتریۆمێکی گومەز شووشەیی، بە دەروازەیەکی شووشەیی و تەرازی سەربان.','A round modern mall (120 m across) beside the wheel: 5 floors around an inner garden and a glass-domed atrium, with a glass entrance hall and rooftop terraces.'],
  p1:['دوکانی براندە جیهانییەکان لە ڕاڕەوێکی بازنەیی','International brand shops along a circular promenade'],
  p2:['ئەتریۆمی سەقف شووشە لەگەڵ تاڤگەی ئاو','A glass-roofed atrium with a water wall'],
  p3:['چێشتخانە و کافێ لەسەر سەربان بە دیمەنی پارک و شار','Rooftop restaurants and cafés overlooking the park and the city'],
  p4:['سینەما، هۆڵی وەرزش، مەلەوانگە و سپا','Cinema, gym, swimming pool and spa'],
- p5:['پارکینگی ژێرزەوی (B1، B2) و گۆڕەپانی پێشەوە بە فوارە','Underground parking (B1, B2) and a front plaza with a fountain'],
+ p5:['3 نهۆمی پارکینگی ژێرزەوی بۆ 1,900–2,100 ئۆتۆمبێل، لەگەڵ شوێنی بارگاوی کردنی ئۆتۆمبێلی کارەبایی','3 basement parking floors for 1,900–2,100 cars, with EV charging'],
  n_in:['ناوەوە','Inside'],e_in:['ناوەوە','Inside'],h_in:['ژیانی ناو بازاڕەکە','Life inside the mall'],
  s_in:['شوێنێک بۆ بازاڕکردن، خواردن، وەرزش و کات بەسەربردن — بە ڕۆژ و شەو.','A place to shop, eat, exercise and spend time, day and night.'],
  g1:['چێشتخانەی سەربان','Rooftop restaurant'],g2:['ئەتریۆمی شووشەیی و تاڤگە','Glass atrium and water wall'],g3:['تەرازی سەربان','Rooftop terrace'],
@@ -250,13 +260,16 @@ var TX={
  s_3d:['چەرخوفەلەک و بازاڕە بازنەییەکە لەسەر وێنەی ڕاستەقینەی مانگی دەستکردی هەولێر. «سواربە» دابگرە و بە پەنجە سەیری دەوروبەر بکە.','The wheel and the round mall on the real satellite view of Erbil. Tap “Ride” and drag to look around.'],
  open3d:['▶ کردنەوەی 3D','▶ Open 3D'],p3d:['نەخشەکە و مۆدێلەکە باردەکرێن؛ لە مۆبایل چەند چرکەیەک دەخایەنێت.','The map and the model load; on a phone this takes a few seconds.'],
  full:['لە پەڕەیەکی تەواودا بیکەرەوە ←','Open full screen →'],
+ e_m3:['بازاڕەکە بە 3D و VR','The mall in 3D and VR'],h_m3:['بچۆ ناو سامی پارک دیستریکت','Step inside Sami Park District'],
+ s_m3:['360° بە دەوری بازاڕەکە و چەرخوفەلەکەکە بسووڕێوە، لە دەروازەکەوە سەیر بکە، بچۆ ناو ئەتریۆمی 5 نهۆمی، و سەربکەوە سەر سەربان. بە ڕۆژ و شەو، بە جووڵەی مۆبایل یان چاویلکەی VR.','Go 360° around the mall and the wheel, look at the entrance, walk into the 5-floor atrium and up to the roof. Day and night, with phone motion or a VR viewer.'],
+ p_m3:['دەرەوە · دەروازە · ناوەوە · سەربان','Outside · Entrance · Inside · Rooftop'],
  e_cmp:['بەراورد','Comparison'],h_cmp:['لە نێوان گەورەکانی جیهاندا','Among the world\'s big wheels'],
  s_cmp:['لە لەندەن ئای و سینگاپور فلایەر بەرزترە.','Taller than the London Eye and the Singapore Flyer.'],
  c_ad:['عەین دوبەی','Ain Dubai'],c_me:['هەولێر (پێشنیار)','Erbil (proposed)'],c_sg:['سینگاپور فلایەر','Singapore Flyer'],c_ld:['لەندەن ئای','London Eye'],
  e_loc:['شوێن','Location'],h_loc:['پارکی سامی عەبدولڕەحمان','Sami Abdulrahman Park'],
- s_loc:['زەوییەکی 35,000 مەتر دووجایی لە لای باشووری پارکی سامی عەبدولڕەحمان، لە تەنیشت شەقامی مووسڵ. چەرخوفەلەک و بازاڕەکە پێکەوە لەسەر ئەم زەوییە دادەنرێن.','A 35,000 m² plot on the south side of Sami Abdulrahman Park, beside Mosul Road. The wheel and the mall sit together on this land.'],
+ s_loc:['زەوییەکی 35,811 مەتر دووجایی لە لای باشووری پارکی سامی عەبدولڕەحمان، لە تەنیشت شەقامی مووسڵ. چەرخوفەلەک و بازاڕەکە پێکەوە لەسەر ئەم زەوییە دادەنرێن.','A 35,811 m² plot on the south side of Sami Abdulrahman Park, beside Mosul Road. The wheel and the mall sit together on this land.'],
  gmap:['لە Google Maps بیبینە','View on Google Maps'],
- l1:['شار','City'],l1v:['هەولێر','Erbil'],l2:['دووری لە قەڵا','Distance to the Citadel'],l3:['شوێن','Coordinates'],l4:['ڕووبەری زەوی','Land area'],l4v:['35,000 م²','35,000 m²'],
+ l1:['شار','City'],l1v:['هەولێر','Erbil'],l2:['دووری لە قەڵا','Distance to the Citadel'],l3:['شوێن','Coordinates'],l4:['ڕووبەری زەوی','Land area'],l4v:['35,811 م²','35,811 m²'],
  disc:['ئەمە پڕۆژەیەکی پێشنیارکراوە. ژمارەکان، وێنەکان و مۆدێلی 3D بۆ پیشاندانن و دیزاینی کۆتایی نین.','This is a proposed project. Figures, images and the 3D model are for presentation and are not the final design.']
 };
 var L=(new URLSearchParams(location.search).get('lang')||(function(){try{return localStorage.getItem('wheel_lang');}catch(e){return null;}})()||'ku')==='en'?1:0;
@@ -264,8 +277,10 @@ function paint(){document.documentElement.lang=L?'en':'ckb';document.documentEle
  document.querySelectorAll('[data-t]').forEach(function(e){var v=TX[e.getAttribute('data-t')];if(v)e.textContent=v[L];});
  document.querySelectorAll('[data-h]').forEach(function(e){e.innerHTML=TX[e.getAttribute('data-h')][L];});
  document.getElementById('lang').textContent=L?'کوردی':'EN';document.title=TX.brand[L]+(L?' · Sami Abdulrahman Park':' · پارکی سامی عەبدولڕەحمان');
- var f=document.querySelector('iframe');if(f)f.src='../global/wheel.html?lang='+(L?'en':'ku');}
+ var f=document.querySelector('#stage iframe');if(f)f.src='../global/wheel.html?lang='+(L?'en':'ku');var f2=document.querySelector('#stage2 iframe');if(f2)f2.src='../global/mall.html?lang='+(L?'en':'ku');}
 document.getElementById('lang').onclick=function(){L=1-L;try{localStorage.setItem('wheel_lang',L?'en':'ku');}catch(e){}paint();};
+document.getElementById('open3d2').onclick=function(){var s=document.getElementById('stage2');if(s.querySelector('iframe'))return;var f=document.createElement('iframe');
+ f.src='../global/mall.html?lang='+(L?'en':'ku');f.allow='fullscreen; xr-spatial-tracking; gyroscope; accelerometer';f.title='Sami Park District 3D';s.appendChild(f);};
 document.getElementById('open3d').onclick=function(){var s=document.getElementById('stage');var f=document.createElement('iframe');
  f.src='../global/wheel.html?lang='+(L?'en':'ku');f.allow='fullscreen';f.title='Erbil Eye 3D';s.appendChild(f);};
 document.documentElement.classList.add('js');

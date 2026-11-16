@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0E2236">
+<title>سامی پارک دیستریکت · 3D · VR · 360°</title>
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<style>
+:root{--navy:#102B46;--blue:#173F63;--line:#DFE7EF;--muted:#718096;--gold:#C9A45C;--gold2:#E3C78C}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0b1626;font-family:Inter,'Noto Sans Arabic',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+canvas{display:block;touch-action:none}
+.top{position:fixed;top:calc(12px + env(safe-area-inset-top));inset-inline:12px;display:flex;gap:8px;align-items:center;z-index:5}
+.ib{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--blue);display:grid;place-items:center;cursor:pointer;flex-shrink:0;text-decoration:none;font:700 12px inherit;font-family:inherit;padding:0}
+.ib svg{width:22px;height:22px}
+.ttl{flex:1;min-width:0;height:44px;border-radius:10px;background:rgba(255,255,255,.94);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;padding:0 12px}
+.ttl b{font-size:15px;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl span{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{position:fixed;inset-inline:0;bottom:0;z-index:5;padding:10px 12px calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;max-width:640px;margin:0 auto;pointer-events:none}
+.bar>*{pointer-events:auto}
+.seg{display:flex;background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.seg button{flex:1;min-height:44px;border:0;border-radius:9px;background:none;color:var(--blue);font:600 14px inherit;font-family:inherit;cursor:pointer}
+.seg button.on{background:var(--blue);color:#fff}
+.row{display:flex;gap:8px}
+.btn{flex:1;min-height:46px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.95);color:var(--blue);font:600 14px inherit;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;padding:0 8px}
+.btn.on{background:#EAF1F7;border-color:var(--blue)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#1b1408}
+.walk{position:fixed;inset-inline-end:14px;bottom:calc(150px + env(safe-area-inset-bottom));z-index:5;display:none;flex-direction:column;gap:8px}
+.walk.on{display:flex}
+.walk button{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.92);color:var(--blue);font-size:20px;cursor:pointer;touch-action:none}
+.hint{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%);z-index:6;background:rgba(16,43,70,.86);color:#fff;border-radius:12px;padding:10px 14px;font-size:13px;pointer-events:none;opacity:0;transition:opacity .4s;text-align:center;max-width:80vw}
+.hint.on{opacity:1}
+.place{position:fixed;top:calc(66px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:5;background:rgba(16,43,70,.86);color:#fff;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;white-space:nowrap}
+/* cardboard mode */
+body.vr .top,body.vr .bar,body.vr .walk,body.vr .place{display:none}
+.vrx{position:fixed;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:7;display:none;gap:8px}
+body.vr .vrx{display:flex}
+.vrx button{height:40px;padding:0 14px;border-radius:999px;border:0;background:rgba(255,255,255,.9);color:var(--navy);font:600 13px inherit;font-family:inherit}
+body.vr:after{content:"";position:fixed;top:0;bottom:0;left:50%;width:2px;background:#000;z-index:6;pointer-events:none}
+.err{position:fixed;inset:0;display:none;place-items:center;z-index:9;background:#0b1626;color:#fff;text-align:center;padding:24px;font-size:14px;line-height:1.6}
+.load{position:fixed;inset:0;display:grid;place-items:center;z-index:8;background:#0b1626;color:#E3C78C;font-size:14px;transition:opacity .5s}
+</style>
+</head>
+<body>
+<div class="load" id="load">…</div>
+<div class="top">
+  <a class="ib" id="back" href="wheel.html" aria-label="گەڕانەوە"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  <div class="ttl"><b>SAMI PARK DISTRICT</b><span data-t="sub"></span></div>
+  <button class="ib" id="lang">EN</button>
+</div>
+<div class="place" id="place"></div>
+<div class="hint" id="hint"></div>
+<div class="walk" id="walk"><button id="fw" aria-label="forward">▲</button><button id="bk" aria-label="back">▼</button></div>
+<div class="vrx"><button id="vrPrev">◀</button><button id="vrExit" data-t="vrexit"></button><button id="vrNext">▶</button></div>
+<div class="bar">
+  <div class="seg" id="seg">
+    <button data-v="out" class="on" data-t="v_out"></button>
+    <button data-v="gate" data-t="v_gate"></button>
+    <button data-v="in" data-t="v_in"></button>
+    <button data-v="roof" data-t="v_roof"></button>
+  </div>
+  <div class="row">
+    <button class="btn" id="night"></button>
+    <button class="btn" id="gyro" data-t="gyro"></button>
+    <button class="btn gold" id="vr" data-t="vr"></button>
+  </div>
+</div>
+<div class="err" id="err"></div>
+
+<script>
+(function(){
+var TX={
+ sub:['3D · VR · 360° — لە تەنیشت چەرخوفەلەکی هەولێر','3D · VR · 360° — beside the Erbil Eye'],
+ v_out:['دەرەوە 360°','Outside 360°'],v_gate:['دەروازە','Entrance'],v_in:['ناوەوە','Inside'],v_roof:['سەربان','Rooftop'],
+ day:['☀️ ڕۆژ','☀️ Day'],night:['🌙 شەو','🌙 Night'],gyro:['📱 جووڵە','📱 Motion'],vr:['🥽 VR','🥽 VR'],vrexit:['دەرچوون','Exit'],
+ p_out:['سووڕانەوەی 360° بە دەوری بازاڕەکە و چەرخوفەلەکەکە','360° around the mall and the wheel'],
+ p_gate:['دەروازەی سەرەکی — لە شەقامی مووسڵەوە','Main entrance — from Mosul Road'],
+ p_in:['ئەتریۆمی ناوەڕاست — 5 نهۆم، گومەزی شووشەیی','Central atrium — 5 floors, glass dome'],
+ p_roof:['باخچە و چێشتخانەی سەربان','Rooftop garden and restaurants'],
+ h_drag:['بە پەنجە ڕابکێشە بۆ سەیرکردنی 360°','Drag to look around 360°'],
+ h_walk:['▲ ▼ بۆ ڕۆیشتن · ڕابکێشە بۆ سووڕاندن','▲ ▼ to walk · drag to turn'],
+ h_vr:['مۆبایلەکە بخەرە ناو چاویلکەی VR (Cardboard). سەرت بجووڵێنە بۆ سەیرکردن.','Put the phone in a VR viewer (Cardboard). Move your head to look around.'],
+ h_gyro:['مۆبایلەکە بجووڵێنە بۆ سەیرکردنی دەوروبەر','Move the phone to look around'],
+ nogyro:['ئەم ئامێرە هەستەوەری جووڵەی نییە یان ڕێگەی نەدا.','This device has no motion sensor, or permission was not given.'],
+ nogl:['ئەم ئامێرە WebGL پشتگیری ناکات.','This device does not support WebGL.'],
+ noscript:['نەتوانرا ئامرازی 3D باربکرێت. ئینتەرنێتەکەت بپشکنە.','The 3D library did not load. Check the connection.'],
+ loading:['بارکردنی سامی پارک دیستریکت…','Loading Sami Park District…']
+};
+var L=(new URLSearchParams(location.search).get('lang')||(function(){try{return localStorage.getItem('wheel_lang');}catch(e){return null;}})()||'ku')==='en'?1:0;
+function t(k){return (TX[k]||[k,k])[L];}
+function $(id){return document.getElementById(id);}
+$('load').textContent=t('loading');
+function fail(k){var e=$('err');e.textContent=t(k);e.style.display='grid';$('load').style.display='none';}
+if(typeof THREE==='undefined'){fail('noscript');return;}
+try{var tc=document.createElement('canvas');if(!(tc.getContext('webgl2')||tc.getContext('webgl')))throw 0;}catch(e){fail('nogl');return;}
+
+// ================= renderer, scene, camera =================
+var renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));renderer.setSize(innerWidth,innerHeight);
+renderer.xr.enabled=true;document.body.appendChild(renderer.domElement);
+var scene=new THREE.Scene();
+var camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,6000);
+var dolly=new THREE.Group();dolly.add(camera);scene.add(dolly);
+var hemi=new THREE.HemisphereLight(0xdfe9f5,0x6b6050,0.9);scene.add(hemi);
+var sun=new THREE.DirectionalLight(0xfff2dd,0.9);sun.position.set(-200,320,160);scene.add(sun);
+function V(x,y,z){return new THREE.Vector3(x,y,z);}
+function lam(c,o){var m=new THREE.MeshLambertMaterial(Object.assign({color:c},o||{}));return m;}
+function beam(a,b,r,mat,seg){var d=new THREE.Vector3().subVectors(b,a),len=d.length();var m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,len,seg||6,1),mat);
+ m.position.copy(a).addScaledVector(d,0.5);m.quaternion.setFromUnitVectors(V(0,1,0),d.normalize());return m;}
+function canvasTex(w,h,draw,rep){var cv=document.createElement('canvas');cv.width=w;cv.height=h;draw(cv.getContext('2d'),w,h);var tx=new THREE.CanvasTexture(cv);
+ if(rep){tx.wrapS=THREE.RepeatWrapping;tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(rep[0],rep[1]);}tx.anisotropy=4;return tx;}
+var glows=[];   // materials that light up at night: {m, day, night}
+function glow(m,day,night){glows.push({m:m,d:day,n:night});return m;}
+
+// ---- palms, instanced (trunk + 8 drooping leaves each) ----
+var leafGeo=new THREE.BoxGeometry(0.55,0.06,4.2);leafGeo.translate(0,0,2.1);
+function palms(list,parent,h){h=h||9;var n=list.length;if(!n)return;
+ var tr=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.22,0.38,h,7),lam(0x8B6F4E),n);
+ var lv=new THREE.InstancedMesh(leafGeo,lam(0x3E6B2C),n*8);var o=new THREE.Object3D();
+ list.forEach(function(q,i){var s=q[2]||1;o.position.set(q[0],h*s/2,q[1]);o.rotation.set(0,0,0);o.scale.set(s,s,s);o.updateMatrix();tr.setMatrixAt(i,o.matrix);
+  for(var k=0;k<8;k++){o.position.set(q[0],h*s,q[1]);o.rotation.set(0,k/8*Math.PI*2+i,0);o.rotateX(0.35+((k%2)*0.25));o.scale.set(s,s,s);o.updateMatrix();lv.setMatrixAt(i*8+k,o.matrix);}});
+ parent.add(tr);parent.add(lv);}
+
+// ---- water and fountains (jets pulse) ----
+var water=glow(lam(0x5FA8D3,{emissive:0x1d4f70}),0.3,0.9);
+var sprayMat=glow(new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:0.45,emissive:0xBFE4FF}),0.25,1.2);
+var jets=[];
+function fountain(parent,x,z,r,n,hg,y0){y0=y0||0;var g=new THREE.Group();g.position.set(x,y0,z);
+ var rim=new THREE.Mesh(new THREE.CylinderGeometry(r+0.6,r+0.8,0.9,48),lam(0xEDE6D8));rim.position.y=0.45;g.add(rim);
+ var w=new THREE.Mesh(new THREE.CylinderGeometry(r,r,0.2,48),water);w.position.y=0.85;g.add(w);
+ for(var i=0;i<n;i++){var a=i/n*Math.PI*2,rr=i===0?0:r*0.6,hh=i===0?hg:hg*0.55;var j=new THREE.Mesh(new THREE.ConeGeometry(i===0?Math.max(0.25,r*0.05):Math.max(0.12,r*0.03),1,10,1,true),sprayMat);
+  j.position.set(Math.cos(a)*rr,0.9,Math.sin(a)*rr);j.geometry.translate(0,0.5,0);j.userData={h:hh,ph:i*0.7};g.add(j);jets.push(j);}
+ parent.add(g);return g;}
+
+// ================= OUTSIDE: land, road, park, mall, wheel =================
+var world=new THREE.Group();scene.add(world);
+var grass=new THREE.Mesh(new THREE.PlaneGeometry(3000,3000),lam(0x6E8B52));grass.rotation.x=-Math.PI/2;world.add(grass);
+// the land (35,811 m², ~170 x 210 m) and Mosul Road in front of it
+var land=new THREE.Mesh(new THREE.PlaneGeometry(170,210),lam(0xBDB29E,{polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}));land.rotation.x=-Math.PI/2;land.position.set(0,0.05,0);world.add(land);
+var road=new THREE.Mesh(new THREE.PlaneGeometry(3000,34),lam(0x3D4248,{polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}));road.rotation.x=-Math.PI/2;road.position.set(0,0.06,128);world.add(road);
+var lane=canvasTex(256,16,function(g,w,h){g.fillStyle='#3D4248';g.fillRect(0,0,w,h);g.fillStyle='#E8E2CF';g.fillRect(0,6,128,4);},[300,1]);
+[120,136].forEach(function(z){var m=new THREE.Mesh(new THREE.PlaneGeometry(3000,0.5),new THREE.MeshBasicMaterial({map:lane,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}));m.rotation.x=-Math.PI/2;m.position.set(0,0.08,z);world.add(m);});
+// cars on the road
+var carCols=[0xffffff,0x222222,0x9aa3ad,0x7a1f1f,0x1f3d7a,0xd8d8d8];var cars=[];
+for(var ci=0;ci<26;ci++){var car=new THREE.Mesh(new THREE.BoxGeometry(4.4,1.5,1.9),lam(carCols[ci%6]));var lanez=[116,124,132,140][ci%4];car.position.set(-600+ci*47,0.8,lanez);car.userData.v=(lanez<128?1:-1)*(11+ci%5*2);world.add(car);cars.push(car);}
+// park trees around
+(function(){var n=420,tr=new THREE.InstancedMesh(new THREE.SphereGeometry(1,8,6),lam(0x4E7238),n),o=new THREE.Object3D(),k=0;
+ for(var i=0;i<1400&&k<n;i++){var x=(Math.random()-0.5)*900,z=-60-Math.random()*700;if(Math.abs(x)<100&&z>-120)continue;var s=3+Math.random()*3;o.position.set(x,s*0.9,z);o.scale.set(s,s*1.1,s);o.updateMatrix();tr.setMatrixAt(k++,o.matrix);}
+ for(var i=0;i<600&&k<n;i++){var x=(Math.random()<0.5?-1:1)*(100+Math.random()*400),z=-120+Math.random()*230;var s=3+Math.random()*3;o.position.set(x,s*0.9,z);o.scale.set(s,s*1.1,s);o.updateMatrix();tr.setMatrixAt(k++,o.matrix);}
+ tr.count=k;world.add(tr);})();
+// city blocks across the road
+(function(){var n=160,m=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),glow(lam(0xD8D2C6,{emissive:0x3b2a14}),0,0.6),n),o=new THREE.Object3D();
+ for(var i=0;i<n;i++){var w=14+Math.random()*26,d=14+Math.random()*24,h=6+Math.random()*(Math.random()<0.1?60:18);o.position.set((Math.random()-0.5)*1400,h/2,170+Math.random()*500);o.scale.set(w,h,d);o.updateMatrix();m.setMatrixAt(i,o.matrix);}world.add(m);})();
+
+// ---------- the mall: Sami Park District ----------
+// Ring of 5 floors (25 m) around a garden courtyard with a central glass-domed atrium; glass entrance with the
+// name over an arched canopy facing Mosul Road; LED screens; rooftop garden, restaurants and an infinity pool;
+// front plaza with a fountain. 3 basement parking floors are not drawn.
+var RO=60,RI=40,FL=5,FH=5,MH=FL*FH;
+var mall=new THREE.Group();mall.position.set(0,0,12);world.add(mall);
+var facade=canvasTex(128,64*FL,function(g,w,h){for(var f=0;f<FL;f++){var y=h-(f+1)*64;g.fillStyle='#F2ECE0';g.fillRect(0,y,w,64);
+  var gr=g.createLinearGradient(0,y+10,0,y+60);gr.addColorStop(0,f===0?'#FFE0B0':'#F6D2A0');gr.addColorStop(1,f===0?'#D19856':'#B98550');g.fillStyle=gr;g.fillRect(0,y+(f===0?6:12),w,f===0?56:46);
+  g.fillStyle='rgba(55,40,25,.6)';for(var x=0;x<w;x+=(f===0?64:32))g.fillRect(x,y+8,f===0?4:3,56);}},[56,1]);
+var facMat=glow(new THREE.MeshLambertMaterial({map:facade,emissive:0xffffff,emissiveMap:facade}),0.12,0.85);
+var outer=new THREE.Mesh(new THREE.CylinderGeometry(RO,RO,MH,160,1,true),facMat);outer.position.y=MH/2;mall.add(outer);
+var facI=facade.clone();facI.needsUpdate=true;facI.repeat.set(38,1);
+var inner=new THREE.Mesh(new THREE.CylinderGeometry(RI,RI,MH,120,1,true),glow(new THREE.MeshLambertMaterial({map:facI,emissive:0xffffff,emissiveMap:facI,side:THREE.BackSide}),0.12,0.85));inner.position.y=MH/2;mall.add(inner);
+var white=glow(lam(0xFFFFFF,{emissive:0xFFF1D6}),0.05,0.35);
+var roofR=new THREE.Mesh(new THREE.RingGeometry(RI,RO,160,1),lam(0xE9E4DA,{side:THREE.DoubleSide}));roofR.rotation.x=-Math.PI/2;roofR.position.y=MH;mall.add(roofR);
+[[RO+1,3],[RI-0.8,2.2]].forEach(function(c){var b=new THREE.Mesh(new THREE.CylinderGeometry(c[0],c[0],c[1],160,1,true),white);b.material.side=THREE.DoubleSide;b.position.y=MH+c[1]/2-0.4;mall.add(b);});
+// a white floor band at every level outside (the horizontal lines of the render)
+for(var f=1;f<FL;f++){var bd=new THREE.Mesh(new THREE.CylinderGeometry(RO+0.5,RO+0.5,0.6,160,1,true),white);bd.position.y=f*FH;mall.add(bd);}
+var rg=new THREE.Mesh(new THREE.RingGeometry(RI+4,RO-5,160,1),lam(0x6F8F55,{polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}));rg.rotation.x=-Math.PI/2;rg.position.y=MH+0.1;mall.add(rg);
+var cream=lam(0xF4EFE6);var glassM=new THREE.MeshPhongMaterial({color:0x9fc4e0,transparent:true,opacity:0.45,shininess:90,specular:0xffffff,side:THREE.DoubleSide});
+// rooftop canopies (restaurants) and an infinity pool on the roof
+for(var c=0;c<10;c++){var ca=c/10*Math.PI*2+0.6,cr=(RI+RO)/2;var cn=new THREE.Group();cn.position.set(Math.cos(ca)*cr,MH,Math.sin(ca)*cr);cn.rotation.y=-ca;
+ var top=new THREE.Mesh(new THREE.BoxGeometry(10,0.6,18),cream);top.position.y=5.5;cn.add(top);
+ [[-3.5,-7],[3.5,-7],[-3.5,7],[3.5,7]].forEach(function(q){var p=new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.25,5.5,6),cream);p.position.set(q[0],2.75,q[1]);cn.add(p);});
+ var gb=new THREE.Mesh(new THREE.BoxGeometry(7,4,13),glow(new THREE.MeshPhongMaterial({color:0xFFD7A0,emissive:0x7a4a1a,transparent:true,opacity:0.85}),0.2,1));gb.position.y=2;cn.add(gb);mall.add(cn);}
+var pool=new THREE.Mesh(new THREE.RingGeometry(RO-8,RO-2.5,64,1,Math.PI*1.15,Math.PI*0.3),water);pool.rotation.x=-Math.PI/2;pool.position.y=MH+0.3;mall.add(pool);
+// glass entrance hall with an arched canopy and the name sign
+var ent=new THREE.Group();ent.position.set(0,0,RO-3);mall.add(ent);
+var hallG=glow(new THREE.MeshPhongMaterial({color:0xFFD7A0,emissive:0x8a5a24,transparent:true,opacity:0.9,shininess:80}),0.25,1.1);
+var hall=new THREE.Mesh(new THREE.BoxGeometry(44,MH+2,16),hallG);hall.position.set(0,(MH+2)/2,3);ent.add(hall);
+for(var mi=-3;mi<=3;mi++){var mu=new THREE.Mesh(new THREE.BoxGeometry(0.7,MH+2,0.7),cream);mu.position.set(mi*7,(MH+2)/2,11.2);ent.add(mu);}
+var arch=new THREE.Mesh(new THREE.TorusGeometry(26,1.4,10,64,Math.PI),white);arch.position.set(0,MH-14,14);arch.scale.set(1,0.62,1);ent.add(arch);
+var canopy=new THREE.Mesh(new THREE.BoxGeometry(52,1,14),white);canopy.position.set(0,MH+3,10);ent.add(canopy);
+var signTex=canvasTex(1024,110,function(g,w,h){g.fillStyle='#1E1812';g.fillRect(0,0,w,h);g.fillStyle='#F7DDA6';g.font='700 66px Inter,Arial,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('SAMI PARK DISTRICT',w/2,h/2+3);});
+var sign=new THREE.Mesh(new THREE.PlaneGeometry(36,3.9),glow(new THREE.MeshLambertMaterial({map:signTex,emissive:0xffffff,emissiveMap:signTex}),0.5,1.3));sign.position.set(0,MH+5.6,17.05);ent.add(sign);
+var signBack=new THREE.Mesh(new THREE.BoxGeometry(38,5,0.6),lam(0x1E1812));signBack.position.set(0,MH+5.6,16.7);ent.add(signBack);
+// LED screens either side of the entrance
+var ledTex=canvasTex(512,256,function(g,w,h){var gr=g.createLinearGradient(0,0,w,h);gr.addColorStop(0,'#3a1c71');gr.addColorStop(.5,'#d76d77');gr.addColorStop(1,'#ffaf7b');g.fillStyle=gr;g.fillRect(0,0,w,h);
+ g.fillStyle='rgba(255,255,255,.92)';g.font='700 44px Inter,Arial,sans-serif';g.textAlign='center';g.fillText('SAMI PARK',w/2,h/2-6);g.font='500 24px Inter,Arial,sans-serif';g.fillText('WHERE MOBILITY MEETS LIFESTYLE',w/2,h/2+34);});
+[-1,1].forEach(function(s){var a=Math.PI/2+s*0.42;var scr=new THREE.Mesh(new THREE.PlaneGeometry(26,13),glow(new THREE.MeshLambertMaterial({map:ledTex,emissive:0xffffff,emissiveMap:ledTex}),0.6,1.4));
+ scr.position.set(Math.cos(a)*(RO+0.8),MH-9,Math.sin(a)*(RO+0.8));scr.lookAt(Math.cos(a)*200,MH-9,Math.sin(a)*200);mall.add(scr);});
+// courtyard: garden, paths, palms and the glass-domed central atrium
+var cy=new THREE.Mesh(new THREE.CircleGeometry(RI,96),lam(0x7E9B5E,{polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}));cy.rotation.x=-Math.PI/2;cy.position.y=0.2;mall.add(cy);
+[0,1,2,3].forEach(function(i){var a=i*Math.PI/2;var p=new THREE.Mesh(new THREE.PlaneGeometry(4,RI-24),lam(0xC9BCA4,{polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3}));p.rotation.x=-Math.PI/2;p.rotation.z=a+Math.PI/2;p.position.set(Math.cos(a)*(RI+24)/2,0.25,Math.sin(a)*(RI+24)/2);mall.add(p);});
+var drum=new THREE.Mesh(new THREE.CylinderGeometry(22,22,8,64,1,true),hallG);drum.position.y=4;mall.add(drum);
+var dome=new THREE.Mesh(new THREE.SphereGeometry(22,40,14,0,Math.PI*2,0,Math.PI/2),glassM);dome.position.y=8;dome.scale.y=0.7;mall.add(dome);
+var lattice=new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.SphereGeometry(22.1,24,8,0,Math.PI*2,0,Math.PI/2)),new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:0.55}));lattice.position.y=8;lattice.scale.y=0.7;mall.add(lattice);
+var cp=[];for(var i=0;i<14;i++){var a=i/14*Math.PI*2;cp.push([Math.cos(a)*31,Math.sin(a)*31,0.9]);}palms(cp,mall,9);
+// paving, front plaza, fountain, palms and lamp posts
+var pav=new THREE.Mesh(new THREE.RingGeometry(RO,RO+8,160,1),lam(0xD3C8B2,{polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}));pav.rotation.x=-Math.PI/2;pav.position.y=0.1;mall.add(pav);
+var plaza=new THREE.Mesh(new THREE.PlaneGeometry(90,26),lam(0xD9CDB5,{polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3}));plaza.rotation.x=-Math.PI/2;plaza.position.set(0,0.12,RO+20);mall.add(plaza);
+fountain(mall,0,RO+20,6,9,7);
+var pp=[];for(var i=0;i<40;i++){var a=i/40*Math.PI*2;if(Math.abs(a-Math.PI/2)<0.42)continue;pp.push([Math.cos(a)*(RO+4),Math.sin(a)*(RO+4),1]);}
+[-40,-30,-20,20,30,40].forEach(function(x){[RO+12,RO+26].forEach(function(z){pp.push([x,z,1]);});});palms(pp,mall,10);
+var lampMat=glow(lam(0xFFE2B0,{emissive:0xFFC870}),0.2,1.5);
+for(var i=-4;i<=4;i++){if(!i)continue;var lp=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.15,6,6),lam(0x333333));lp.position.set(i*10,3,RO+33);mall.add(lp);var lb=new THREE.Mesh(new THREE.SphereGeometry(0.45,10,8),lampMat);lb.position.set(i*10,6.2,RO+33);mall.add(lb);}
+
+// ---------- the Erbil Eye wheel behind the mall ----------
+var H=95,R=85,RC=R+3.2,NC=48,NS=32,W=12;
+var wheelRoot=new THREE.Group();wheelRoot.position.set(0,0,-75);wheelRoot.rotation.y=Math.PI/2;world.add(wheelRoot);
+var steel=lam(0xE9EEF3),steelD=lam(0xB9C4CF),cable=lam(0xD5DCE3);
+var ledRim=glow(lam(0xffffff,{emissive:0xC9A45C}),0.3,1.4);
+[-1,1].forEach(function(sx){var tp=V(sx*9,H,0);[-1,1].forEach(function(sz){wheelRoot.add(beam(tp,V(sx*26,0,sz*48),1.6,steel,10));});
+ wheelRoot.add(beam(V(sx*17.5,H*0.48,-24.5),V(sx*17.5,H*0.48,24.5),0.9,steelD,8));});
+var axle=new THREE.Mesh(new THREE.CylinderGeometry(3,3,22,20),steelD);axle.rotation.z=Math.PI/2;axle.position.y=H;wheelRoot.add(axle);
+var st=new THREE.Mesh(new THREE.BoxGeometry(26,5,46),lam(0xF2EEE6));st.position.y=2.5;wheelRoot.add(st);
+var wheel=new THREE.Group();wheel.position.y=H;wheelRoot.add(wheel);
+[-W/2,W/2].forEach(function(x){var rim=new THREE.Mesh(new THREE.TorusGeometry(R,1.1,8,180),steel);rim.rotation.y=Math.PI/2;rim.position.x=x;wheel.add(rim);
+ var li=new THREE.Mesh(new THREE.TorusGeometry(R+1.3,0.35,6,240),ledRim);li.rotation.y=Math.PI/2;li.position.x=x*1.04;wheel.add(li);
+ for(var i=0;i<NS;i++){var a=i/NS*Math.PI*2;wheel.add(beam(V(x*0.6,0,0),V(x,Math.sin(a)*R,Math.cos(a)*R),0.18,cable,4));}});
+for(var j=0;j<NC;j++){var a=j/NC*Math.PI*2;wheel.add(beam(V(-W/2,Math.sin(a)*R,Math.cos(a)*R),V(W/2,Math.sin(a)*R,Math.cos(a)*R),0.5,steelD,6));}
+var cabins=[];var capGeo=new THREE.CapsuleGeometry(2.5,6,6,14);capGeo.rotateZ(Math.PI/2);
+var capMat=glow(new THREE.MeshPhongMaterial({color:0x9fc4e0,transparent:true,opacity:0.6,shininess:90,emissive:0x6a8fb0}),0.05,0.6);
+for(var k=0;k<NC;k++){var a=k/NC*Math.PI*2;var c=new THREE.Mesh(capGeo,capMat);c.position.set(0,Math.sin(a)*RC,Math.cos(a)*RC);wheel.add(c);cabins.push(c);}
+
+// ================= INSIDE: the central atrium (its own space, far below the ground) =================
+// 5 floors of shop galleries round a fountain and palms under a lattice glass dome, with a glass water wall.
+var atr=new THREE.Group();atr.position.set(0,-2000,0);scene.add(atr);
+var AR=32,AI=17;
+var marble=canvasTex(512,512,function(g,w,h){g.fillStyle='#EFE9DF';g.fillRect(0,0,w,h);g.strokeStyle='rgba(150,130,100,.25)';g.lineWidth=2;for(var i=0;i<=w;i+=64){g.beginPath();g.moveTo(i,0);g.lineTo(i,h);g.stroke();g.beginPath();g.moveTo(0,i);g.lineTo(w,i);g.stroke();}
+ g.strokeStyle='rgba(120,100,80,.12)';for(var k=0;k<40;k++){g.beginPath();g.moveTo(Math.random()*w,Math.random()*h);g.bezierCurveTo(Math.random()*w,Math.random()*h,Math.random()*w,Math.random()*h,Math.random()*w,Math.random()*h);g.stroke();}},[8,8]);
+var floor0=new THREE.Mesh(new THREE.CircleGeometry(AR,96),new THREE.MeshLambertMaterial({map:marble}));floor0.rotation.x=-Math.PI/2;atr.add(floor0);
+var names=['FASHION','CAFÉ','BEAUTY','KIDS','HOME','SPORT','JEWELRY','BOOKS','TECH','SHOES','PERFUME','WATCHES'];
+var shopTex=canvasTex(1024,256,function(g,w,h){for(var i=0;i<4;i++){var x=i*256;g.fillStyle='#2B2118';g.fillRect(x,0,256,h);
+  g.fillStyle='#1C1510';g.fillRect(x+10,8,236,40);g.fillStyle='#F3D9A4';g.font='600 26px Inter,Arial,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(names[(i*3)%12],x+128,29);
+  var gr=g.createLinearGradient(0,56,0,h);gr.addColorStop(0,'#FFE6BF');gr.addColorStop(1,'#E0A866');g.fillStyle=gr;g.fillRect(x+10,56,236,h-60);
+  g.fillStyle='rgba(80,55,30,.35)';for(var r=0;r<3;r++)g.fillRect(x+30+r*70,100,40,90);g.fillStyle='#C9A45C';g.fillRect(x,0,6,h);}},[6,1]);
+shopTex.repeat.x=-6;   // the inside face of the wall would show the signs mirrored
+var shopMat=glow(new THREE.MeshLambertMaterial({map:shopTex,emissive:0xffffff,emissiveMap:shopTex,side:THREE.BackSide}),0.45,0.9);
+var slabMat=lam(0xF5F1EA,{side:THREE.DoubleSide});var railMat=new THREE.MeshPhongMaterial({color:0xcfe3f0,transparent:true,opacity:0.35,side:THREE.DoubleSide});
+var goldLine=glow(lam(0xE3C78C,{emissive:0xC9A45C}),0.4,1.2);
+for(var f=0;f<FL;f++){var y=f*FH;
+ var sh=new THREE.Mesh(new THREE.CylinderGeometry(AR,AR,FH-0.6,120,1,true),shopMat);sh.position.y=y+(FH-0.6)/2;atr.add(sh);
+ if(f>0){var sl=new THREE.Mesh(new THREE.RingGeometry(AI,AR,120,1),slabMat);sl.rotation.x=-Math.PI/2;sl.position.y=y;atr.add(sl);
+  var ed=new THREE.Mesh(new THREE.CylinderGeometry(AI,AI,0.7,120,1,true),slabMat);ed.position.y=y-0.35;atr.add(ed);
+  var gl=new THREE.Mesh(new THREE.CylinderGeometry(AI-0.05,AI-0.05,0.12,120,1,true),goldLine);gl.position.y=y-0.72;atr.add(gl);
+  var rl=new THREE.Mesh(new THREE.CylinderGeometry(AI+0.2,AI+0.2,1.1,120,1,true),railMat);rl.position.y=y+0.55;atr.add(rl);}
+ var ceil=new THREE.Mesh(new THREE.RingGeometry(AI,AR,120,1),slabMat);ceil.rotation.x=Math.PI/2;ceil.position.y=y+FH-0.05;if(f<FL-1)atr.add(ceil);}
+for(var i=0;i<16;i++){var a=i/16*Math.PI*2;var a2=a+Math.PI/16;var col=new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,MH,12),lam(0xFAF7F2));col.position.set(Math.cos(a2)*(AI+1.2),MH/2,Math.sin(a2)*(AI+1.2));atr.add(col);}
+var ring=new THREE.Mesh(new THREE.TorusGeometry(AR,0.8,8,120),white);ring.rotation.x=Math.PI/2;ring.position.y=MH;atr.add(ring);
+var aDome=new THREE.Mesh(new THREE.SphereGeometry(AR,48,16,0,Math.PI*2,0,Math.PI/2),new THREE.MeshPhongMaterial({color:0xbfdcf0,transparent:true,opacity:0.22,side:THREE.DoubleSide,shininess:100}));aDome.position.y=MH;aDome.scale.y=0.55;atr.add(aDome);
+var domeLines=new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:0.7});
+var aLat=new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.SphereGeometry(AR-0.1,36,10,0,Math.PI*2,0,Math.PI/2)),domeLines);aLat.position.y=MH;aLat.scale.y=0.55;atr.add(aLat);
+var ledRing=new THREE.Mesh(new THREE.TorusGeometry(AR-1,0.5,8,120),glow(lam(0xffffff,{emissive:0x8E5CFF}),0.2,1.6));ledRing.rotation.x=Math.PI/2;ledRing.position.y=MH+0.6;atr.add(ledRing);
+var sky=new THREE.Mesh(new THREE.SphereGeometry(400,24,12,0,Math.PI*2,0,Math.PI/2),new THREE.MeshBasicMaterial({color:0x9cc9ee,side:THREE.BackSide}));sky.position.y=MH;atr.add(sky);
+fountain(atr,0,0,7,13,9);
+// glass water wall behind the fountain
+var wallTex=canvasTex(128,512,function(g,w,h){g.fillStyle='#9fd0ef';g.fillRect(0,0,w,h);for(var i=0;i<120;i++){g.fillStyle='rgba(255,255,255,'+(0.15+Math.random()*0.35)+')';g.fillRect(Math.random()*w,Math.random()*h,1+Math.random()*2,20+Math.random()*80);}},[3,1]);
+var wwMat=glow(new THREE.MeshLambertMaterial({map:wallTex,emissive:0xffffff,emissiveMap:wallTex,transparent:true,opacity:0.85,side:THREE.DoubleSide}),0.3,1);
+var ww=new THREE.Mesh(new THREE.PlaneGeometry(10,22),wwMat);ww.position.set(0,11,-11);atr.add(ww);
+var wwf=new THREE.Mesh(new THREE.BoxGeometry(11,0.8,1.2),lam(0xEDE6D8));wwf.position.set(0,22.2,-11);atr.add(wwf);
+var wwb=new THREE.Mesh(new THREE.BoxGeometry(11,0.8,2.4),water);wwb.position.set(0,0.4,-11);atr.add(wwb);
+// planters with palms, benches
+var ap=[];for(var i=0;i<8;i++){var a=i/8*Math.PI*2+0.2;ap.push([Math.cos(a)*12.5,Math.sin(a)*12.5,0.85]);
+ var pl=new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.4,0.9,20),lam(0xEDE6D8));pl.position.set(Math.cos(a)*12.5,0.45,Math.sin(a)*12.5);atr.add(pl);
+ var bn=new THREE.Mesh(new THREE.BoxGeometry(3,0.5,0.8),lam(0x8B6B4A));bn.position.set(Math.cos(a+0.39)*12.5,0.45,Math.sin(a+0.39)*12.5);bn.rotation.y=-(a+0.39)+Math.PI/2;atr.add(bn);}
+palms(ap,atr,8);
+var aLight=new THREE.PointLight(0xffe2b8,0.6,90);aLight.position.set(0,14,0);atr.add(aLight);
+
+// ================= views, controls =================
+// out: orbit 360 around the mall and wheel · gate: eye level at the plaza · in: eye level in the atrium · roof: eye level on the roof
+var VIEWS={
+ out:{orbit:true,target:V(0,28,-15),r:300,yaw:0.55,pitch:0.3},
+ gate:{pos:V(0,1.7,150),yaw:0,pitch:0.14,area:function(p){p.x=Math.max(-80,Math.min(80,p.x));p.z=Math.max(12+RO+9,Math.min(152,p.z));}},
+ in:{pos:V(0,-2000+1.7,26),yaw:0,pitch:0.08,area:function(p){var d=Math.hypot(p.x,p.z);if(d>AR-2){p.x*=(AR-2)/d;p.z*=(AR-2)/d;}if(d<8.5){p.x*=8.5/d;p.z*=8.5/d;}}},
+ roof:{pos:V(Math.cos(0.914)*50,MH+4,12+Math.sin(0.914)*50),yaw:0.657,pitch:0.12,area:function(p){var dx=p.x,dz=p.z-12,d=Math.hypot(dx,dz)||1;var c=Math.max(RI+3,Math.min(RO-2,d));p.x=dx/d*c;p.z=12+dz/d*c;}}
+};
+var order=['out','gate','in','roof'];
+var view='out',orb={yaw:0.5,pitch:0.32,r:290,auto:true},look={yaw:0,pitch:0},night=false,gyroOn=false,stereo=false,walkDir=0,lastTouch=0;
+function setView(v){view=v;var d=VIEWS[v];document.querySelectorAll('#seg button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===v);});
+ $('place').textContent=t('p_'+v);$('walk').classList.toggle('on',!d.orbit&&!stereo);
+ dolly.position.set(0,0,0);dolly.rotation.set(0,0,0);camera.position.set(0,0,0);camera.rotation.set(0,0,0);
+ camera.fov=d.orbit?55:72;camera.updateProjectionMatrix();
+ if(d.orbit){orb.yaw=d.yaw;orb.pitch=d.pitch;orb.r=d.r;orb.auto=true;}
+ else{dolly.position.copy(d.pos);look.yaw=d.yaw;look.pitch=d.pitch;gyroBase=null;}
+ hint(d.orbit?t('h_drag'):t('h_walk'));}
+var hintT;function hint(s){var h=$('hint');h.textContent=s;h.classList.add('on');clearTimeout(hintT);hintT=setTimeout(function(){h.classList.remove('on');},2600);}
+function applyCam(){var d=VIEWS[view];
+ if(d.orbit){var x=d.target.x+orb.r*Math.cos(orb.pitch)*Math.sin(orb.yaw),y=d.target.y+orb.r*Math.sin(orb.pitch),z=d.target.z+orb.r*Math.cos(orb.pitch)*Math.cos(orb.yaw);
+  dolly.position.set(0,0,0);dolly.rotation.set(0,0,0);camera.position.set(x,Math.max(4,y),z);camera.lookAt(d.target);return;}
+ if(renderer.xr.isPresenting){dolly.rotation.set(0,look.yaw,0);return;}
+ if(gyroOn&&gyroQ){dolly.rotation.set(0,look.yaw,0);camera.quaternion.copy(gyroQ);return;}
+ dolly.rotation.set(0,look.yaw,0);camera.rotation.set(look.pitch,0,0);}
+// drag to look / orbit, pinch or wheel to zoom outside
+(function(){var c=renderer.domElement,pts={},pd=0;
+ c.addEventListener('pointerdown',function(e){pts[e.pointerId]={x:e.clientX,y:e.clientY};c.setPointerCapture(e.pointerId);orb.auto=false;lastTouch=performance.now();});
+ c.addEventListener('pointermove',function(e){var p=pts[e.pointerId];if(!p)return;var ids=Object.keys(pts);
+  if(ids.length===2&&VIEWS[view].orbit){p.x=e.clientX;p.y=e.clientY;var a=pts[ids[0]],b=pts[ids[1]],d=Math.hypot(a.x-b.x,a.y-b.y);if(pd)orb.r=Math.max(90,Math.min(900,orb.r*pd/d));pd=d;return;}
+  var dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;lastTouch=performance.now();
+  if(VIEWS[view].orbit){orb.yaw-=dx*0.005;orb.pitch=Math.max(0.02,Math.min(1.35,orb.pitch+dy*0.004));}
+  else{look.yaw+=dx*0.004*(L?1:1);if(!gyroOn)look.pitch=Math.max(-1.2,Math.min(1.2,look.pitch+dy*0.003));}});
+ var up=function(e){delete pts[e.pointerId];pd=0;};c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);
+ c.addEventListener('wheel',function(e){if(VIEWS[view].orbit){orb.r=Math.max(90,Math.min(900,orb.r*(1+e.deltaY*0.001)));orb.auto=false;lastTouch=performance.now();}e.preventDefault();},{passive:false});
+ addEventListener('keydown',function(e){if(e.key==='ArrowUp'||e.key==='w')walkDir=1;if(e.key==='ArrowDown'||e.key==='s')walkDir=-1;});
+ addEventListener('keyup',function(){walkDir=0;});
+ [['fw',1],['bk',-1]].forEach(function(q){var b=$(q[0]);b.addEventListener('pointerdown',function(e){walkDir=q[1];e.preventDefault();});['pointerup','pointerleave','pointercancel'].forEach(function(ev){b.addEventListener(ev,function(){walkDir=0;});});});})();
+// phone motion (gyroscope)
+var gyroQ=null,gyroBase=null,zee=V(0,0,1),q0=new THREE.Quaternion(),q1=new THREE.Quaternion(-Math.sqrt(0.5),0,0,Math.sqrt(0.5)),eul=new THREE.Euler();
+function onOri(e){if(e.alpha==null)return;var al=THREE.MathUtils.degToRad(e.alpha),be=THREE.MathUtils.degToRad(e.beta),ga=THREE.MathUtils.degToRad(e.gamma);
+ var orient=THREE.MathUtils.degToRad((screen.orientation&&screen.orientation.angle)||window.orientation||0);
+ var q=gyroQ||new THREE.Quaternion();eul.set(be,al,-ga,'YXZ');q.setFromEuler(eul);q.multiply(q1);q.multiply(q0.setFromAxisAngle(zee,-orient));
+ if(gyroBase===null){gyroBase=al;}gyroQ=q;}
+function startGyro(cb){var go=function(){addEventListener('deviceorientation',onOri);gyroOn=true;$('gyro').classList.add('on');
+  setTimeout(function(){if(!gyroQ){stopGyro();hint(t('nogyro'));if(cb)cb(false);}else if(cb)cb(true);},1200);};
+ if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){DeviceOrientationEvent.requestPermission().then(function(s){if(s==='granted')go();else{hint(t('nogyro'));if(cb)cb(false);}}).catch(function(){hint(t('nogyro'));if(cb)cb(false);});}
+ else if('DeviceOrientationEvent' in window)go();else{hint(t('nogyro'));if(cb)cb(false);}}
+function stopGyro(){removeEventListener('deviceorientation',onOri);gyroOn=false;gyroQ=null;$('gyro').classList.remove('on');}
+$('gyro').onclick=function(){if(gyroOn){stopGyro();return;}if(VIEWS[view].orbit)setView('gate');startGyro(function(ok){if(ok)hint(t('h_gyro'));});};
+// VR: real headsets (WebXR) when the browser has it, otherwise a phone VR viewer (Cardboard): split screen + motion
+var xrOK=false;if(navigator.xr&&navigator.xr.isSessionSupported){navigator.xr.isSessionSupported('immersive-vr').then(function(s){xrOK=!!s;}).catch(function(){});}
+var stereoCam=new THREE.StereoCamera();stereoCam.eyeSep=0.064;
+$('vr').onclick=function(){if(VIEWS[view].orbit)setView('gate');
+ if(xrOK){navigator.xr.requestSession('immersive-vr',{optionalFeatures:['local-floor']}).then(function(s){renderer.xr.setReferenceSpaceType('local');renderer.xr.setSession(s);
+   dolly.position.y=VIEWS[view].pos.y;s.addEventListener('end',function(){setView(view);});}).catch(function(){cardboard();});return;}
+ cardboard();};
+function cardboard(){startGyro(function(ok){stereo=true;document.body.classList.add('vr');$('walk').classList.remove('on');resize();hint(t('h_vr'));
+ try{if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){});}catch(e){}
+ try{screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape').catch(function(){});}catch(e){}});}
+function exitCardboard(){stereo=false;document.body.classList.remove('vr');stopGyro();resize();setView(view);try{document.fullscreenElement&&document.exitFullscreen();}catch(e){}}
+$('vrExit').onclick=exitCardboard;
+function stepView(d){var eye=['gate','in','roof'];var i=eye.indexOf(view);setView(eye[(i+d+eye.length)%eye.length]);}
+$('vrPrev').onclick=function(){stepView(-1);};$('vrNext').onclick=function(){stepView(1);};
+document.querySelectorAll('#seg button').forEach(function(b){b.onclick=function(){setView(b.getAttribute('data-v'));};});
+// day / night
+function setNight(n){night=n;var bg=n?0x0b1626:0x9fc8ea;scene.background=new THREE.Color(bg);scene.fog=new THREE.Fog(bg,n?500:900,n?2600:4200);
+ hemi.intensity=n?0.28:0.9;sun.intensity=n?0.06:0.9;aLight.intensity=n?1.1:0.5;sky.material.color.set(n?0x0d1a33:0x9cc9ee);
+ glows.forEach(function(g){g.m.emissiveIntensity=n?g.n:g.d;});$('night').textContent=n?t('day'):t('night');}
+$('night').onclick=function(){setNight(!night);};
+// language
+function paint(){document.documentElement.lang=L?'en':'ckb';document.documentElement.dir=L?'ltr':'rtl';document.querySelectorAll('[data-t]').forEach(function(e){e.textContent=t(e.getAttribute('data-t'));});
+ $('lang').textContent=L?'کو':'EN';$('night').textContent=night?t('day'):t('night');$('place').textContent=t('p_'+view);
+ $('back').querySelector('path').setAttribute('d',L?'M19 12H5M11 6l-6 6 6 6':'M5 12h14M13 6l6 6-6 6');}
+$('lang').onclick=function(){L=1-L;try{localStorage.setItem('wheel_lang',L?'en':'ku');}catch(e){}paint();};
+try{if(window.top!==window.self)$('back').style.display='none';}catch(e){}
+function resize(){var w=innerWidth,h=innerHeight;renderer.setSize(w,h);camera.aspect=stereo?(w/2)/h:w/h;camera.updateProjectionMatrix();}
+addEventListener('resize',resize);
+
+// ================= loop =================
+var clock=new THREE.Clock(),fwd=new THREE.Vector3();
+renderer.setAnimationLoop(function(){var dt=Math.min(0.05,clock.getDelta()),tm=clock.elapsedTime;
+ wheel.rotation.x-=dt*2*Math.PI/300;cabins.forEach(function(c){c.rotation.x=-wheel.rotation.x;});
+ ledRim.emissive.setHSL((tm*0.03)%1,0.75,0.55);if(night)ledRing.material.emissive.setHSL((0.72+Math.sin(tm*0.3)*0.08)%1,0.8,0.55);
+ jets.forEach(function(j){var s=0.75+0.25*Math.sin(tm*2+j.userData.ph);j.scale.set(1,j.userData.h*s,1);});
+ wallTex.offset.y-=dt*0.6;
+ cars.forEach(function(c){c.position.x+=c.userData.v*dt;if(c.position.x>700)c.position.x=-700;if(c.position.x<-700)c.position.x=700;});
+ var d=VIEWS[view];
+ if(d.orbit&&orb.auto)orb.yaw+=dt*0.12;
+ if(d.orbit&&!orb.auto&&performance.now()-lastTouch>6000)orb.auto=true;
+ if(!d.orbit&&walkDir){camera.getWorldDirection(fwd);fwd.y=0;fwd.normalize();dolly.position.addScaledVector(fwd,walkDir*dt*6);d.area(dolly.position);}
+ applyCam();
+ if(stereo&&!renderer.xr.isPresenting){var w=innerWidth,h=innerHeight;camera.updateMatrixWorld();stereoCam.update(camera);renderer.setScissorTest(true);
+  renderer.setScissor(0,0,w/2,h);renderer.setViewport(0,0,w/2,h);renderer.render(scene,stereoCam.cameraL);
+  renderer.setScissor(w/2,0,w/2,h);renderer.setViewport(w/2,0,w/2,h);renderer.render(scene,stereoCam.cameraR);renderer.setScissorTest(false);}
+ else renderer.render(scene,camera);});
+
+var start=new URLSearchParams(location.search).get('view');
+paint();setNight(new URLSearchParams(location.search).get('night')==='1');setView(VIEWS[start]?start:'out');
+setTimeout(function(){var l=$('load');l.style.opacity=0;setTimeout(function(){l.style.display='none';},500);},300);
+})();
+</script>
+</body>
+</html>
