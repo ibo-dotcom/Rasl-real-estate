@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#102B46">
+<title>چەرخوفەلەکی هەولێر · Erbil Eye</title>
+<link rel="stylesheet" href="../vendor/maplibre-gl.css">
+<script src="../vendor/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<style>
+:root{--navy:#102B46;--blue:#173F63;--line:#DFE7EF;--muted:#718096;--gold:#C9A45C;--bg:#F5F8FB}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0b1a2b;font-family:Inter,'Noto Sans Arabic',system-ui,sans-serif;color:#172B3A;-webkit-tap-highlight-color:transparent}
+#map{position:fixed;inset:0}
+.top{position:fixed;top:calc(12px + env(safe-area-inset-top));inset-inline:12px;display:flex;gap:8px;align-items:center;z-index:5}
+.ib{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--blue);display:grid;place-items:center;cursor:pointer;flex-shrink:0;text-decoration:none;font:700 12px inherit;padding:0}
+.ib svg{width:22px;height:22px}
+.ttl{flex:1;min-width:0;height:44px;border-radius:10px;background:rgba(255,255,255,.94);border:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;padding:0 12px}
+.ttl b{font-size:15px;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ttl span{font-size:11px;color:var(--muted)}
+.sheet{position:fixed;inset-inline:0;bottom:0;z-index:5;background:#fff;border-radius:18px 18px 0 0;box-shadow:0 -6px 24px rgba(16,43,70,.18);padding:10px 16px calc(14px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto;transition:transform .25s ease}
+.sheet.min .more{display:none}
+.grab{width:100%;height:18px;margin:-6px 0 4px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--muted)}.grab:before{content:'';width:40px;height:4px;border-radius:2px;background:var(--line)}
+.row{display:flex;gap:8px}
+.btn{flex:1;min-height:48px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--blue);font:600 14px inherit;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;padding:0 8px}
+.btn.main{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn.on{background:#EAF1F7;border-color:var(--blue)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.fact{background:var(--bg);border-radius:10px;padding:8px 6px;text-align:center}
+.fact b{display:block;font-size:17px;color:var(--navy)}
+.fact span{font-size:11px;color:var(--muted)}
+.cmp{display:flex;flex-direction:column;gap:6px;margin:4px 0 12px}
+.cmp div{display:flex;align-items:center;gap:8px;font-size:12px;color:#172B3A}
+.cmp i{display:block;height:8px;border-radius:4px;background:#C8D6E3}
+.cmp div.me i{background:var(--gold)}
+.cmp em{font-style:normal;min-width:92px}
+.cmp small{color:var(--muted);min-width:40px;text-align:end}
+.note{font-size:12px;line-height:1.55;color:var(--muted);margin:0 0 10px}
+.proj{display:flex;gap:10px;align-items:center;background:var(--bg);border-radius:12px;padding:8px;margin-bottom:10px}
+.proj img{width:56px;height:56px;object-fit:cover;border-radius:8px;flex-shrink:0}
+.proj b{font-size:13px;color:var(--navy);display:block}
+.proj span{font-size:11px;color:var(--muted)}
+/* ride */
+#cab{position:fixed;inset:0;z-index:4;display:none;touch-action:none;cursor:grab}
+#cab.on{display:block}
+#cab .frame{position:absolute;inset:0;pointer-events:none;border:14px solid rgba(20,30,40,.85);border-radius:46px;box-shadow:inset 0 0 0 3px rgba(255,255,255,.18),inset 0 0 80px rgba(0,0,0,.35)}
+#cab .bar{position:absolute;left:0;right:0;bottom:26%;height:6px;background:linear-gradient(#cfd8e0,#8a99a8);opacity:.85;pointer-events:none}
+#cab .bar:after{content:"";position:absolute;inset-inline:0;top:6px;height:30vh;background:linear-gradient(rgba(20,30,40,.0),rgba(20,30,40,.55))}
+.hud{position:fixed;top:calc(68px + env(safe-area-inset-top));inset-inline:12px;z-index:6;display:none;gap:8px;justify-content:center;flex-wrap:wrap}
+.hud.on{display:flex}
+.chip{background:rgba(16,43,70,.86);color:#fff;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;white-space:nowrap}
+.chip small{font-weight:500;opacity:.75}
+.hint{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;background:rgba(16,43,70,.86);color:#fff;border-radius:12px;padding:10px 14px;font-size:13px;pointer-events:none;opacity:0;transition:opacity .4s}
+.hint.on{opacity:1}
+.lm{background:#fff;border:1px solid var(--blue);color:var(--navy);border-radius:999px;padding:4px 9px;font:600 12px Inter,'Noto Sans Arabic',system-ui,sans-serif;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.lm.gold{background:var(--gold);border-color:var(--gold);color:#fff}
+.err{position:fixed;inset:0;display:none;place-items:center;z-index:9;background:#0b1a2b;color:#fff;text-align:center;padding:24px;font-size:14px;line-height:1.6}
+.maplibregl-ctrl-attrib{font-size:10px}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="cab"><div class="frame"></div><div class="bar"></div></div>
+
+<div class="top">
+  <a class="ib" id="back" href="index.html" aria-label="گەڕانەوە"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  <div class="ttl"><b data-t="title"></b><span data-t="sub"></span></div>
+  <button class="ib" id="lang" aria-label="Language">EN</button>
+</div>
+
+<div class="hud" id="hud">
+  <div class="chip" id="hAlt"></div>
+  <div class="chip" id="hSee"></div>
+  <div class="chip" id="hCit"></div>
+</div>
+<div class="hint" id="hint" data-t="drag"></div>
+
+<div class="sheet min" id="sheet">
+  <div class="grab" id="grab" data-t="info"></div>
+  <div class="row" id="rowMain">
+    <button class="btn main" id="ride"></button>
+    <button class="btn" id="view"></button>
+    <button class="btn" id="sat"></button>
+  </div>
+  <div class="row" id="rowRide" style="display:none">
+    <button class="btn" id="pause"></button>
+    <button class="btn" id="look"></button>
+    <button class="btn main" id="exit"></button>
+  </div>
+  <div class="more">
+    <div class="facts">
+      <div class="fact"><b dir="ltr">180 m</b><span data-t="f_h"></span></div>
+      <div class="fact"><b dir="ltr">170 m</b><span data-t="f_d"></span></div>
+      <div class="fact"><b dir="ltr">48</b><span data-t="f_c"></span></div>
+      <div class="fact"><b dir="ltr">25</b><span data-t="f_p"></span></div>
+      <div class="fact"><b dir="ltr">1,200</b><span data-t="f_all"></span></div>
+      <div class="fact"><b dir="ltr">~47 km</b><span data-t="f_see"></span></div>
+    </div>
+    <div class="cmp">
+      <div><em data-t="c_ad"></em><i style="width:100%"></i><small dir="ltr">250 m</small></div>
+      <div class="me"><em data-t="c_me"></em><i style="width:72%"></i><small dir="ltr">180 m</small></div>
+      <div><em data-t="c_sg"></em><i style="width:66%"></i><small dir="ltr">165 m</small></div>
+      <div><em data-t="c_ld"></em><i style="width:54%"></i><small dir="ltr">135 m</small></div>
+    </div>
+    <div class="proj"><img src="wheel-project.jpg" alt=""><div><b data-t="p_t"></b><span data-t="p_s"></span></div></div>
+    <p class="note" data-t="note"></p>
+    <div class="row"><button class="btn" id="move"></button></div>
+  </div>
+</div>
+<div class="err" id="err"></div>
+
+<script>
+(function(){
+// ---------- text ----------
+var TX={
+ title:['چەرخوفەلەکی هەولێر','Erbil Eye'],
+ sub:['پارکی سامی عەبدولڕەحمان · 180 مەتر','Sami Abdulrahman Park · 180 m'],
+ ride:['🎡 سواربە','🎡 Ride'],exit:['دابەزە','Get off'],view:['سووڕانەوە','Orbit'],sat:['🛰 مانگی دەستکرد','🛰 Satellite'],
+ pause:['⏸ ڕاگرتن','⏸ Pause'],play:['▶ بڕۆ','▶ Go'],look:['🏰 بۆ قەڵا','🏰 Citadel'],
+ move:['📍 گواستنەوەی شوێن','📍 Move the site'],moving:['لەسەر نەخشە شوێنێک دابگرە…','Tap a spot on the map…'],
+ f_h:['بەرزی','Height'],f_d:['تیرەی بازنە','Wheel diameter'],f_c:['کابینە','Cabins'],f_p:['کەس لە کابینەیەک','People per cabin'],f_all:['کەس لە یەک کاتدا','Riders at once'],f_see:['دووری بینین لە سەرەوە','View from the top'],
+ info:['زانیاری','Details'],c_ad:['عەین دوبەی','Ain Dubai'],c_me:['هەولێر (پێشنیار)','Erbil (proposed)'],c_sg:['سینگاپور فلایەر','Singapore Flyer'],c_ld:['لەندەن ئای','London Eye'],
+ p_t:['پرۆژەی بازاڕ و پارکینگ','Mall and parking project'],p_s:['لە ڕۆژهەڵاتی چەرخوفەلەکەکە، وەک وێنەکەت','East of the wheel, as in your render'],
+ note:['شار و بیناکان لە نەخشەی OpenStreetMap ـەوە دێن. چەرخوفەلەک و پرۆژەکە مۆدێلی سادەن بۆ پیشاندانی قەبارە و شوێن، نەک دیزاینی ئەندازیاری. لە سواربووندا خولێک ٩٠ چرکەیە (لە ڕاستیدا نزیکەی ٣٠ خولەک).','City and buildings come from OpenStreetMap. The wheel and the project are simple models to show size and place, not an engineering design. A ride lap here takes 90 seconds (about 30 minutes in reality).'],
+ drag:['بە پەنجە ڕابکێشە بۆ سەیرکردنی دەوروبەر','Drag to look around'],
+ alt:['بەرزی','Height'],see:['دەبینیت تا','You see'],cit:['قەڵا','Citadel'],
+ citadel:['قەڵای هەولێر','Erbil Citadel'],airport:['فڕۆکەخانەی هەولێر','Erbil Airport'],wheel:['چەرخوفەلەک','The wheel'],
+ nogl:['ئەم ئامێرە WebGL پشتگیری ناکات، بۆیە نەخشەی 3D ناکرێتەوە.','This device does not support WebGL, so the 3D map cannot open.'],
+ noscript:['نەتوانرا ئامرازی 3D باربکرێت. ئینتەرنێتەکەت بپشکنە و دووبارە بیکەرەوە.','The 3D library did not load. Check the connection and open the page again.']
+};
+var L=(new URLSearchParams(location.search).get('lang')||localStorage.getItem('wheel_lang')||'ku')==='en'?1:0;
+function t(k){return (TX[k]||[k,k])[L];}
+function paintText(){document.documentElement.lang=L?'en':'ckb';document.documentElement.dir=L?'ltr':'rtl';
+ document.querySelectorAll('[data-t]').forEach(function(e){e.textContent=t(e.getAttribute('data-t'));});
+ $('ride').textContent=t('ride');$('exit').textContent=t('exit');$('view').textContent=t('view');$('sat').textContent=t('sat');
+ $('pause').textContent=paused?t('play'):t('pause');$('look').textContent=t('look');$('move').textContent=moving?t('moving'):t('move');
+ $('lang').textContent=L?'کو':'EN';
+ $('back').querySelector('path').setAttribute('d',L?'M19 12H5M11 6l-6 6 6 6':'M5 12h14M13 6l6 6-6 6');
+ marks.forEach(function(m){m.el.textContent=t(m.k);});}
+function $(id){return document.getElementById(id);}
+function fail(k){var e=$('err');e.textContent=t(k);e.style.display='grid';}
+
+// ---------- the site ----------
+// Sami Abdulrahman Park, Erbil (park centre ~36.1915 N, 43.9858 E). The spot can be moved with "Move the site".
+var DEF={lng:43.9858,lat:36.1915};
+var site=DEF;try{var sv=JSON.parse(localStorage.getItem('wheel_site')||'null');if(sv&&isFinite(sv.lng)&&isFinite(sv.lat))site=sv;}catch(e){}
+var CITADEL={lng:44.0092,lat:36.1912},AIRPORT={lng:43.9632,lat:36.2376};
+
+if(typeof THREE==='undefined'){fail('noscript');return;}
+if(typeof maplibregl==='undefined'){fail('noscript');return;}
+try{var tc=document.createElement('canvas');if(!(tc.getContext('webgl2')||tc.getContext('webgl')))throw 0;}catch(e){fail('nogl');return;}
+
+// ---------- the wheel (metres; x = east, y = up, z = south) ----------
+var H=95,R=85,RC=R+3.2,NC=48,NS=32,W=12;  // hub height, rim radius, cabin radius, cabins, spokes, wheel width
+var scene=new THREE.Scene();
+var sun=new THREE.DirectionalLight(0xffffff,0.85);sun.position.set(-0.5,1,0.35);scene.add(sun);
+scene.add(new THREE.HemisphereLight(0xdfe9f5,0x8a7d68,0.65));
+var steel=new THREE.MeshLambertMaterial({color:0xE9EEF3});
+var steelD=new THREE.MeshLambertMaterial({color:0xB9C4CF});
+var cable=new THREE.MeshLambertMaterial({color:0xD5DCE3});
+var led=new THREE.MeshLambertMaterial({color:0xffffff,emissive:0xC9A45C,emissiveIntensity:0.9});
+var glass=new THREE.MeshPhongMaterial({color:0x9fc4e0,transparent:true,opacity:0.55,shininess:90,specular:0xffffff});
+var cabFrame=new THREE.MeshLambertMaterial({color:0xF4F6F8});
+function beam(a,b,r,mat,seg){var d=new THREE.Vector3().subVectors(b,a),len=d.length();var g=new THREE.CylinderGeometry(r,r,len,seg||6,1);
+ var m=new THREE.Mesh(g,mat);m.position.copy(a).addScaledVector(d,0.5);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return m;}
+function V(x,y,z){return new THREE.Vector3(x,y,z);}
+
+var root=new THREE.Group();scene.add(root);
+// plaza and boarding station
+var plaza=new THREE.Mesh(new THREE.CircleGeometry(70,64),new THREE.MeshLambertMaterial({color:0xE8DFCF,polygonOffset:true,polygonOffsetFactor:-2}));
+plaza.rotation.x=-Math.PI/2;plaza.position.y=0.4;root.add(plaza);
+var station=new THREE.Mesh(new THREE.BoxGeometry(26,5,46),new THREE.MeshLambertMaterial({color:0xF2EEE6}));station.position.set(0,2.5,0);root.add(station);
+var roof=new THREE.Mesh(new THREE.BoxGeometry(30,0.8,52),new THREE.MeshLambertMaterial({color:0x173F63}));roof.position.set(0,5.4,0);root.add(roof);
+// A-frame legs (two on each side, splayed north and south)
+[-1,1].forEach(function(sx){var top=V(sx*9,H,0);
+ [-1,1].forEach(function(sz){root.add(beam(top,V(sx*26,0,sz*48),1.6,steel,10));});
+ root.add(beam(V(sx*17.5,H*0.48,-24.5),V(sx*17.5,H*0.48,24.5),0.9,steelD,8));
+ root.add(beam(V(sx*21,H*0.25,-36),V(sx*21,H*0.25,36),0.8,steelD,8));});
+// hub and axle
+var axle=new THREE.Mesh(new THREE.CylinderGeometry(3,3,22,20),steelD);axle.rotation.z=Math.PI/2;axle.position.set(0,H,0);root.add(axle);
+
+var wheel=new THREE.Group();wheel.position.set(0,H,0);root.add(wheel);
+var hub=new THREE.Mesh(new THREE.CylinderGeometry(5,5,W+4,24),steel);hub.rotation.z=Math.PI/2;wheel.add(hub);
+[-W/2,W/2].forEach(function(x){
+ var rim=new THREE.Mesh(new THREE.TorusGeometry(R,1.1,8,180),steel);rim.rotation.y=Math.PI/2;rim.position.x=x;wheel.add(rim);
+ var inner=new THREE.Mesh(new THREE.TorusGeometry(R-6,0.6,6,180),steelD);inner.rotation.y=Math.PI/2;inner.position.x=x;wheel.add(inner);
+ var lights=new THREE.Mesh(new THREE.TorusGeometry(R+1.3,0.35,6,240),led);lights.rotation.y=Math.PI/2;lights.position.x=x*1.04;wheel.add(lights);
+ for(var i=0;i<NS;i++){var a=i/NS*Math.PI*2;wheel.add(beam(V(x*0.6,0,0),V(x,Math.sin(a)*R,Math.cos(a)*R),0.18,cable,4));}});
+for(var j=0;j<NC;j++){var a=j/NC*Math.PI*2,y=Math.sin(a)*R,z=Math.cos(a)*R,y2=Math.sin(a)*(R-6),z2=Math.cos(a)*(R-6);
+ wheel.add(beam(V(-W/2,y,z),V(W/2,y,z),0.5,steelD,6));
+ wheel.add(beam(V(-W/2,y,z),V(W/2,y2,z2),0.3,steelD,4));}
+// capsules: they hang level while the wheel turns
+var cabins=[];
+var capGeo=new THREE.CapsuleGeometry(2.5,6,6,14);capGeo.rotateZ(Math.PI/2);
+var floorGeo=new THREE.BoxGeometry(8.6,0.4,4.2);
+for(var k=0;k<NC;k++){var ang=k/NC*Math.PI*2;var c=new THREE.Group();c.position.set(0,Math.sin(ang)*RC,Math.cos(ang)*RC);
+ var cap=new THREE.Mesh(capGeo,glass);c.add(cap);var fl=new THREE.Mesh(floorGeo,cabFrame);fl.position.y=-1.6;c.add(fl);
+ var ring=new THREE.Mesh(new THREE.TorusGeometry(2.6,0.22,6,24),cabFrame);ring.rotation.y=Math.PI/2;c.add(ring);
+ wheel.add(c);cabins.push(c);}
+
+// ---------- the mall project east of the wheel (simple massing after the render) ----------
+var proj=new THREE.Group();proj.position.set(205,0,0);scene.add(proj);
+function winTex(floors){var cv=document.createElement('canvas');cv.width=64;cv.height=64*floors;var g=cv.getContext('2d');
+ for(var f=0;f<floors;f++){var y=f*64;g.fillStyle='#E4D6BC';g.fillRect(0,y,64,64);g.fillStyle='#2E3C48';g.fillRect(4,y+18,56,34);
+  g.fillStyle='rgba(255,196,120,.55)';g.fillRect(6,y+20,52,30);g.fillStyle='#E4D6BC';g.fillRect(30,y+18,4,34);}
+ var tx=new THREE.CanvasTexture(cv);tx.wrapS=THREE.RepeatWrapping;return tx;}
+function block(w,h,d,x,z,floors){var tx=winTex(floors);var side=function(len){var tt=tx.clone();tt.needsUpdate=true;tt.repeat.set(Math.max(1,Math.round(len/8)),1);return new THREE.MeshLambertMaterial({map:tt});};
+ var top=new THREE.MeshLambertMaterial({color:0xD9D3C7});
+ var m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),[side(d),side(d),top,top,side(w),side(w)]);m.position.set(x,h/2,z);proj.add(m);return m;}
+// central parking deck with two round ramps
+var deck=new THREE.Mesh(new THREE.BoxGeometry(150,16,100),[0,0,0,0,0,0].map(function(_,i){return new THREE.MeshLambertMaterial({color:i===2?0x8E949A:0xCFC9BD});}));deck.position.set(0,8,0);proj.add(deck);
+[-1,1].forEach(function(s){var r=new THREE.Mesh(new THREE.CylinderGeometry(15,15,16,32),new THREE.MeshLambertMaterial({color:0xD6D0C4}));r.position.set(s*82,8,30);proj.add(r);});
+// shop buildings around it
+block(68,20,24,-42,-74,4);block(68,20,24,42,-74,4);
+block(68,20,24,-42,74,4);block(68,20,24,42,74,4);
+block(26,20,150,-112,0,4);block(26,20,150,112,0,4);
+var pg=new THREE.Mesh(new THREE.PlaneGeometry(270,190),new THREE.MeshLambertMaterial({color:0xBDB6A8,polygonOffset:true,polygonOffsetFactor:-2}));pg.rotation.x=-Math.PI/2;pg.position.y=0.35;proj.add(pg);
+
+// ---------- map ----------
+var map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/liberty',center:[site.lng+0.0012,site.lat-0.0016],zoom:16.2,pitch:62,bearing:-28,maxPitch:85,antialias:true,attributionControl:{compact:true}});
+var merc,scale;
+function placeModel(){merc=maplibregl.MercatorCoordinate.fromLngLat([site.lng,site.lat],0);scale=merc.meterInMercatorCoordinateUnits();}
+placeModel();
+var layer={id:'erbil-eye',type:'custom',renderingMode:'3d',
+ onAdd:function(m,gl){this.cam=new THREE.Camera();this.r=new THREE.WebGLRenderer({canvas:m.getCanvas(),context:gl,antialias:true});this.r.autoClear=false;},
+ render:function(gl,matrix){var mm=new THREE.Matrix4().fromArray(matrix);
+  var l=new THREE.Matrix4().makeTranslation(merc.x,merc.y,merc.z).scale(new THREE.Vector3(scale,-scale,scale)).multiply(new THREE.Matrix4().makeRotationX(Math.PI/2));
+  this.cam.projectionMatrix=mm.multiply(l);this.r.resetState();this.r.render(scene,this.cam);}};
+var marks=[];
+function mark(k,ll,cls){var el=document.createElement('div');el.className='lm'+(cls?' '+cls:'');el.textContent=t(k);
+ var mk=new maplibregl.Marker({element:el,anchor:'bottom'}).setLngLat([ll.lng,ll.lat]).addTo(map);marks.push({k:k,el:el,mk:mk});return mk;}
+map.on('load',function(){
+ try{map.setSky({'sky-color':'#7FB2E0','horizon-color':'#E8EEF2','fog-color':'#E8EEF2','sky-horizon-blend':0.6,'horizon-fog-blend':0.6,'fog-ground-blend':0.3,'atmosphere-blend':0.6});}catch(e){}
+ var firstSym=(map.getStyle().layers.filter(function(x){return x.type==='symbol';})[0]||{}).id;
+ map.addSource('esri',{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Esri, Maxar, Earthstar Geographics'});
+ map.addLayer({id:'esri',type:'raster',source:'esri',layout:{visibility:'none'}},firstSym);
+ map.addLayer(layer);
+ mark('citadel',CITADEL,'gold');mark('airport',AIRPORT);
+});
+map.on('error',function(){});
+
+// ---------- animation, ride camera ----------
+var phi=0,last=performance.now(),riding=false,paused=false,orbit=false,rideCab=0,look={bearing:90,down:8};
+var LAP=90; // seconds per lap while riding
+function cabinWorld(i){var p=new THREE.Vector3();cabins[i].getWorldPosition(p);return p;}
+function toLngLat(p){var lat=site.lat-p.z/111320;var lng=site.lng+p.x/(111320*Math.cos(site.lat*Math.PI/180));return {lng:lng,lat:lat};}
+function distM(a,b){var R0=6371000,r=Math.PI/180,dl=(b.lat-a.lat)*r,dn=(b.lng-a.lng)*r;var h=Math.sin(dl/2)*Math.sin(dl/2)+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dn/2)*Math.sin(dn/2);return 2*R0*Math.asin(Math.sqrt(h));}
+function bearingTo(a,b){var r=Math.PI/180,y=Math.sin((b.lng-a.lng)*r)*Math.cos(b.lat*r),x=Math.cos(a.lat*r)*Math.sin(b.lat*r)-Math.sin(a.lat*r)*Math.cos(b.lat*r)*Math.cos((b.lng-a.lng)*r);return (Math.atan2(y,x)/r+360)%360;}
+function num(n){return L?n.toLocaleString('en'):n.toLocaleString('ar-IQ');}
+function tick(now){var dt=Math.min(0.1,(now-last)/1000);last=now;
+ var speed=riding?(paused?0:2*Math.PI/LAP):2*Math.PI/600;phi-=speed*dt;wheel.rotation.x=phi;
+ cabins.forEach(function(c){c.rotation.x=-phi;});
+ led.emissive.setHSL(((now/1000)*0.03)%1,0.75,0.55);
+ if(riding){var p=cabinWorld(rideCab);var ll=toLngLat(p);var alt=Math.max(4,p.y+0.6);var D=2500,b=look.bearing*Math.PI/180;
+  var tgt={lat:ll.lat+Math.cos(b)*D/111320,lng:ll.lng+Math.sin(b)*D/(111320*Math.cos(ll.lat*Math.PI/180))};
+  try{var o=map.calculateCameraOptionsFromTo(new maplibregl.LngLat(ll.lng,ll.lat),alt,new maplibregl.LngLat(tgt.lng,tgt.lat),alt-D*Math.tan(look.down*Math.PI/180));map.jumpTo(o);}catch(e){}
+  var h=Math.round(p.y),see=Math.round(3.57*Math.sqrt(Math.max(1,p.y+1.6)));
+  $('hAlt').innerHTML=t('alt')+': <bdi dir="ltr">'+num(h)+' m</bdi>';$('hSee').innerHTML=t('see')+' <bdi dir="ltr">'+num(see)+' km</bdi>';
+  $('hCit').innerHTML='🏰 '+t('cit')+' <bdi dir="ltr">'+num(+(distM(ll,CITADEL)/1000).toFixed(1))+' km</bdi>';}
+ else if(orbit){map.setBearing(map.getBearing()+dt*6);}
+ if(map.loaded()||map.isStyleLoaded())map.triggerRepaint();
+ requestAnimationFrame(tick);}
+requestAnimationFrame(tick);
+
+// pick the cabin at the bottom (boarding) when the ride starts
+function bottomCabin(){var best=0,by=1e9;cabins.forEach(function(c,i){var y=cabinWorld(i).y;if(y<by){by=y;best=i;}});return best;}
+function startRide(){riding=true;paused=false;orbit=false;rideCab=bottomCabin();cabins[rideCab].visible=false;
+ look.bearing=bearingTo(site,CITADEL);look.down=8;
+ $('cab').classList.add('on');$('hud').classList.add('on');$('rowMain').style.display='none';$('rowRide').style.display='flex';$('view').classList.remove('on');
+ $('sheet').classList.add('min');var h=$('hint');h.classList.add('on');setTimeout(function(){h.classList.remove('on');},2600);paintText();}
+function stopRide(){riding=false;cabins[rideCab].visible=true;$('cab').classList.remove('on');$('hud').classList.remove('on');$('rowMain').style.display='flex';$('rowRide').style.display='none';
+ map.easeTo({center:[site.lng+0.0012,site.lat-0.0016],zoom:16.2,pitch:62,bearing:-28,duration:1200});}
+$('ride').onclick=startRide;$('exit').onclick=stopRide;
+$('pause').onclick=function(){paused=!paused;paintText();};
+$('look').onclick=function(){look.bearing=bearingTo(site,CITADEL);look.down=8;};
+$('view').onclick=function(){orbit=!orbit;this.classList.toggle('on',orbit);if(orbit)map.easeTo({center:[site.lng+0.0012,site.lat-0.0008],zoom:15.8,pitch:65,duration:900});};
+$('sat').onclick=function(){if(!map.getLayer('esri'))return;var on=map.getLayoutProperty('esri','visibility')!=='visible';map.setLayoutProperty('esri','visibility',on?'visible':'none');this.classList.toggle('on',on);};
+$('grab').onclick=function(){$('sheet').classList.toggle('min');};
+$('lang').onclick=function(){L=1-L;try{localStorage.setItem('wheel_lang',L?'en':'ku');}catch(e){}paintText();};
+// look around inside the cabin
+(function(){var c=$('cab'),d=null;
+ c.addEventListener('pointerdown',function(e){d={x:e.clientX,y:e.clientY,b:look.bearing,dn:look.down};c.setPointerCapture(e.pointerId);c.style.cursor='grabbing';});
+ c.addEventListener('pointermove',function(e){if(!d)return;look.bearing=(d.b-(e.clientX-d.x)*0.25+360)%360;look.down=Math.max(5,Math.min(60,d.dn+(e.clientY-d.y)*0.15));});
+ var up=function(){d=null;c.style.cursor='grab';};c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);})();
+// move the site: next tap on the map sets the new spot
+var moving=false;
+$('move').onclick=function(){moving=!moving;paintText();};
+map.on('click',function(e){if(!moving)return;moving=false;site={lng:+e.lngLat.lng.toFixed(6),lat:+e.lngLat.lat.toFixed(6)};placeModel();try{localStorage.setItem('wheel_site',JSON.stringify(site));}catch(x){}paintText();});
+paintText();
+})();
+</script>
+</body>
+</html>
