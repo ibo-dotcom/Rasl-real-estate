@@ -398,7 +398,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 if(!get('reg_ku_v1')){if(!get('reg_lang')||get('reg_lang')==='en')put('reg_lang','ku');put('reg_ku_v1','1');}var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794801321';
+var BUILD='1794802914';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -1470,7 +1470,7 @@ tripMode:function(a){if(MAP.dest)tripTo(MAP.dest,a.getAttribute('data-m'));},map
 offOpen:function(){st.off=true;st.offEdit=null;render();loadOffers(true);},offClose:function(){st.off=false;st.offEdit=null;render();},
 offEdit:function(a){st.offEdit=a.getAttribute('data-id')||null;render();},
 offDel:async function(a){if(!SB||!me||me.role!=='owner'||!confirm(T('pp_delq')))return;try{await SB.from('offers').delete().eq('id',a.getAttribute('data-id'));await loadOffers(true);}catch(e){}},
-offSave:async function(a){if(!SB||!me||me.role!=='owner')return;var m=function(t){var e=$('ofmsg');if(e)e.textContent=t;};var n=function(id){return Number(String(val(id)).replace(/[^0-9.]/g,''))||0;};var t=val('of_t');if(t.length<2){m(T('er_title'));return;}
+offSave:async function(a){if(!SB||!me||me.role!=='owner')return;var m=function(t){var e=$('ofmsg');if(e)e.textContent=t;};var n=function(id){return Number(String(val(id)).replace(/[^0-9.]/g,''))||0;};var t=val('of_t');var pl=$('of_l')?$('of_l').value:'';if(!t&&pl){var pr=listings.filter(function(x){return x.id===pl;})[0];t=pr?pr.title:'';}if(t.length<2){m(T('er_title'));return;}
  var s=val('of_s'),e=val('of_e');if(!s||!e||e<s){m(T('of_e_dates'));return;}var row={title:t,benefit:val('of_b'),details:$('of_d')?$('of_d').value:'',listing_id:$('of_l').value||null,discount_pct:Math.min(90,n('of_dp')),points_mult:Math.min(10,Math.max(1,n('of_pm')||1)),bonus_points:n('of_bp'),starts_at:new Date(s+'T00:00:00').toISOString(),ends_at:new Date(e+'T23:59:59').toISOString(),active:$('of_on')?$('of_on').checked:true};
  a.disabled=true;try{var f=$('ofFile')&&$('ofFile').files[0];if(f){var path=me.id+'/offer-'+Date.now()+'.jpg';var u=await SB.storage.from('studio').upload(path,f,{contentType:f.type||'image/jpeg'});if(u.error)throw u.error;row.image_url=SB.storage.from('studio').getPublicUrl(path).data.publicUrl;}
   var r=st.offEdit?await SB.from('offers').update(row).eq('id',st.offEdit):await SB.from('offers').insert(row);if(r.error)throw r.error;st.offEdit=null;await loadOffers(true);}catch(x){a.disabled=false;m(errText(x));}},
@@ -2203,7 +2203,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  if(own){var e=st.offEdit?OF.list.filter(function(o){return o.id===st.offEdit;})[0]||{}:{},d=function(v){return v?String(v).slice(0,10):'';},td=new Date().toISOString().slice(0,10),nx=new Date(Date.now()+30*86400000).toISOString().slice(0,10);
   var ta='width: 100%; box-sizing: border-box; min-height: 70px; padding: 10px 12px; border: 1px solid #DFE7EF; border-radius: 8px; font: 400 15px '+FONT+'; resize: vertical';
   h+='<div style="'+card+'; border-color: #173F63"><b style="font-size: 14px">'+(st.offEdit?icoIn('pen')+' '+esc(T('of_edit')):'＋ '+esc(T('of_new')))+'</b>'+field('of_t','ac_title',e.title||'')+field('of_b','of_benefit',e.benefit||'','placeholder="'+esc(T('of_benefit_ph'))+'"')+'<textarea id="of_d" placeholder="'+esc(T('pp_details'))+'" style="'+ta+'">'+esc(e.details||'')+'</textarea>'
-   +'<div style="display: flex; flex-direction: column; gap: 6px"><label for="of_l" style="'+LAB+'">'+esc(T('of_where'))+'</label><select id="of_l" style="'+INP+'"><option value="">'+esc(T('of_all'))+'</option>'+listings.map(function(l){return '<option value="'+esc(l.id)+'"'+(e.listing_id===l.id?' selected':'')+'>'+esc(l.title)+'</option>';}).join('')+'</select></div>'
+   +'<div style="display: flex; flex-direction: column; gap: 6px"><label for="of_l" style="'+LAB+'">'+esc(T('of_where'))+'</label><select id="of_l" style="'+INP+'"'+' onchange=\"var t=document.getElementById(\'of_t\');if(t&&!t.value&&this.value)t.value=this.options[this.selectedIndex].text;\"'+'><option value="">'+esc(T('of_all'))+'</option>'+listings.map(function(l){return '<option value="'+esc(l.id)+'"'+(e.listing_id===l.id?' selected':'')+'>'+esc(l.title)+'</option>';}).join('')+'</select></div>'
    +'<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">'+field('of_dp','of_disc_l',String(e.discount_pct||0),'type="text" inputmode="decimal" dir="ltr"')+field('of_pm','of_mult_l',String(e.points_mult||1),'type="text" inputmode="decimal" dir="ltr"')+field('of_bp','of_bonus_l',String(e.bonus_points||0),'type="text" inputmode="decimal" dir="ltr"')+'</div>'
    +'<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">'+field('of_s','of_start',d(e.starts_at)||td,'type="date" dir="ltr"')+field('of_e','of_end',d(e.ends_at)||nx,'type="date" dir="ltr"')+'</div>'
    +'<label style="display: flex; align-items: center; gap: 8px; font-size: 14px"><input id="of_on" type="checkbox"'+(e.active===false?'':' checked')+' style="width: 20px; height: 20px">'+esc(T('pm_on'))+'</label>'
@@ -2212,7 +2212,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  return h+'</div></div>';}
 
 // ---- Auto-update: every phone moves to the newest version by itself ----
-var APP_VER='20261116035521';
+var APP_VER='20261116042154';
 (function(){if(APP_VER.indexOf('__')===0)return;var busy=false,shown=false;
  function busyNow(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||!!document.querySelector('.tm-sheet');}
  function go(v){try{var k='rasl_upd_'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
