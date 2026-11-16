@@ -120,7 +120,7 @@ var TX={
  pause:['⏸ ڕاگرتن','⏸ Pause'],play:['▶ بڕۆ','▶ Go'],look:['🏰 بۆ قەڵا','🏰 Citadel'],
  move:['📍 گواستنەوەی شوێن','📍 Move the site'],moving:['لەسەر نەخشە شوێنێک دابگرە…','Tap a spot on the map…'],
  f_h:['بەرزی','Height'],f_d:['تیرەی بازنە','Wheel diameter'],f_c:['کابینە','Cabins'],f_p:['کەس لە کابینەیەک','People per cabin'],f_all:['کەس لە یەک کاتدا','Riders at once'],f_see:['دووری بینین لە سەرەوە','View from the top'],
- info:['زانیاری','Details'],c_ad:['عەین دوبەی','Ain Dubai'],c_me:['هەولێر (پێشنیار)','Erbil (proposed)'],c_sg:['سینگاپور فلایەر','Singapore Flyer'],c_ld:['لەندەن ئای','London Eye'],
+ mapv:['🗺 نەخشە','🗺 Map'],info:['زانیاری','Details'],c_ad:['عەین دوبەی','Ain Dubai'],c_me:['هەولێر (پێشنیار)','Erbil (proposed)'],c_sg:['سینگاپور فلایەر','Singapore Flyer'],c_ld:['لەندەن ئای','London Eye'],
  p_t:['پرۆژەی بازاڕ و پارکینگ','Mall and parking project'],p_s:['لە ڕۆژهەڵاتی چەرخوفەلەکەکە، وەک وێنەکەت','East of the wheel, as in your render'],
  note:['شار و بیناکان لە نەخشەی OpenStreetMap ـەوە دێن. چەرخوفەلەک و پرۆژەکە مۆدێلی سادەن بۆ پیشاندانی قەبارە و شوێن، نەک دیزاینی ئەندازیاری. لە سواربووندا خولێک ٩٠ چرکەیە (لە ڕاستیدا نزیکەی ٣٠ خولەک).','City and buildings come from OpenStreetMap. The wheel and the project are simple models to show size and place, not an engineering design. A ride lap here takes 90 seconds (about 30 minutes in reality).'],
  drag:['بە پەنجە ڕابکێشە بۆ سەیرکردنی دەوروبەر','Drag to look around'],
@@ -133,7 +133,7 @@ var L=(new URLSearchParams(location.search).get('lang')||localStorage.getItem('w
 function t(k){return (TX[k]||[k,k])[L];}
 function paintText(){document.documentElement.lang=L?'en':'ckb';document.documentElement.dir=L?'ltr':'rtl';
  document.querySelectorAll('[data-t]').forEach(function(e){e.textContent=t(e.getAttribute('data-t'));});
- $('ride').textContent=t('ride');$('exit').textContent=t('exit');$('view').textContent=t('view');$('sat').textContent=t('sat');
+ $('ride').textContent=t('ride');$('exit').textContent=t('exit');$('view').textContent=t('view');$('sat').textContent=satOn?t('mapv'):t('sat');
  $('pause').textContent=paused?t('play'):t('pause');$('look').textContent=t('look');$('move').textContent=moving?t('moving'):t('move');
  $('lang').textContent=L?'کو':'EN';
  $('back').querySelector('path').setAttribute('d',L?'M19 12H5M11 6l-6 6 6 6':'M5 12h14M13 6l6 6-6 6');
@@ -232,10 +232,11 @@ function mark(k,ll,cls){var el=document.createElement('div');el.className='lm'+(
  var mk=new maplibregl.Marker({element:el,anchor:'bottom'}).setLngLat([ll.lng,ll.lat]).addTo(map);marks.push({k:k,el:el,mk:mk});return mk;}
 map.on('load',function(){
  try{map.setSky({'sky-color':'#7FB2E0','horizon-color':'#E8EEF2','fog-color':'#E8EEF2','sky-horizon-blend':0.6,'horizon-fog-blend':0.6,'fog-ground-blend':0.3,'atmosphere-blend':0.6});}catch(e){}
- var firstSym=(map.getStyle().layers.filter(function(x){return x.type==='symbol';})[0]||{}).id;
+ var base=(map.getStyle().layers.filter(function(x){return x.type!=='background';})[0]||{}).id;
  map.addSource('esri',{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Esri, Maxar, Earthstar Geographics'});
- map.addLayer({id:'esri',type:'raster',source:'esri',layout:{visibility:'none'}},firstSym);
+ map.addLayer({id:'esri',type:'raster',source:'esri',layout:{visibility:'none'}},base);
  map.addLayer(layer);
+ setSat(true);
  mark('citadel',CITADEL,'gold');mark('airport',AIRPORT);
 });
 map.on('error',function(){});
@@ -275,7 +276,17 @@ $('ride').onclick=startRide;$('exit').onclick=stopRide;
 $('pause').onclick=function(){paused=!paused;paintText();};
 $('look').onclick=function(){look.bearing=bearingTo(site,CITADEL);look.down=8;};
 $('view').onclick=function(){orbit=!orbit;this.classList.toggle('on',orbit);if(orbit)map.easeTo({center:[site.lng+0.0012,site.lat-0.0008],zoom:15.8,pitch:65,duration:900});};
-$('sat').onclick=function(){if(!map.getLayer('esri'))return;var on=map.getLayoutProperty('esri','visibility')!=='visible';map.setLayoutProperty('esri','visibility',on?'visible':'none');this.classList.toggle('on',on);};
+// Satellite (default): the photo underneath, with the 3D buildings, road names and place names on top.
+// Map: the drawn street map. The flat drawn layers are hidden over the photo so it is not covered.
+var satOn=false;
+function setSat(on){if(!map.getLayer('esri'))return;satOn=on;map.setLayoutProperty('esri','visibility',on?'visible':'none');
+ map.getStyle().layers.forEach(function(x){if(x.id==='esri'||x.id==='erbil-eye')return;if(x.type==='fill'||x.type==='line'||x.type==='background'){
+  var keep=/road|street|highway|motorway|primary|secondary|trunk|bridge|tunnel/i.test(x.id)&&x.type==='line';
+  map.setLayoutProperty(x.id,'visibility',on&&!keep?'none':'visible');}
+  if(x.type==='line'&&on&&/road|street|highway|motorway|primary|secondary|trunk|bridge|tunnel/i.test(x.id)){try{map.setPaintProperty(x.id,'line-opacity',0.35);}catch(e){}}
+  if(x.type==='line'&&!on){try{map.setPaintProperty(x.id,'line-opacity',1);}catch(e){}}});
+ paintText();}
+$('sat').onclick=function(){setSat(!satOn);};
 $('grab').onclick=function(){$('sheet').classList.toggle('min');};
 $('lang').onclick=function(){L=1-L;try{localStorage.setItem('wheel_lang',L?'en':'ku');}catch(e){}paintText();};
 // look around inside the cabin
