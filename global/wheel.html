@@ -122,8 +122,8 @@ var TX={
  move:['📍 گواستنەوە','📍 Move'],turn:['↻ سووڕاندن','↻ Turn'],reset:['شوێنی سەرەتا','Back to the first spot'],f_land:['ڕووبەری زەوی','Land area'],moving:['لەسەر نەخشە شوێنێک دابگرە…','Tap a spot on the map…'],
  f_h:['بەرزی','Height'],f_d:['تیرەی بازنە','Wheel diameter'],f_c:['کابینە','Cabins'],f_p:['کەس لە کابینەیەک','People per cabin'],f_all:['کەس لە یەک کاتدا','Riders at once'],f_see:['دووری بینین لە سەرەوە','View from the top'],
  mapv:['🗺 نەخشە','🗺 Map'],info:['زانیاری','Details'],c_ad:['عەین دوبەی','Ain Dubai'],c_me:['هەولێر (پێشنیار)','Erbil (proposed)'],c_sg:['سینگاپور فلایەر','Singapore Flyer'],c_ld:['لەندەن ئای','London Eye'],
- p_t:['سامی پارک دیستریکت','Sami Park District'],p_s:['بازاڕی بازنەیی 132 مەتری لە تەنیشت چەرخوفەلەکەکە','A 132 m round mall beside the wheel'],
- note:['هێڵی زێڕین سنووری زەوییەکەیە (35,000 م²، نزیکەی 200 × 175 م). شوێنەکەم لە وێنەکەتەوە خەمڵاندووە: بۆ ڕاستکردنەوە «📍 گواستنەوە» دابگرە و لەسەر نەخشە ناوەڕاستی زەوییەکە دابگرە، و بە «↻ سووڕاندن» ڕووی بازاڕەکە بەرەو شەقام بکە. شار و بیناکان لە OpenStreetMap ـەوە دێن؛ چەرخوفەلەک و بازاڕەکە مۆدێلی سادەن بۆ پیشاندانی قەبارە و شوێن.','The gold line is the edge of the land (35,000 m², about 200 × 175 m). The spot is estimated from your screenshot: to correct it tap “📍 Move” and then the centre of the land on the map, and use “↻ Turn” to face the mall to the road. City and buildings come from OpenStreetMap; the wheel and the mall are simple models to show size and place.'],
+ p_t:['سامی پارک دیستریکت','Sami Park District'],p_s:['بازاڕی بازنەیی 120 مەتری لە تەنیشت چەرخوفەلەکەکە','A 120 m round mall beside the wheel'],
+ note:['هێڵی زێڕین سنووری زەوییەکەیە (35,000 م²، نزیکەی 170 × 206 م). شوێنەکەم لە وێنەکەتەوە خەمڵاندووە: بۆ ڕاستکردنەوە «📍 گواستنەوە» دابگرە و لەسەر نەخشە ناوەڕاستی زەوییەکە دابگرە، و بە «↻ سووڕاندن» ڕووی بازاڕەکە بەرەو شەقام بکە. شار و بیناکان لە OpenStreetMap ـەوە دێن؛ چەرخوفەلەک و بازاڕەکە مۆدێلی سادەن بۆ پیشاندانی قەبارە و شوێن.','The gold line is the edge of the land (35,000 m², about 170 × 206 m). The spot is estimated from your screenshot: to correct it tap “📍 Move” and then the centre of the land on the map, and use “↻ Turn” to face the mall to the road. City and buildings come from OpenStreetMap; the wheel and the mall are simple models to show size and place.'],
  drag:['بە پەنجە ڕابکێشە بۆ سەیرکردنی دەوروبەر','Drag to look around'],
  alt:['بەرزی','Height'],see:['دەبینیت تا','You see'],cit:['قەڵا','Citadel'],
  citadel:['قەڵای هەولێر','Erbil Citadel'],airport:['فڕۆکەخانەی هەولێر','Erbil Airport'],wheel:['چەرخوفەلەک','The wheel'],
@@ -144,11 +144,11 @@ function fail(k){var e=$('err');e.textContent=t(k);e.style.display='grid';}
 
 // ---------- the site ----------
 // Sami Abdulrahman Park, Erbil (park centre ~36.1915 N, 43.9858 E). The spot can be moved with "Move the site".
-// The owner's land: 35,000 m² on the south side of Sami Abdulrahman Park by Mosul Road (centre estimated from
-// the spot the owner marked on a screenshot). "Move" and "Turn" fine-tune it on the map.
-var DEF={lng:43.9873,lat:36.1856},LOT_W=200,LOT_D=175;
-var site=DEF;try{var sv=JSON.parse(localStorage.getItem('wheel_site2')||'null');if(sv&&isFinite(sv.lng)&&isFinite(sv.lat))site=sv;}catch(e){}
-var rot=40;try{var rv=parseFloat(localStorage.getItem('wheel_rot2'));if(isFinite(rv))rot=rv;}catch(e){}
+// The owner's land: 35,000 m² (about 170 m along Mosul Road x 206 m deep) on the south side of Sami Abdulrahman
+// Park, the plot the owner coloured blue on a screenshot (centre and size estimated from it). "Move" and "Turn" fine-tune it on the map.
+var DEF={lng:43.98345,lat:36.18581},LOT_W=170,LOT_D=206;
+var site=DEF;try{var sv=JSON.parse(localStorage.getItem('wheel_site3')||'null');if(sv&&isFinite(sv.lng)&&isFinite(sv.lat))site=sv;}catch(e){}
+var rot=24;try{var rv=parseFloat(localStorage.getItem('wheel_rot3'));if(isFinite(rv))rot=rv;}catch(e){}
 var CITADEL={lng:44.0092,lat:36.1912},AIRPORT={lng:43.9632,lat:36.2376};
 
 if(typeof THREE==='undefined'){fail('noscript');return;}
@@ -171,7 +171,7 @@ function beam(a,b,r,mat,seg){var d=new THREE.Vector3().subVectors(b,a),len=d.len
 function V(x,y,z){return new THREE.Vector3(x,y,z);}
 
 var lot=new THREE.Group();lot.rotation.y=rot*Math.PI/180;scene.add(lot);
-var root=new THREE.Group();root.position.set(-67.5,0,-14);lot.add(root);
+var root=new THREE.Group();root.position.set(0,0,-73);root.rotation.y=Math.PI/2;lot.add(root);
 // plaza and boarding station
 var plaza=new THREE.Mesh(new THREE.CircleGeometry(22,48),new THREE.MeshLambertMaterial({color:0xE8DFCF,polygonOffset:true,polygonOffsetFactor:-2}));
 plaza.rotation.x=-Math.PI/2;plaza.position.y=0.4;root.add(plaza);
@@ -205,11 +205,11 @@ for(var k=0;k<NC;k++){var ang=k/NC*Math.PI*2;var c=new THREE.Group();c.position.
  wheel.add(c);cabins.push(c);}
 
 // ---------- Sami Park District: the round modern mall beside the wheel (after the owner's renders) ----------
-// Sized so the mall and the wheel fit together on the 35,000 m² land (200 x 175 m): a 132 m ring of three floors
+// Sized so the mall and the wheel fit together on the 35,000 m² land (170 x 206 m): a 120 m ring of three floors
 // around a garden courtyard and fountain, a glass entrance hall with a dome facing the road, rooftop terraces
 // with white canopies, a front plaza with a fountain and palms. Underground parking (B1, B2) is not drawn.
-var RO=66,RI=44,MH=18;
-var proj=new THREE.Group();proj.position.set(27.5,0,-14);lot.add(proj);
+var RO=60,RI=40,MH=18;
+var proj=new THREE.Group();proj.position.set(0,0,19);lot.add(proj);
 function flat(geo,color,y,off,par){var m=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:color,polygonOffset:true,polygonOffsetFactor:off||-2,polygonOffsetUnits:off||-2}));m.rotation.x=-Math.PI/2;m.position.y=y;(par||proj).add(m);return m;}
 function facadeTex(floors,bays){var cv=document.createElement('canvas');cv.width=128;cv.height=64*floors;var g=cv.getContext('2d');
  for(var f=0;f<floors;f++){var y=f*64;g.fillStyle='#F1EBDF';g.fillRect(0,y,128,64);
@@ -217,8 +217,8 @@ function facadeTex(floors,bays){var cv=document.createElement('canvas');cv.width
   g.fillStyle='rgba(60,45,30,.55)';for(var x=0;x<128;x+=32)g.fillRect(x,y+12,3,48);}
  var t=new THREE.CanvasTexture(cv);t.wrapS=THREE.RepeatWrapping;t.repeat.set(bays,1);return t;}
 var cream=new THREE.MeshLambertMaterial({color:0xF4EFE6});
-var outer=new THREE.Mesh(new THREE.CylinderGeometry(RO,RO,MH,128,1,true),new THREE.MeshLambertMaterial({map:facadeTex(3,52),emissive:0x3a2410,emissiveIntensity:0.35}));outer.position.y=MH/2;proj.add(outer);
-var inner=new THREE.Mesh(new THREE.CylinderGeometry(RI,RI,MH,96,1,true),new THREE.MeshLambertMaterial({map:facadeTex(3,34),side:THREE.BackSide,emissive:0x3a2410,emissiveIntensity:0.35}));inner.position.y=MH/2;proj.add(inner);
+var outer=new THREE.Mesh(new THREE.CylinderGeometry(RO,RO,MH,128,1,true),new THREE.MeshLambertMaterial({map:facadeTex(3,47),emissive:0x3a2410,emissiveIntensity:0.35}));outer.position.y=MH/2;proj.add(outer);
+var inner=new THREE.Mesh(new THREE.CylinderGeometry(RI,RI,MH,96,1,true),new THREE.MeshLambertMaterial({map:facadeTex(3,31),side:THREE.BackSide,emissive:0x3a2410,emissiveIntensity:0.35}));inner.position.y=MH/2;proj.add(inner);
 var roofR=new THREE.Mesh(new THREE.RingGeometry(RI,RO,128,1),new THREE.MeshLambertMaterial({color:0xE9E4DA,side:THREE.DoubleSide}));roofR.rotation.x=-Math.PI/2;roofR.position.y=MH;proj.add(roofR);
 [[RO+0.8,2.6],[RI-0.7,2]].forEach(function(c){var b=new THREE.Mesh(new THREE.CylinderGeometry(c[0],c[0],c[1],128,1,true),new THREE.MeshLambertMaterial({color:0xFFFFFF,side:THREE.DoubleSide,emissive:0xFFF1D6,emissiveIntensity:0.25}));b.position.y=MH+c[1]/2-0.4;proj.add(b);});
 var garden=new THREE.Mesh(new THREE.RingGeometry(RI+4,RO-5,128,1),new THREE.MeshLambertMaterial({color:0x6F8F55,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}));garden.rotation.x=-Math.PI/2;garden.position.y=MH+0.15;proj.add(garden);
@@ -248,32 +248,32 @@ function fountain(x,z,r,jets,hgt){var g=new THREE.Group();g.position.set(x,0,z);
  for(var i=0;i<jets;i++){var a=i/jets*Math.PI*2,rr=i===0?0:r*0.55,hh=i===0?hgt:hgt*0.6;var j=new THREE.Mesh(new THREE.ConeGeometry(i===0?1:0.5,hh,8),spray);j.position.set(Math.cos(a)*rr,1.1+hh/2,Math.sin(a)*rr);g.add(j);}
  proj.add(g);return g;}
 fountain(0,0,11,9,10);
-for(var pi=0;pi<4;pi++){var pa=pi/4*Math.PI*2+Math.PI/4;var pv=new THREE.Mesh(new THREE.BoxGeometry(9,4.5,6),cream);pv.position.set(Math.cos(pa)*30,2.25,Math.sin(pa)*30);pv.rotation.y=-pa;proj.add(pv);
- var pr=new THREE.Mesh(new THREE.BoxGeometry(12,0.5,9),new THREE.MeshLambertMaterial({color:0xFFFFFF}));pr.position.set(Math.cos(pa)*30,4.8,Math.sin(pa)*30);pr.rotation.y=-pa;proj.add(pr);}
+for(var pi=0;pi<4;pi++){var pa=pi/4*Math.PI*2+Math.PI/4;var pv=new THREE.Mesh(new THREE.BoxGeometry(9,4.5,6),cream);pv.position.set(Math.cos(pa)*28,2.25,Math.sin(pa)*28);pv.rotation.y=-pa;proj.add(pv);
+ var pr=new THREE.Mesh(new THREE.BoxGeometry(12,0.5,9),new THREE.MeshLambertMaterial({color:0xFFFFFF}));pr.position.set(Math.cos(pa)*28,4.8,Math.sin(pa)*28);pr.rotation.y=-pa;proj.add(pr);}
 // paving round the mall and the front plaza toward the road
 flat(new THREE.RingGeometry(RO,RO+6,128,1),0xB9AD97,0.42);
-var fp=flat(new THREE.PlaneGeometry(64,24),0xBFB29A,0.6,-4);fp.position.z=RO+18;
-fountain(0,RO+19,5,7,6);
+var fp=flat(new THREE.PlaneGeometry(64,18),0xBFB29A,0.6,-4);fp.position.z=RO+15;
+fountain(0,RO+15,4,7,5);
 // palms (one instanced mesh for trunks, one for crowns)
 var palmPos=[];
 for(var i=0;i<36;i++){var a=i/36*Math.PI*2;if(Math.abs(a-Math.PI/2)<0.38)continue;palmPos.push([Math.cos(a)*(RO+3),Math.sin(a)*(RO+3)]);}
-for(var i=0;i<14;i++){var a=i/14*Math.PI*2;palmPos.push([Math.cos(a)*37,Math.sin(a)*37]);}
+for(var i=0;i<14;i++){var a=i/14*Math.PI*2;palmPos.push([Math.cos(a)*34,Math.sin(a)*34]);}
 for(var i=0;i<8;i++){var a=i/8*Math.PI*2+0.2;palmPos.push([Math.cos(a)*21,Math.sin(a)*21]);}
-[-28,-18,18,28].forEach(function(x){[RO+10,RO+20,RO+29].forEach(function(z){palmPos.push([x,z]);});});
+[-28,-18,18,28].forEach(function(x){[RO+10,RO+20].forEach(function(z){palmPos.push([x,z]);});});
 var trunkM=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.3,0.45,9,6),new THREE.MeshLambertMaterial({color:0x8B6F4E}),palmPos.length);
 var crownG=new THREE.ConeGeometry(3.4,2.1,7);crownG.rotateX(Math.PI);
 var crownM=new THREE.InstancedMesh(crownG,new THREE.MeshLambertMaterial({color:0x3F6B2E}),palmPos.length);
 var tmp=new THREE.Object3D();palmPos.forEach(function(q,i){tmp.position.set(q[0],5,q[1]);tmp.rotation.set(0,i*1.7,0);tmp.updateMatrix();trunkM.setMatrixAt(i,tmp.matrix);
  tmp.position.set(q[0],10,q[1]);tmp.updateMatrix();crownM.setMatrixAt(i,tmp.matrix);});proj.add(trunkM);proj.add(crownM);
 
-// ---------- the land: 35,000 m² (200 x 175 m), a gold line on its edge ----------
+// ---------- the land: 35,000 m² (170 x 206 m), a gold line on its edge ----------
 (function(){var gold=new THREE.MeshLambertMaterial({color:0xE3C78C,emissive:0xC9A45C,emissiveIntensity:0.8,polygonOffset:true,polygonOffsetFactor:-6,polygonOffsetUnits:-6});
  var fill=new THREE.Mesh(new THREE.PlaneGeometry(LOT_W,LOT_D),new THREE.MeshLambertMaterial({color:0xD8CFBF,transparent:true,opacity:0.35,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}));
  fill.rotation.x=-Math.PI/2;fill.position.y=0.25;lot.add(fill);
  [[0,-LOT_D/2,LOT_W+2,2],[0,LOT_D/2,LOT_W+2,2],[-LOT_W/2,0,2,LOT_D],[LOT_W/2,0,2,LOT_D]].forEach(function(e){var m=new THREE.Mesh(new THREE.PlaneGeometry(e[2],e[3]),gold);m.rotation.x=-Math.PI/2;m.position.set(e[0],0.8,e[1]);lot.add(m);});})();
 
 // ---------- map ----------
-var map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/liberty',center:[site.lng+0.0005,site.lat-0.0013],zoom:16.5,pitch:60,bearing:-24,maxPitch:85,antialias:true,attributionControl:{compact:true}});
+var map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/liberty',center:[site.lng+0.0004,site.lat-0.0012],zoom:16.6,pitch:60,bearing:-24,maxPitch:85,antialias:true,attributionControl:{compact:true}});
 var merc,scale;
 function placeModel(){merc=maplibregl.MercatorCoordinate.fromLngLat([site.lng,site.lat],0);scale=merc.meterInMercatorCoordinateUnits();}
 placeModel();
@@ -331,7 +331,7 @@ $('ride').onclick=startRide;$('exit').onclick=stopRide;
 $('pause').onclick=function(){paused=!paused;paintText();};
 $('look').onclick=function(){look.bearing=bearingTo(site,CITADEL);look.down=8;};
 $('view').onclick=function(){orbit=!orbit;this.classList.toggle('on',orbit);if(orbit)map.easeTo({center:[site.lng,site.lat],zoom:16.2,pitch:62,duration:900});};
-function home(){map.easeTo({center:[site.lng+0.0005,site.lat-0.0013],zoom:16.5,pitch:60,bearing:-24,duration:1200});}
+function home(){map.easeTo({center:[site.lng+0.0004,site.lat-0.0012],zoom:16.6,pitch:60,bearing:-24,duration:1200});}
 // Satellite (default): the photo underneath, with the 3D buildings, road names and place names on top.
 // Map: the drawn street map. The flat drawn layers are hidden over the photo so it is not covered.
 var satOn=false;
@@ -353,9 +353,9 @@ $('lang').onclick=function(){L=1-L;try{localStorage.setItem('wheel_lang',L?'en':
 // move the site: next tap on the map sets the new spot
 var moving=false;
 $('move').onclick=function(){moving=!moving;paintText();};
-map.on('click',function(e){if(!moving)return;moving=false;site={lng:+e.lngLat.lng.toFixed(6),lat:+e.lngLat.lat.toFixed(6)};placeModel();try{localStorage.setItem('wheel_site2',JSON.stringify(site));}catch(x){}paintText();home();});
-$('turn').onclick=function(){rot=(rot+15)%360;lot.rotation.y=rot*Math.PI/180;try{localStorage.setItem('wheel_rot2',String(rot));}catch(x){}};
-$('reset').onclick=function(){site=DEF;rot=40;lot.rotation.y=rot*Math.PI/180;placeModel();try{localStorage.removeItem('wheel_site2');localStorage.removeItem('wheel_rot2');}catch(x){}home();};
+map.on('click',function(e){if(!moving)return;moving=false;site={lng:+e.lngLat.lng.toFixed(6),lat:+e.lngLat.lat.toFixed(6)};placeModel();try{localStorage.setItem('wheel_site3',JSON.stringify(site));}catch(x){}paintText();home();});
+$('turn').onclick=function(){rot=(rot+15)%360;lot.rotation.y=rot*Math.PI/180;try{localStorage.setItem('wheel_rot3',String(rot));}catch(x){}};
+$('reset').onclick=function(){site=DEF;rot=24;lot.rotation.y=rot*Math.PI/180;placeModel();try{localStorage.removeItem('wheel_site3');localStorage.removeItem('wheel_rot3');}catch(x){}home();};
 paintText();
 // Inside the website (an iframe) there is nothing to go back to.
 try{if(window.top!==window.self)$('back').style.display='none';}catch(e){}
