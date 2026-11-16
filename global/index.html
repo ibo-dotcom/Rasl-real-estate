@@ -398,7 +398,7 @@ function put(k,v){try{window.localStorage.setItem(k,v);}catch(e){}}
 if(!get('reg_ku_v1')){if(!get('reg_lang')||get('reg_lang')==='en')put('reg_lang','ku');put('reg_ku_v1','1');}var l0=get('reg_lang');if(LANGS.indexOf(l0)>=0)st.lang=l0;
 try{var p0=JSON.parse(get('reg_plan'));if(p0&&p0.ranks&&p0.levels)st.plan=p0;}catch(e){}
 var app=document.getElementById('app');
-var BUILD='1794801050';
+var BUILD='1794801321';
 (function(){if(!/^https?:$/.test(location.protocol)||/claude/.test(location.hostname))return;try{var base=location.origin+location.pathname;fetch(base+'?u='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var BUILD='(\d+)'/);if(!m||m[1]===BUILD)return;var k='reg_upd_'+m[1];try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}location.replace(base+'?u='+m[1]+location.hash);}).catch(function(){});}catch(e){}})();
 try{var refq=new URLSearchParams(location.search).get('ref');if(refq){put('reg_ref',refq.toUpperCase().slice(0,60));history.replaceState(null,'',location.pathname+(location.hash||'#Register'));}}catch(e){}
 var SB=null,me=null,team=[],ads=[],listings=[],pf={blob:null,url:''},adBlobs=[],lBlobs=[],FONT="Inter, 'Noto Sans Arabic', system-ui, sans-serif";
@@ -1093,7 +1093,7 @@ var going=rsvps.filter(function(r){return r.meeting_id===m.id;}),mine=me&&going.
 var h='<div style="background: #FFFFFF; border: 1px solid #173F63; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column">'+(m.image_url?'<img src="'+esc(m.image_url)+'" alt="" loading="lazy" style="width: 100%; height: 160px; object-fit: cover; display: block">':'')+'<div style="padding: 14px; display: flex; flex-direction: column; gap: 8px"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: #173F63">'+esc(T('ac_meet_tag'))+'</span><b style="font-size: 17px; overflow-wrap: anywhere">'+esc(m.title)+'</b><span style="font-size: 13px; color: #3D5166">🗓 '+esc(when(m.starts_at))+'</span>'+(m.place?'<span style="font-size: 13px; color: #3D5166">'+icoIn('📍')+' '+esc(m.place)+'</span>':'')+(!compact&&m.description?'<p style="margin: 0; font-size: 14px; line-height: 1.55; color: #3D5166; white-space: pre-wrap; overflow-wrap: anywhere">'+esc(m.description)+'</p>':'');
 h+='<div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">'+(compact?'<a href="#Learn" class="mi-btn gold" style="flex: 1">'+esc(T('ac_see'))+'</a>':'<button data-act="rsvp" data-id="'+esc(m.id)+'" class="mi-btn'+(mine?'':' gold')+'">'+esc(T(mine?'ac_notgoing':'ac_going'))+'</button>'+(m.online_url?'<a href="'+esc(m.online_url)+'" target="_blank" rel="noopener" class="mi-btn">'+esc(T('ac_join_online'))+'</a>':'')+(owner?'<button data-act="delMeet" data-id="'+esc(m.id)+'" class="mi-btn" style="flex: 0 0 auto; min-width: 0; padding: 0 14px; color: #B42318; border-color: #F2C9C9">'+esc(T('a_del'))+'</button>':''))+'<span style="font-size: 12px; color: #718096">'+icoIn('👥')+' '+esc(T('ac_coming').replace('{n}',going.length))+'</span></div>';
 h+=ackBar('meeting',m.id,!compact);return h+'</div></div>';}
-function canTeam(){return !!me&&!me.frozen&&(me.role==='owner'||leadNeeds()==='');}
+function canTeam(){if(!me||me.frozen)return false;if(me.role==='owner')return true;var s=LEAD.st;return !!(s&&s.active&&(!s.kyc_required||s.kyc_status==='approved'));}
 function bsGuide(){if(!canTeam())return '';var c='padding: 16px; background: #FFFFFF; border: 1px solid #DFE7EF; border-radius: 12px; display: flex; flex-direction: column; gap: 10px';var st3='<span style="font-size: 13px; color: #173F63; font-weight: 700">';
 var items=[['🏗 '+(st.lang==='ku'?'شوێنی فرۆشتن (خاوەن و تیم)':'Sales place (owner and team)'),[st.lang==='ku'?'١. تۆمارکردنی پرۆژە: ناو، شوێن، جۆر، و هەموو یەکەکان بە ڕووبەر و نرخی مەتر.':'1. Register the project: name, place, type, and each unit with area and price per m².',st.lang==='ku'?'٢. قیست و کۆمیشن: خشتەی پارەدان و ڕێژەی کۆمیشن بۆ هەر پرۆژەیەک.':'2. Payments and commission for each project.',st.lang==='ku'?'٣. بەڵگە و پەسەندکردن: پێش بڵاوکردنەوە، خاوەن پەسەندی دەکات.':'3. Documents and approval before it is shown.']],
 ['🛒 '+(st.lang==='ku'?'شوێنی کڕین (ئەندام و کڕیار)':'Buy place (members and buyers)'),[st.lang==='ku'?'١. هەڵبژاردنی پرۆژە و یەکە، لەسەر نەخشەی 3D.':'1. Choose the project and unit on the 3D map.',st.lang==='ku'?'٢. زانیاری: نرخ، ڕووبەر، قیست، و داشکاندن و خاڵی خۆت.':'2. Information: price, area, payments, and your discount and points.',st.lang==='ku'?'٣. داوای کڕین: لە ئەپەوە دەنێریت، و خاوەن پەسەندی دەکات.':'3. Request to buy: sent in the app, and the owner approves.']],
@@ -2212,7 +2212,7 @@ function offerSheet(){var own=me&&me.role==='owner',card='padding: 14px; border-
  return h+'</div></div>';}
 
 // ---- Auto-update: every phone moves to the newest version by itself ----
-var APP_VER='20261116035049';
+var APP_VER='20261116035521';
 (function(){if(APP_VER.indexOf('__')===0)return;var busy=false,shown=false;
  function busyNow(){var a=document.activeElement;return !!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))||!!document.querySelector('.tm-sheet');}
  function go(v){try{var k='rasl_upd_'+v;if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1');}catch(e){}
