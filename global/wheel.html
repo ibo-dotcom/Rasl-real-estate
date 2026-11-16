@@ -299,6 +299,8 @@ var moving=false;
 $('move').onclick=function(){moving=!moving;paintText();};
 map.on('click',function(e){if(!moving)return;moving=false;site={lng:+e.lngLat.lng.toFixed(6),lat:+e.lngLat.lat.toFixed(6)};placeModel();try{localStorage.setItem('wheel_site',JSON.stringify(site));}catch(x){}paintText();});
 paintText();
+// Inside the website (an iframe) there is nothing to go back to.
+try{if(window.top!==window.self)$('back').style.display='none';}catch(e){}
 })();
 </script>
 </body>

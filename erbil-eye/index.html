@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0E2236">
+<title>چەرخوفەلەکی هەولێر · Erbil Eye</title>
+<meta name="description" content="چەرخوفەلەکێکی 180 مەتری لە پارکی سامی عەبدولڕەحمان، هەولێر — لەگەڵ بازاڕ و پارکینگ. Erbil Eye: a 180 m observation wheel in Sami Abdulrahman Park.">
+<meta property="og:title" content="چەرخوفەلەکی هەولێر · Erbil Eye">
+<meta property="og:description" content="180 m · 48 capsules · all of Erbil in view">
+<meta property="og:image" content="hero.jpg">
+<link rel="icon" href="../assets/favicon.svg">
+<style>
+:root{--ink:#0E2236;--navy:#173F63;--gold:#C9A45C;--gold2:#E3C78C;--bg:#F7F4EE;--card:#FFFFFF;--muted:#6B7785;--line:#E6E0D4}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,'Noto Sans Arabic',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+/* nav */
+.nav{position:fixed;top:0;inset-inline:0;z-index:20;transition:background .25s,box-shadow .25s}
+.nav.solid{background:rgba(14,34,54,.94);box-shadow:0 2px 16px rgba(0,0,0,.2);backdrop-filter:blur(8px)}
+.nav .wrap{display:flex;align-items:center;gap:16px;height:64px;padding-top:env(safe-area-inset-top)}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:700;font-size:16px}
+.brand svg{width:30px;height:30px}
+.links{display:flex;gap:22px;margin-inline-start:auto}
+.links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:14px}
+.links a:hover{color:#fff}
+.lang{height:36px;min-width:44px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;font:600 13px inherit;font-family:inherit;cursor:pointer}
+@media (max-width:760px){.links{display:none}.lang{margin-inline-start:auto}}
+/* hero */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:#0E2236}
+.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,34,54,.55) 0%,rgba(14,34,54,.1) 35%,rgba(14,34,54,.85) 100%)}
+.hero .wrap{position:relative;z-index:2;padding-bottom:calc(56px + env(safe-area-inset-bottom));padding-top:120px}
+.tag{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(201,164,92,.18);border:1px solid rgba(227,199,140,.6);color:var(--gold2);font-size:13px;font-weight:600;margin-bottom:16px}
+h1{font-size:clamp(38px,8vw,76px);line-height:1.05;margin:0 0 14px;font-weight:800;letter-spacing:-.01em}
+h1 span{color:var(--gold2)}
+.lead{font-size:clamp(16px,2.4vw,20px);max-width:620px;margin:0 0 28px;color:rgba(255,255,255,.9)}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 22px;border-radius:12px;font:700 15px inherit;font-family:inherit;text-decoration:none;cursor:pointer;border:0}
+.btn.gold{background:var(--gold);color:#1b1408}
+.btn.gold:hover{background:var(--gold2)}
+.btn.ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.5)}
+.btn.navy{background:var(--navy);color:#fff}
+/* numbers */
+.nums{background:var(--ink);color:#fff}
+.nums .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+.num{padding:26px 12px;text-align:center;border-inline-start:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.num b{display:block;font-size:clamp(26px,4vw,40px);color:var(--gold2);font-weight:800;line-height:1.1}
+.num span{font-size:13px;color:rgba(255,255,255,.7)}
+@media (max-width:640px){.nums .wrap{grid-template-columns:repeat(2,1fr)}}
+/* sections */
+section.s{padding:84px 0}
+.eyebrow{color:var(--gold);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px}
+h2{font-size:clamp(28px,4.6vw,44px);line-height:1.15;margin:0 0 14px;font-weight:800}
+.sub{color:var(--muted);font-size:17px;max-width:640px;margin:0 0 36px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:860px){.grid3{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}
+.card .ic{width:48px;height:48px;border-radius:12px;background:#F3EBDB;color:var(--navy);display:grid;place-items:center;margin-bottom:14px}
+.card .ic svg{width:24px;height:24px}
+.card h3{margin:0 0 6px;font-size:19px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.split{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.photo{border-radius:20px;overflow:hidden;box-shadow:0 18px 40px rgba(14,34,54,.18)}
+.ticks{list-style:none;padding:0;margin:0 0 26px;display:flex;flex-direction:column;gap:12px}
+.ticks li{display:flex;gap:10px;align-items:flex-start;font-size:16px}
+.ticks li:before{content:"";flex-shrink:0;width:22px;height:22px;margin-top:2px;border-radius:50%;background:var(--gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/14px no-repeat}
+/* 3D */
+.dark{background:var(--ink);color:#fff}
+.dark .sub{color:rgba(255,255,255,.7)}
+.stage{position:relative;border-radius:20px;overflow:hidden;background:#09182A url(wide.jpg) center/cover;aspect-ratio:16/10;max-height:78vh;width:100%;border:1px solid rgba(255,255,255,.12)}
+@media (max-width:640px){.stage{aspect-ratio:9/14}}
+.stage:before{content:"";position:absolute;inset:0;background:rgba(9,24,42,.55)}
+.stage .play{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:2;text-align:center;padding:20px}
+.stage .play p{margin:0;color:rgba(255,255,255,.85);font-size:15px;max-width:420px}
+.stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:3}
+.full{margin-top:14px;font-size:14px;color:var(--gold2)}
+/* compare */
+.bars{display:flex;flex-direction:column;gap:14px;max-width:760px}
+.bar{display:grid;grid-template-columns:150px 1fr 64px;gap:12px;align-items:center;font-size:15px}
+.bar i{display:block;height:14px;border-radius:7px;background:#D9D2C3}
+.bar.me i{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.bar.me{font-weight:700}
+.bar small{color:var(--muted);text-align:end;font-size:14px}
+@media (max-width:520px){.bar{grid-template-columns:110px 1fr 56px;font-size:14px}}
+/* location */
+.loc{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:860px){.loc{grid-template-columns:1fr}}
+.kv{display:flex;flex-direction:column;gap:12px}
+.kv div{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:16px}
+.kv span{color:var(--muted)}
+/* footer */
+.foot{background:#091726;color:rgba(255,255,255,.7);padding:40px 0 calc(40px + env(safe-area-inset-bottom));font-size:13px}
+.foot .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+.foot p{margin:0;max-width:640px}
+.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav"><div class="wrap">
+  <a class="brand" href="#top"><svg viewBox="0 0 32 32" fill="none" stroke="#E3C78C" stroke-width="1.8"><circle cx="16" cy="13" r="10"/><circle cx="16" cy="13" r="2"/><path d="M16 3v20M6 13h20M9 6l14 14M23 6L9 20"/><path d="M12 29l4-14 4 14"/></svg><span data-t="brand"></span></a>
+  <nav class="links">
+    <a href="#why" data-t="n_why"></a><a href="#project" data-t="n_proj"></a><a href="#ride" data-t="n_3d"></a><a href="#where" data-t="n_loc"></a>
+  </nav>
+  <button class="lang" id="lang">EN</button>
+</div></header>
+
+<section class="hero" id="top">
+  <img class="bg" src="hero.jpg" alt="">
+  <div class="wrap">
+    <div class="tag" data-t="tag"></div>
+    <h1 data-h="h1"></h1>
+    <p class="lead" data-t="lead"></p>
+    <div class="cta">
+      <a class="btn gold" href="#ride" data-t="cta1"></a>
+      <a class="btn ghost" href="#project" data-t="cta2"></a>
+    </div>
+  </div>
+</section>
+
+<div class="nums"><div class="wrap">
+  <div class="num"><b dir="ltr">180 m</b><span data-t="k_h"></span></div>
+  <div class="num"><b>48</b><span data-t="k_c"></span></div>
+  <div class="num"><b dir="ltr">1,200</b><span data-t="k_p"></span></div>
+  <div class="num"><b dir="ltr">~47 km</b><span data-t="k_v"></span></div>
+</div></div>
+
+<section class="s" id="why"><div class="wrap">
+  <p class="eyebrow" data-t="e_why"></p>
+  <h2 data-t="h_why"></h2>
+  <p class="sub" data-t="s_why"></p>
+  <div class="grid3">
+    <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div><h3 data-t="w1t"></h3><p data-t="w1"></p></div>
+    <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12c-4 0-6-3-6-6 3 0 6 2 6 6zM12 14c4 0 6-3 6-6-3 0-6 2-6 6z"/><path d="M4 22h16"/></svg></div><h3 data-t="w2t"></h3><p data-t="w2"></p></div>
+    <div class="card reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg></div><h3 data-t="w3t"></h3><p data-t="w3"></p></div>
+  </div>
+</div></section>
+
+<section class="s" id="project" style="padding-top:0"><div class="wrap split">
+  <div class="photo reveal"><img src="hero.jpg" alt="" loading="lazy"></div>
+  <div class="reveal">
+    <p class="eyebrow" data-t="e_proj"></p>
+    <h2 data-t="h_proj"></h2>
+    <p class="sub" style="margin-bottom:22px" data-t="s_proj"></p>
+    <ul class="ticks"><li data-t="p1"></li><li data-t="p2"></li><li data-t="p3"></li><li data-t="p4"></li></ul>
+    <a class="btn navy" href="#ride" data-t="cta1"></a>
+  </div>
+</div></section>
+
+<section class="s dark" id="ride"><div class="wrap">
+  <p class="eyebrow" data-t="e_3d"></p>
+  <h2 data-t="h_3d"></h2>
+  <p class="sub" data-t="s_3d"></p>
+  <div class="stage" id="stage">
+    <div class="play"><button class="btn gold" id="open3d" data-t="open3d"></button><p data-t="p3d"></p></div>
+  </div>
+  <a class="full" href="../global/wheel.html" target="_blank" rel="noopener" data-t="full"></a>
+</div></section>
+
+<section class="s"><div class="wrap">
+  <p class="eyebrow" data-t="e_cmp"></p>
+  <h2 data-t="h_cmp"></h2>
+  <p class="sub" data-t="s_cmp"></p>
+  <div class="bars">
+    <div class="bar reveal"><span data-t="c_ad"></span><i style="width:100%"></i><small dir="ltr">250 m</small></div>
+    <div class="bar me reveal"><span data-t="c_me"></span><i style="width:72%"></i><small dir="ltr">180 m</small></div>
+    <div class="bar reveal"><span data-t="c_sg"></span><i style="width:66%"></i><small dir="ltr">165 m</small></div>
+    <div class="bar reveal"><span data-t="c_ld"></span><i style="width:54%"></i><small dir="ltr">135 m</small></div>
+  </div>
+</div></section>
+
+<section class="s" id="where" style="padding-top:0"><div class="wrap loc">
+  <div class="reveal">
+    <p class="eyebrow" data-t="e_loc"></p>
+    <h2 data-t="h_loc"></h2>
+    <p class="sub" data-t="s_loc"></p>
+    <a class="btn navy" href="https://www.google.com/maps/search/?api=1&query=36.1915,43.9858" target="_blank" rel="noopener" data-t="gmap"></a>
+  </div>
+  <div class="kv reveal">
+    <div><span data-t="l1"></span><b data-t="l1v"></b></div>
+    <div><span data-t="l2"></span><b dir="ltr">~2.1 km</b></div>
+    <div><span data-t="l3"></span><b dir="ltr">36.1915, 43.9858</b></div>
+    <div><span data-t="l4"></span><b data-t="l4v"></b></div>
+  </div>
+</div></section>
+
+<footer class="foot"><div class="wrap">
+  <p data-t="disc"></p>
+  <span>© 2026 · <span data-t="brand"></span></span>
+</div></footer>
+
+<script>
+(function(){
+var TX={
+ brand:['چەرخوفەلەکی هەولێر','Erbil Eye'],
+ n_why:['بۆچی','Why'],n_proj:['پرۆژەکە','The project'],n_3d:['3D','3D'],n_loc:['شوێن','Location'],
+ tag:['پڕۆژەی پێشنیارکراو · پارکی سامی عەبدولڕەحمان','Proposed project · Sami Abdulrahman Park'],
+ h1:['هەموو هەولێر<br><span>لە یەک چاوتروکاندندا</span>','All of Erbil<br><span>in one view</span>'],
+ lead:['چەرخوفەلەکێکی 180 مەتری لە دڵی گەورەترین پارکی هەولێر، لەگەڵ بازاڕ و پارکینگێکی نوێ. لە سەرەوە قەڵا، شار و چیاکان هەموویان لەبەرچاوتن.','A 180-metre observation wheel in the heart of Erbil\'s largest park, with a new mall and parking. From the top, the Citadel, the city and the mountains are all in view.'],
+ cta1:['🎡 بە 3D سواربە','🎡 Ride it in 3D'],cta2:['پرۆژەکە ببینە','See the project'],
+ k_h:['بەرزی','Height'],k_c:['کابینەی شووشەیی','Glass capsules'],k_p:['کەس لە یەک کاتدا','Riders at once'],k_v:['دووری بینین لە سەرەوە','View from the top'],
+ e_why:['بۆچی چەرخوفەلەک','Why a wheel'],h_why:['شوێنێکی نوێ بۆ بینینی شار','A new way to see the city'],
+ s_why:['هەولێر شارێکی تەختە، بۆیە لە 180 مەترەوە هەموو شارەکە و دەوروبەری دیارە.','Erbil is flat, so from 180 metres the whole city and its surroundings are in view.'],
+ w1t:['بینینی هەموو شار','The whole city'],w1:['قەڵای هەولێر، فڕۆکەخانە، تاوەرەکان و چیاکان — هەمووی لە کابینەیەکی شووشەییەوە.','The Citadel, the airport, the towers and the mountains, all from one glass capsule.'],
+ w2t:['لەناو پارکدا','Inside the park'],w2:['لە پارکی سامی عەبدولڕەحمان، گەورەترین پارکی هەولێر، شوێنێک بۆ خێزان و گەشتیاران.','In Sami Abdulrahman Park, Erbil\'s largest park: a place for families and visitors.'],
+ w3t:['شەوان ڕووناک','Lit at night'],w3:['ڕووناکیی LED لەسەر بازنەکە ڕەنگ دەگۆڕێت و لە هەموو شارەوە دیار دەبێت.','LED lights on the rim change colour and can be seen from across the city.'],
+ e_proj:['پرۆژەکە','The project'],h_proj:['بازاڕ، پارکینگ و چەرخوفەلەک','Mall, parking and the wheel'],
+ s_proj:['بیناکانی بازاڕ بە دەوری پارکینگێکی چەند نهۆمیدا، و چەرخوفەلەکەکە لە لای ڕۆژئاوایەوە.','Shop buildings around a multi-level car park, with the wheel on the west side.'],
+ p1:['چەرخوفەلەکی 180 مەتری بە 48 کابینە، هەر یەکەیان بۆ 25 کەس','A 180 m wheel with 48 capsules, each for 25 people'],
+ p2:['بیناکانی بازاڕ و چێشتخانە بە چوار نهۆم','Four-storey shop and restaurant buildings'],
+ p3:['پارکینگی چەند نهۆمی بە دوو ڕێگای بازنەیی','Multi-level parking with two spiral ramps'],
+ p4:['گۆڕەپانێکی پیاسە و وێستگەی سواربوون لە ژێر چەرخوفەلەکەکە','A walking plaza and boarding station under the wheel'],
+ e_3d:['ئەزموونی 3D','3D experience'],h_3d:['پێش دروستکردن، سواری ببە','Ride it before it is built'],
+ s_3d:['لەسەر وێنەی ڕاستەقینەی مانگی دەستکردی هەولێر. «سواربە» دابگرە و بە پەنجە سەیری دەوروبەر بکە.','On the real satellite view of Erbil. Tap “Ride” and drag to look around.'],
+ open3d:['▶ کردنەوەی 3D','▶ Open 3D'],p3d:['نەخشەکە و مۆدێلەکە باردەکرێن؛ لە مۆبایل چەند چرکەیەک دەخایەنێت.','The map and the model load; on a phone this takes a few seconds.'],
+ full:['لە پەڕەیەکی تەواودا بیکەرەوە ←','Open full screen →'],
+ e_cmp:['بەراورد','Comparison'],h_cmp:['لە نێوان گەورەکانی جیهاندا','Among the world\'s big wheels'],
+ s_cmp:['لە لەندەن ئای و سینگاپور فلایەر بەرزترە.','Taller than the London Eye and the Singapore Flyer.'],
+ c_ad:['عەین دوبەی','Ain Dubai'],c_me:['هەولێر (پێشنیار)','Erbil (proposed)'],c_sg:['سینگاپور فلایەر','Singapore Flyer'],c_ld:['لەندەن ئای','London Eye'],
+ e_loc:['شوێن','Location'],h_loc:['پارکی سامی عەبدولڕەحمان','Sami Abdulrahman Park'],
+ s_loc:['پارکێکی 200 هێکتاری لە ڕۆژئاوای ناوەڕاستی هەولێر، نزیک لە قەڵا و شەقامە سەرەکییەکان.','A 200-hectare park west of central Erbil, close to the Citadel and the main roads.'],
+ gmap:['لە Google Maps بیبینە','View on Google Maps'],
+ l1:['شار','City'],l1v:['هەولێر','Erbil'],l2:['دووری لە قەڵا','Distance to the Citadel'],l3:['شوێن','Coordinates'],l4:['ڕووبەری پارک','Park area'],l4v:['200 هێکتار','200 hectares'],
+ disc:['ئەمە پڕۆژەیەکی پێشنیارکراوە. ژمارەکان، وێنەکان و مۆدێلی 3D بۆ پیشاندانن و دیزاینی کۆتایی نین.','This is a proposed project. Figures, images and the 3D model are for presentation and are not the final design.']
+};
+var L=(new URLSearchParams(location.search).get('lang')||(function(){try{return localStorage.getItem('wheel_lang');}catch(e){return null;}})()||'ku')==='en'?1:0;
+function paint(){document.documentElement.lang=L?'en':'ckb';document.documentElement.dir=L?'ltr':'rtl';
+ document.querySelectorAll('[data-t]').forEach(function(e){var v=TX[e.getAttribute('data-t')];if(v)e.textContent=v[L];});
+ document.querySelectorAll('[data-h]').forEach(function(e){e.innerHTML=TX[e.getAttribute('data-h')][L];});
+ document.getElementById('lang').textContent=L?'کوردی':'EN';document.title=TX.brand[L]+(L?' · Sami Abdulrahman Park':' · پارکی سامی عەبدولڕەحمان');
+ var f=document.querySelector('iframe');if(f)f.src='../global/wheel.html?lang='+(L?'en':'ku');}
+document.getElementById('lang').onclick=function(){L=1-L;try{localStorage.setItem('wheel_lang',L?'en':'ku');}catch(e){}paint();};
+document.getElementById('open3d').onclick=function(){var s=document.getElementById('stage');var f=document.createElement('iframe');
+ f.src='../global/wheel.html?lang='+(L?'en':'ku');f.allow='fullscreen';f.title='Erbil Eye 3D';s.appendChild(f);};
+document.documentElement.classList.add('js');
+var nav=document.getElementById('nav');function sc(){nav.classList.toggle('solid',scrollY>40);}addEventListener('scroll',sc,{passive:true});sc();
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0,rootMargin:'0px 0px -8% 0px'});
+ document.querySelectorAll('.reveal').forEach(function(e){io.observe(e);});}else document.querySelectorAll('.reveal').forEach(function(e){e.classList.add('in');});
+paint();
+})();
+</script>
+</body>
+</html>
