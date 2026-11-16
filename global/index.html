@@ -2513,7 +2513,7 @@ var tile=function(ic,lab,v,sub,act){var inner='<span class="ast-i">'+mIco(ic)+'<
  if(act==='team'||act==='office')return '<a href="#Network" data-go="'+(act==='team'?'tree':'office')+'" class="ast" style="text-decoration: none; color: inherit">'+inner+'</a>';
  if(act==='visits'&&!(me&&me.role==='owner'))return '<div class="ast" style="cursor: default">'+inner+'</div>';
  return '<button data-act="statGo" data-k="'+act+'" class="ast">'+inner+'</button>';};
-return '<div id="appStats" class="ast-row">'+tile('team',mt3('members'),nfmt(s.members),'','team')+tile('home',mt3('projects'),nfmt(s.projects),'','proj')+tile('eye',mt3('visits'),nfmt(s.visits_total),'+'+nfmt(s.visits_today)+' '+esc(mt3('today')),'visits')+tile('bank',mt3('offices'),nfmt(Number(s.offices||0)+Number(s.companies||0)),'','office')+'</div>';}
+return '<div id="appStats" class="ast-row">'+tile('team',mt3('members'),nfmt(s.members),'','team')+tile('home',mt3('projects'),nfmt(s.projects),'','proj')+tile('eye',mt3('visits'),nfmt(s.visits_total),'+'+nfmt(s.visits_today)+' '+esc(mt3('today')),'visits')+tile('bank',mt3('offices'),nfmt(Number(s.offices||0)+Number(s.companies||0)),(ofs().mine&&ofs().mine.status==='pending'?'<span style="color: #8A5A00">'+esc(st.lang==='ku'?'١ چاوەڕێی پەسەندکردن':'1 pending')+'</span>':''),'office')+'</div>';}
 async function loadOffice(force){var O=ofs();if(!SB||!me)return;if(!force&&Date.now()-O.oat<20000)return;O.oat=Date.now();
 try{var r=await SB.rpc('my_office');var d=r.data||{};O.mine=d.mine||null;O.brand=d.brand||null;
 if(O.brand){var p=await SB.from('office_posts').select('*').eq('office_id',O.brand.id).order('created_at',{ascending:false}).limit(20);O.posts=p.data||[];}else O.posts=[];
