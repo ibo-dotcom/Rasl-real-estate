@@ -41,10 +41,10 @@ const ROUTES=QUICK?['Main','Dashboard','Network']:['Main','Search','Network','Le
    await p.close();}}
  log('3) sheets checked:',ns);
  // 4) side menu: back returns to the menu
- let nm=0;{let p=await mk('Main');await p.evaluate(()=>{const m=document.querySelector('[data-act=menuOpen]');m&&m.click();});await p.waitForTimeout(400);
+ let nm=0;{let p=await mk('Main');await p.evaluate(()=>{const m=document.querySelector('[data-act=menuOpen]');m&&m.click();});await p.waitForSelector('.mpanel a',{timeout:8000}).catch(()=>{});
   const items=await p.evaluate(()=>[...document.querySelectorAll('.mpanel a[href^="#"], .mpanel [data-act=menuAct]')].map((e,i)=>({i,label:(e.innerText||'').trim().slice(0,24),href:e.getAttribute('href'),a:e.getAttribute('data-a')})).filter(x=>x.a!=='signout'));await p.close();
   if(!items.length)problems.push('menu: no items found');
-  for(const it of items){p=await mk('Main');await p.evaluate(()=>document.querySelector('[data-act=menuOpen]').click());await p.waitForTimeout(350);
+  for(const it of items){p=await mk('Main');await p.evaluate(()=>document.querySelector('[data-act=menuOpen]').click());await p.waitForSelector('.mpanel a',{timeout:8000}).catch(()=>{});
    await p.evaluate(i=>{const e=[...document.querySelectorAll('.mpanel a[href^="#"], .mpanel [data-act=menuAct]')][i];e&&e.click();},it.i);await p.waitForTimeout(800);
    const hash=await p.evaluate(()=>location.hash),sheet=await p.evaluate(()=>!!(document.querySelector('.tm-sheet:not(.mside)')||document.getElementById('secView')||document.getElementById('bioSet')));
    if(!sheet&&hash==='#Main'){await p.close();continue;}
