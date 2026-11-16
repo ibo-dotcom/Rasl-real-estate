@@ -8,7 +8,7 @@
 <meta name="description" content="چەرخوفەلەکێکی 180 مەتری لە پارکی سامی عەبدولڕەحمان، هەولێر — لەگەڵ بازاڕ و پارکینگ. Erbil Eye: a 180 m observation wheel in Sami Abdulrahman Park.">
 <meta property="og:title" content="چەرخوفەلەکی هەولێر · Erbil Eye">
 <meta property="og:description" content="180 m · 48 capsules · all of Erbil in view">
-<meta property="og:image" content="hero.jpg">
+<meta property="og:image" content="mall.jpg">
 <link rel="icon" href="../assets/favicon.svg">
 <style>
 :root{--ink:#0E2236;--navy:#173F63;--gold:#C9A45C;--gold2:#E3C78C;--bg:#F7F4EE;--card:#FFFFFF;--muted:#6B7785;--line:#E6E0D4}
@@ -31,7 +31,7 @@ a{color:inherit}
 @media (max-width:760px){.links{display:none}.lang{margin-inline-start:auto}}
 /* hero */
 .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:#0E2236}
-.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9}
+.hero img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 55%;opacity:.9}
 .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,34,54,.55) 0%,rgba(14,34,54,.1) 35%,rgba(14,34,54,.85) 100%)}
 .hero .wrap{position:relative;z-index:2;padding-bottom:calc(56px + env(safe-area-inset-bottom));padding-top:120px}
 .tag{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(201,164,92,.18);border:1px solid rgba(227,199,140,.6);color:var(--gold2);font-size:13px;font-weight:600;margin-bottom:16px}
@@ -72,7 +72,7 @@ h2{font-size:clamp(28px,4.6vw,44px);line-height:1.15;margin:0 0 14px;font-weight
 /* 3D */
 .dark{background:var(--ink);color:#fff}
 .dark .sub{color:rgba(255,255,255,.7)}
-.stage{position:relative;border-radius:20px;overflow:hidden;background:#09182A url(wide.jpg) center/cover;aspect-ratio:16/10;max-height:78vh;width:100%;border:1px solid rgba(255,255,255,.12)}
+.stage{position:relative;border-radius:20px;overflow:hidden;background:#09182A url(mall.jpg) center/cover;aspect-ratio:16/10;max-height:78vh;width:100%;border:1px solid rgba(255,255,255,.12)}
 @media (max-width:640px){.stage{aspect-ratio:9/14}}
 .stage:before{content:"";position:absolute;inset:0;background:rgba(9,24,42,.55)}
 .stage .play{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:2;text-align:center;padding:20px}
@@ -93,6 +93,14 @@ h2{font-size:clamp(28px,4.6vw,44px);line-height:1.15;margin:0 0 14px;font-weight
 .kv{display:flex;flex-direction:column;gap:12px}
 .kv div{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:16px}
 .kv span{color:var(--muted)}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gal figure{margin:0;position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3;background:#ddd}
+.gal figure.big{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
+.gal figure.wide{grid-column:span 2;aspect-ratio:auto}
+.gal img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.gal figure:hover img{transform:scale(1.04)}
+.gal figcaption{position:absolute;inset-inline:0;bottom:0;padding:24px 12px 10px;color:#fff;font-size:14px;font-weight:600;background:linear-gradient(transparent,rgba(9,23,38,.85))}
+@media (max-width:860px){.gal{grid-template-columns:repeat(2,1fr)}.gal figure.big{grid-column:span 2;grid-row:auto;aspect-ratio:16/10}.gal figure.wide{aspect-ratio:16/9}}
 /* footer */
 .foot{background:#091726;color:rgba(255,255,255,.7);padding:40px 0 calc(40px + env(safe-area-inset-bottom));font-size:13px}
 .foot .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
@@ -107,13 +115,13 @@ h2{font-size:clamp(28px,4.6vw,44px);line-height:1.15;margin:0 0 14px;font-weight
 <header class="nav" id="nav"><div class="wrap">
   <a class="brand" href="#top"><svg viewBox="0 0 32 32" fill="none" stroke="#E3C78C" stroke-width="1.8"><circle cx="16" cy="13" r="10"/><circle cx="16" cy="13" r="2"/><path d="M16 3v20M6 13h20M9 6l14 14M23 6L9 20"/><path d="M12 29l4-14 4 14"/></svg><span data-t="brand"></span></a>
   <nav class="links">
-    <a href="#why" data-t="n_why"></a><a href="#project" data-t="n_proj"></a><a href="#ride" data-t="n_3d"></a><a href="#where" data-t="n_loc"></a>
+    <a href="#why" data-t="n_why"></a><a href="#project" data-t="n_proj"></a><a href="#inside" data-t="n_in"></a><a href="#ride" data-t="n_3d"></a><a href="#where" data-t="n_loc"></a>
   </nav>
   <button class="lang" id="lang">EN</button>
 </div></header>
 
 <section class="hero" id="top">
-  <img class="bg" src="hero.jpg" alt="">
+  <img class="bg" src="mall.jpg" alt="">
   <div class="wrap">
     <div class="tag" data-t="tag"></div>
     <h1 data-h="h1"></h1>
@@ -144,13 +152,29 @@ h2{font-size:clamp(28px,4.6vw,44px);line-height:1.15;margin:0 0 14px;font-weight
 </div></section>
 
 <section class="s" id="project" style="padding-top:0"><div class="wrap split">
-  <div class="photo reveal"><img src="hero.jpg" alt="" loading="lazy"></div>
+  <div class="photo reveal"><img src="mall.jpg" alt="" loading="lazy"></div>
   <div class="reveal">
     <p class="eyebrow" data-t="e_proj"></p>
     <h2 data-t="h_proj"></h2>
     <p class="sub" style="margin-bottom:22px" data-t="s_proj"></p>
-    <ul class="ticks"><li data-t="p1"></li><li data-t="p2"></li><li data-t="p3"></li><li data-t="p4"></li></ul>
+    <ul class="ticks"><li data-t="p1"></li><li data-t="p2"></li><li data-t="p3"></li><li data-t="p4"></li><li data-t="p5"></li></ul>
     <a class="btn navy" href="#ride" data-t="cta1"></a>
+  </div>
+</div></section>
+
+<section class="s" id="inside" style="padding-top:0"><div class="wrap">
+  <p class="eyebrow" data-t="e_in"></p>
+  <h2 data-t="h_in"></h2>
+  <p class="sub" data-t="s_in"></p>
+  <div class="gal">
+    <figure class="big reveal"><img src="g2.jpg" alt="" loading="lazy"><figcaption data-t="g2"></figcaption></figure>
+    <figure class="reveal"><img src="g1.jpg" alt="" loading="lazy"><figcaption data-t="g1"></figcaption></figure>
+    <figure class="reveal"><img src="g3.jpg" alt="" loading="lazy"><figcaption data-t="g3"></figcaption></figure>
+    <figure class="reveal"><img src="g5.jpg" alt="" loading="lazy"><figcaption data-t="g5"></figcaption></figure>
+    <figure class="reveal"><img src="g8.jpg" alt="" loading="lazy"><figcaption data-t="g8"></figcaption></figure>
+    <figure class="reveal"><img src="g7.jpg" alt="" loading="lazy"><figcaption data-t="g7"></figcaption></figure>
+    <figure class="reveal"><img src="g6.jpg" alt="" loading="lazy"><figcaption data-t="g6"></figcaption></figure>
+    <figure class="wide reveal"><img src="g4.jpg" alt="" loading="lazy"><figcaption data-t="g4"></figcaption></figure>
   </div>
 </div></section>
 
@@ -203,7 +227,7 @@ var TX={
  n_why:['بۆچی','Why'],n_proj:['پرۆژەکە','The project'],n_3d:['3D','3D'],n_loc:['شوێن','Location'],
  tag:['پڕۆژەی پێشنیارکراو · پارکی سامی عەبدولڕەحمان','Proposed project · Sami Abdulrahman Park'],
  h1:['هەموو هەولێر<br><span>لە یەک چاوتروکاندندا</span>','All of Erbil<br><span>in one view</span>'],
- lead:['چەرخوفەلەکێکی 180 مەتری لە دڵی گەورەترین پارکی هەولێر، لەگەڵ بازاڕ و پارکینگێکی نوێ. لە سەرەوە قەڵا، شار و چیاکان هەموویان لەبەرچاوتن.','A 180-metre observation wheel in the heart of Erbil\'s largest park, with a new mall and parking. From the top, the Citadel, the city and the mountains are all in view.'],
+ lead:['چەرخوفەلەکێکی 180 مەتری و «سامی پارک دیستریکت»، بازاڕێکی هاوچەرخی بازنەیی، لە دڵی گەورەترین پارکی هەولێر. لە سەرەوە قەڵا، شار و چیاکان هەموویان لەبەرچاوتن.','A 180-metre observation wheel and Sami Park District, a round modern mall, in the heart of Erbil\'s largest park. From the top, the Citadel, the city and the mountains are all in view.'],
  cta1:['🎡 بە 3D سواربە','🎡 Ride it in 3D'],cta2:['پرۆژەکە ببینە','See the project'],
  k_h:['بەرزی','Height'],k_c:['کابینەی شووشەیی','Glass capsules'],k_p:['کەس لە یەک کاتدا','Riders at once'],k_v:['دووری بینین لە سەرەوە','View from the top'],
  e_why:['بۆچی چەرخوفەلەک','Why a wheel'],h_why:['شوێنێکی نوێ بۆ بینینی شار','A new way to see the city'],
@@ -211,14 +235,19 @@ var TX={
  w1t:['بینینی هەموو شار','The whole city'],w1:['قەڵای هەولێر، فڕۆکەخانە، تاوەرەکان و چیاکان — هەمووی لە کابینەیەکی شووشەییەوە.','The Citadel, the airport, the towers and the mountains, all from one glass capsule.'],
  w2t:['لەناو پارکدا','Inside the park'],w2:['لە پارکی سامی عەبدولڕەحمان، گەورەترین پارکی هەولێر، شوێنێک بۆ خێزان و گەشتیاران.','In Sami Abdulrahman Park, Erbil\'s largest park: a place for families and visitors.'],
  w3t:['شەوان ڕووناک','Lit at night'],w3:['ڕووناکیی LED لەسەر بازنەکە ڕەنگ دەگۆڕێت و لە هەموو شارەوە دیار دەبێت.','LED lights on the rim change colour and can be seen from across the city.'],
- e_proj:['پرۆژەکە','The project'],h_proj:['بازاڕ، پارکینگ و چەرخوفەلەک','Mall, parking and the wheel'],
- s_proj:['بیناکانی بازاڕ بە دەوری پارکینگێکی چەند نهۆمیدا، و چەرخوفەلەکەکە لە لای ڕۆژئاوایەوە.','Shop buildings around a multi-level car park, with the wheel on the west side.'],
- p1:['چەرخوفەلەکی 180 مەتری بە 48 کابینە، هەر یەکەیان بۆ 25 کەس','A 180 m wheel with 48 capsules, each for 25 people'],
- p2:['بیناکانی بازاڕ و چێشتخانە بە چوار نهۆم','Four-storey shop and restaurant buildings'],
- p3:['پارکینگی چەند نهۆمی بە دوو ڕێگای بازنەیی','Multi-level parking with two spiral ramps'],
- p4:['گۆڕەپانێکی پیاسە و وێستگەی سواربوون لە ژێر چەرخوفەلەکەکە','A walking plaza and boarding station under the wheel'],
+ e_proj:['پرۆژەکە','The project'],h_proj:['سامی پارک دیستریکت','Sami Park District'],
+ s_proj:['بازاڕێکی هاوچەرخی بازنەیی لە تەنیشت چەرخوفەلەکەکە: سێ نهۆم بە دەوری باخچەیەکی ناوەوە و فوارە، بە دەروازەیەکی شووشەیی و تەرازی سەربان.','A round modern mall beside the wheel: three floors around an inner garden and fountain, with a glass entrance hall and rooftop terraces.'],
+ p1:['دوکانی براندە جیهانییەکان لە ڕاڕەوێکی بازنەیی','International brand shops along a circular promenade'],
+ p2:['ئەتریۆمی سەقف شووشە لەگەڵ تاڤگەی ئاو','A glass-roofed atrium with a water wall'],
+ p3:['چێشتخانە و کافێ لەسەر سەربان بە دیمەنی پارک و شار','Rooftop restaurants and cafés overlooking the park and the city'],
+ p4:['سینەما، هۆڵی وەرزش، مەلەوانگە و سپا','Cinema, gym, swimming pool and spa'],
+ p5:['پارکینگی ژێرزەوی (B1، B2) و گۆڕەپانی پێشەوە بە فوارە','Underground parking (B1, B2) and a front plaza with a fountain'],
+ n_in:['ناوەوە','Inside'],e_in:['ناوەوە','Inside'],h_in:['ژیانی ناو بازاڕەکە','Life inside the mall'],
+ s_in:['شوێنێک بۆ بازاڕکردن، خواردن، وەرزش و کات بەسەربردن — بە ڕۆژ و شەو.','A place to shop, eat, exercise and spend time, day and night.'],
+ g1:['چێشتخانەی سەربان','Rooftop restaurant'],g2:['ئەتریۆمی شووشەیی و تاڤگە','Glass atrium and water wall'],g3:['تەرازی سەربان','Rooftop terrace'],
+ g4:['پارکینگی ژێرزەوی','Underground parking'],g5:['دوکانی براندەکان','Brand shops'],g6:['هۆڵی وەرزش','Gym'],g7:['مەلەوانگە و سپا','Pool and spa'],g8:['سینەما','Cinema'],
  e_3d:['ئەزموونی 3D','3D experience'],h_3d:['پێش دروستکردن، سواری ببە','Ride it before it is built'],
- s_3d:['لەسەر وێنەی ڕاستەقینەی مانگی دەستکردی هەولێر. «سواربە» دابگرە و بە پەنجە سەیری دەوروبەر بکە.','On the real satellite view of Erbil. Tap “Ride” and drag to look around.'],
+ s_3d:['چەرخوفەلەک و بازاڕە بازنەییەکە لەسەر وێنەی ڕاستەقینەی مانگی دەستکردی هەولێر. «سواربە» دابگرە و بە پەنجە سەیری دەوروبەر بکە.','The wheel and the round mall on the real satellite view of Erbil. Tap “Ride” and drag to look around.'],
  open3d:['▶ کردنەوەی 3D','▶ Open 3D'],p3d:['نەخشەکە و مۆدێلەکە باردەکرێن؛ لە مۆبایل چەند چرکەیەک دەخایەنێت.','The map and the model load; on a phone this takes a few seconds.'],
  full:['لە پەڕەیەکی تەواودا بیکەرەوە ←','Open full screen →'],
  e_cmp:['بەراورد','Comparison'],h_cmp:['لە نێوان گەورەکانی جیهاندا','Among the world\'s big wheels'],
