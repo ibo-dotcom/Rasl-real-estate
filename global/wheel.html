@@ -93,7 +93,7 @@ html,body{margin:0;height:100%;overflow:hidden;background:#0b1a2b;font-family:In
       <div class="fact"><b dir="ltr">180 m</b><span data-t="f_h"></span></div>
       <div class="fact"><b dir="ltr">170 m</b><span data-t="f_d"></span></div>
       <div class="fact"><b dir="ltr">48</b><span data-t="f_c"></span></div>
-      <div class="fact"><b dir="ltr">25</b><span data-t="f_p"></span></div>
+      <div class="fact"><b dir="ltr">35,000 m²</b><span data-t="f_land"></span></div>
       <div class="fact"><b dir="ltr">1,200</b><span data-t="f_all"></span></div>
       <div class="fact"><b dir="ltr">~47 km</b><span data-t="f_see"></span></div>
     </div>
@@ -105,7 +105,8 @@ html,body{margin:0;height:100%;overflow:hidden;background:#0b1a2b;font-family:In
     </div>
     <div class="proj"><img src="wheel-mall.jpg" alt=""><div><b data-t="p_t"></b><span data-t="p_s"></span></div></div>
     <p class="note" data-t="note"></p>
-    <div class="row"><button class="btn" id="move"></button></div>
+    <div class="row"><button class="btn" id="move"></button><button class="btn" id="turn" data-t="turn"></button></div>
+    <div class="row" style="margin-top:8px"><button class="btn" id="reset" data-t="reset"></button></div>
   </div>
 </div>
 <div class="err" id="err"></div>
@@ -115,14 +116,14 @@ html,body{margin:0;height:100%;overflow:hidden;background:#0b1a2b;font-family:In
 // ---------- text ----------
 var TX={
  title:['چەرخوفەلەکی هەولێر','Erbil Eye'],
- sub:['پارکی سامی عەبدولڕەحمان · 180 مەتر','Sami Abdulrahman Park · 180 m'],
+ sub:['زەوی 35,000 م² · لای شەقامی مووسڵ','35,000 m² land · by Mosul Road'],
  ride:['🎡 سواربە','🎡 Ride'],exit:['دابەزە','Get off'],view:['سووڕانەوە','Orbit'],sat:['🛰 مانگی دەستکرد','🛰 Satellite'],
  pause:['⏸ ڕاگرتن','⏸ Pause'],play:['▶ بڕۆ','▶ Go'],look:['🏰 بۆ قەڵا','🏰 Citadel'],
- move:['📍 گواستنەوەی شوێن','📍 Move the site'],moving:['لەسەر نەخشە شوێنێک دابگرە…','Tap a spot on the map…'],
+ move:['📍 گواستنەوە','📍 Move'],turn:['↻ سووڕاندن','↻ Turn'],reset:['شوێنی سەرەتا','Back to the first spot'],f_land:['ڕووبەری زەوی','Land area'],moving:['لەسەر نەخشە شوێنێک دابگرە…','Tap a spot on the map…'],
  f_h:['بەرزی','Height'],f_d:['تیرەی بازنە','Wheel diameter'],f_c:['کابینە','Cabins'],f_p:['کەس لە کابینەیەک','People per cabin'],f_all:['کەس لە یەک کاتدا','Riders at once'],f_see:['دووری بینین لە سەرەوە','View from the top'],
  mapv:['🗺 نەخشە','🗺 Map'],info:['زانیاری','Details'],c_ad:['عەین دوبەی','Ain Dubai'],c_me:['هەولێر (پێشنیار)','Erbil (proposed)'],c_sg:['سینگاپور فلایەر','Singapore Flyer'],c_ld:['لەندەن ئای','London Eye'],
- p_t:['سامی پارک دیستریکت','Sami Park District'],p_s:['بازاڕی هاوچەرخی بازنەیی لە تەنیشت چەرخوفەلەکەکە','The round modern mall beside the wheel'],
- note:['شار و بیناکان لە نەخشەی OpenStreetMap ـەوە دێن. چەرخوفەلەک و پرۆژەکە مۆدێلی سادەن بۆ پیشاندانی قەبارە و شوێن، نەک دیزاینی ئەندازیاری. لە سواربووندا خولێک ٩٠ چرکەیە (لە ڕاستیدا نزیکەی ٣٠ خولەک).','City and buildings come from OpenStreetMap. The wheel and the project are simple models to show size and place, not an engineering design. A ride lap here takes 90 seconds (about 30 minutes in reality).'],
+ p_t:['سامی پارک دیستریکت','Sami Park District'],p_s:['بازاڕی بازنەیی 132 مەتری لە تەنیشت چەرخوفەلەکەکە','A 132 m round mall beside the wheel'],
+ note:['هێڵی زێڕین سنووری زەوییەکەیە (35,000 م²، نزیکەی 200 × 175 م). شوێنەکەم لە وێنەکەتەوە خەمڵاندووە: بۆ ڕاستکردنەوە «📍 گواستنەوە» دابگرە و لەسەر نەخشە ناوەڕاستی زەوییەکە دابگرە، و بە «↻ سووڕاندن» ڕووی بازاڕەکە بەرەو شەقام بکە. شار و بیناکان لە OpenStreetMap ـەوە دێن؛ چەرخوفەلەک و بازاڕەکە مۆدێلی سادەن بۆ پیشاندانی قەبارە و شوێن.','The gold line is the edge of the land (35,000 m², about 200 × 175 m). The spot is estimated from your screenshot: to correct it tap “📍 Move” and then the centre of the land on the map, and use “↻ Turn” to face the mall to the road. City and buildings come from OpenStreetMap; the wheel and the mall are simple models to show size and place.'],
  drag:['بە پەنجە ڕابکێشە بۆ سەیرکردنی دەوروبەر','Drag to look around'],
  alt:['بەرزی','Height'],see:['دەبینیت تا','You see'],cit:['قەڵا','Citadel'],
  citadel:['قەڵای هەولێر','Erbil Citadel'],airport:['فڕۆکەخانەی هەولێر','Erbil Airport'],wheel:['چەرخوفەلەک','The wheel'],
@@ -143,8 +144,11 @@ function fail(k){var e=$('err');e.textContent=t(k);e.style.display='grid';}
 
 // ---------- the site ----------
 // Sami Abdulrahman Park, Erbil (park centre ~36.1915 N, 43.9858 E). The spot can be moved with "Move the site".
-var DEF={lng:43.9858,lat:36.1915};
-var site=DEF;try{var sv=JSON.parse(localStorage.getItem('wheel_site')||'null');if(sv&&isFinite(sv.lng)&&isFinite(sv.lat))site=sv;}catch(e){}
+// The owner's land: 35,000 m² on the south side of Sami Abdulrahman Park by Mosul Road (centre estimated from
+// the spot the owner marked on a screenshot). "Move" and "Turn" fine-tune it on the map.
+var DEF={lng:43.9873,lat:36.1856},LOT_W=200,LOT_D=175;
+var site=DEF;try{var sv=JSON.parse(localStorage.getItem('wheel_site2')||'null');if(sv&&isFinite(sv.lng)&&isFinite(sv.lat))site=sv;}catch(e){}
+var rot=40;try{var rv=parseFloat(localStorage.getItem('wheel_rot2'));if(isFinite(rv))rot=rv;}catch(e){}
 var CITADEL={lng:44.0092,lat:36.1912},AIRPORT={lng:43.9632,lat:36.2376};
 
 if(typeof THREE==='undefined'){fail('noscript');return;}
@@ -166,9 +170,10 @@ function beam(a,b,r,mat,seg){var d=new THREE.Vector3().subVectors(b,a),len=d.len
  var m=new THREE.Mesh(g,mat);m.position.copy(a).addScaledVector(d,0.5);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return m;}
 function V(x,y,z){return new THREE.Vector3(x,y,z);}
 
-var root=new THREE.Group();scene.add(root);
+var lot=new THREE.Group();lot.rotation.y=rot*Math.PI/180;scene.add(lot);
+var root=new THREE.Group();root.position.set(-67.5,0,-14);lot.add(root);
 // plaza and boarding station
-var plaza=new THREE.Mesh(new THREE.CircleGeometry(70,64),new THREE.MeshLambertMaterial({color:0xE8DFCF,polygonOffset:true,polygonOffsetFactor:-2}));
+var plaza=new THREE.Mesh(new THREE.CircleGeometry(22,48),new THREE.MeshLambertMaterial({color:0xE8DFCF,polygonOffset:true,polygonOffsetFactor:-2}));
 plaza.rotation.x=-Math.PI/2;plaza.position.y=0.4;root.add(plaza);
 var station=new THREE.Mesh(new THREE.BoxGeometry(26,5,46),new THREE.MeshLambertMaterial({color:0xF2EEE6}));station.position.set(0,2.5,0);root.add(station);
 var roof=new THREE.Mesh(new THREE.BoxGeometry(30,0.8,52),new THREE.MeshLambertMaterial({color:0x173F63}));roof.position.set(0,5.4,0);root.add(roof);
@@ -199,75 +204,76 @@ for(var k=0;k<NC;k++){var ang=k/NC*Math.PI*2;var c=new THREE.Group();c.position.
  var ring=new THREE.Mesh(new THREE.TorusGeometry(2.6,0.22,6,24),cabFrame);ring.rotation.y=Math.PI/2;c.add(ring);
  wheel.add(c);cabins.push(c);}
 
-// ---------- Sami Park District: the round modern mall east of the wheel (after the owner's renders) ----------
-// A ring of three floors around a garden courtyard with a fountain, a glass entrance hall with a dome
-// facing south, rooftop terraces with white canopies, a front plaza with a fountain, palms and a ring road.
-// Underground parking (B1, B2) is not drawn.
-var MX=270,RO=140,RI=100,MH=20;
-var proj=new THREE.Group();proj.position.set(MX,0,0);scene.add(proj);
-function flat(geo,color,y,off){var m=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:color,polygonOffset:true,polygonOffsetFactor:off||-2,polygonOffsetUnits:off||-2}));m.rotation.x=-Math.PI/2;m.position.y=y;proj.add(m);return m;}
+// ---------- Sami Park District: the round modern mall beside the wheel (after the owner's renders) ----------
+// Sized so the mall and the wheel fit together on the 35,000 m² land (200 x 175 m): a 132 m ring of three floors
+// around a garden courtyard and fountain, a glass entrance hall with a dome facing the road, rooftop terraces
+// with white canopies, a front plaza with a fountain and palms. Underground parking (B1, B2) is not drawn.
+var RO=66,RI=44,MH=18;
+var proj=new THREE.Group();proj.position.set(27.5,0,-14);lot.add(proj);
+function flat(geo,color,y,off,par){var m=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:color,polygonOffset:true,polygonOffsetFactor:off||-2,polygonOffsetUnits:off||-2}));m.rotation.x=-Math.PI/2;m.position.y=y;(par||proj).add(m);return m;}
 function facadeTex(floors,bays){var cv=document.createElement('canvas');cv.width=128;cv.height=64*floors;var g=cv.getContext('2d');
  for(var f=0;f<floors;f++){var y=f*64;g.fillStyle='#F1EBDF';g.fillRect(0,y,128,64);
   var gr=g.createLinearGradient(0,y+12,0,y+60);gr.addColorStop(0,'#FFD9A0');gr.addColorStop(1,'#C98E4E');g.fillStyle=gr;g.fillRect(0,y+12,128,48);
   g.fillStyle='rgba(60,45,30,.55)';for(var x=0;x<128;x+=32)g.fillRect(x,y+12,3,48);}
  var t=new THREE.CanvasTexture(cv);t.wrapS=THREE.RepeatWrapping;t.repeat.set(bays,1);return t;}
 var cream=new THREE.MeshLambertMaterial({color:0xF4EFE6});
-// outer and courtyard walls
-var outer=new THREE.Mesh(new THREE.CylinderGeometry(RO,RO,MH,160,1,true),new THREE.MeshLambertMaterial({map:facadeTex(3,110),emissive:0x3a2410,emissiveIntensity:0.35}));outer.position.y=MH/2;proj.add(outer);
-var inner=new THREE.Mesh(new THREE.CylinderGeometry(RI,RI,MH,140,1,true),new THREE.MeshLambertMaterial({map:facadeTex(3,80),side:THREE.BackSide,emissive:0x3a2410,emissiveIntensity:0.35}));inner.position.y=MH/2;proj.add(inner);
-// roof, white cornice bands, rooftop garden and canopies
-var roofR=new THREE.Mesh(new THREE.RingGeometry(RI,RO,160,1),new THREE.MeshLambertMaterial({color:0xE9E4DA,side:THREE.DoubleSide}));roofR.rotation.x=-Math.PI/2;roofR.position.y=MH;proj.add(roofR);
-[[RO+1.2,3.2],[RI-1,2.4]].forEach(function(c){var b=new THREE.Mesh(new THREE.CylinderGeometry(c[0],c[0],c[1],160,1,true),new THREE.MeshLambertMaterial({color:0xFFFFFF,side:THREE.DoubleSide,emissive:0xFFF1D6,emissiveIntensity:0.25}));b.position.y=MH+c[1]/2-0.4;proj.add(b);});
-var garden=new THREE.Mesh(new THREE.RingGeometry(RI+7,RO-9,160,1),new THREE.MeshLambertMaterial({color:0x6F8F55,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}));garden.rotation.x=-Math.PI/2;garden.position.y=MH+0.15;proj.add(garden);
-for(var ci=0;ci<14;ci++){var ca=ci/14*Math.PI*2+0.1,cr=(RI+RO)/2;var cn=new THREE.Group();cn.position.set(Math.cos(ca)*cr,MH,Math.sin(ca)*cr);cn.rotation.y=-ca;
- var top=new THREE.Mesh(new THREE.BoxGeometry(14,0.8,30),cream);top.position.y=7;cn.add(top);
- [[-5,-12],[5,-12],[-5,12],[5,12]].forEach(function(q){var c=new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.35,7,6),cream);c.position.set(q[0],3.5,q[1]);cn.add(c);});
- var glassBox=new THREE.Mesh(new THREE.BoxGeometry(10,5,22),glass);glassBox.position.y=2.5;cn.add(glassBox);proj.add(cn);}
-// glass entrance hall facing south, with a dome and the name sign
-var entG=new THREE.Group();entG.position.set(0,0,RO-4);proj.add(entG);
+var outer=new THREE.Mesh(new THREE.CylinderGeometry(RO,RO,MH,128,1,true),new THREE.MeshLambertMaterial({map:facadeTex(3,52),emissive:0x3a2410,emissiveIntensity:0.35}));outer.position.y=MH/2;proj.add(outer);
+var inner=new THREE.Mesh(new THREE.CylinderGeometry(RI,RI,MH,96,1,true),new THREE.MeshLambertMaterial({map:facadeTex(3,34),side:THREE.BackSide,emissive:0x3a2410,emissiveIntensity:0.35}));inner.position.y=MH/2;proj.add(inner);
+var roofR=new THREE.Mesh(new THREE.RingGeometry(RI,RO,128,1),new THREE.MeshLambertMaterial({color:0xE9E4DA,side:THREE.DoubleSide}));roofR.rotation.x=-Math.PI/2;roofR.position.y=MH;proj.add(roofR);
+[[RO+0.8,2.6],[RI-0.7,2]].forEach(function(c){var b=new THREE.Mesh(new THREE.CylinderGeometry(c[0],c[0],c[1],128,1,true),new THREE.MeshLambertMaterial({color:0xFFFFFF,side:THREE.DoubleSide,emissive:0xFFF1D6,emissiveIntensity:0.25}));b.position.y=MH+c[1]/2-0.4;proj.add(b);});
+var garden=new THREE.Mesh(new THREE.RingGeometry(RI+4,RO-5,128,1),new THREE.MeshLambertMaterial({color:0x6F8F55,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}));garden.rotation.x=-Math.PI/2;garden.position.y=MH+0.15;proj.add(garden);
+for(var ci=0;ci<10;ci++){var ca=ci/10*Math.PI*2+0.3,cr=(RI+RO)/2;var cn=new THREE.Group();cn.position.set(Math.cos(ca)*cr,MH,Math.sin(ca)*cr);cn.rotation.y=-ca;
+ var top=new THREE.Mesh(new THREE.BoxGeometry(10,0.6,18),cream);top.position.y=5.5;cn.add(top);
+ [[-3.5,-7],[3.5,-7],[-3.5,7],[3.5,7]].forEach(function(q){var c=new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.28,5.5,6),cream);c.position.set(q[0],2.75,q[1]);cn.add(c);});
+ var gb=new THREE.Mesh(new THREE.BoxGeometry(7,4,13),glass);gb.position.y=2;cn.add(gb);proj.add(cn);}
+// glass entrance hall facing the road, with a dome and the name sign
+var entG=new THREE.Group();entG.position.set(0,0,RO-3);proj.add(entG);
 var hallGlass=new THREE.MeshPhongMaterial({color:0xFFD7A0,emissive:0x7a4a1a,emissiveIntensity:0.5,transparent:true,opacity:0.88,shininess:80});
-var hall=new THREE.Mesh(new THREE.BoxGeometry(64,26,22),hallGlass);hall.position.set(0,13,4);entG.add(hall);
-var slab=new THREE.Mesh(new THREE.BoxGeometry(70,1.6,28),cream);slab.position.set(0,26.6,4);entG.add(slab);
-for(var mi=-3;mi<=3;mi++){var mu=new THREE.Mesh(new THREE.BoxGeometry(0.8,26,0.8),cream);mu.position.set(mi*10,13,15.2);entG.add(mu);}
-var dome=new THREE.Mesh(new THREE.SphereGeometry(18,32,12,0,Math.PI*2,0,Math.PI/2),glass);dome.position.set(0,27.4,4);entG.add(dome);
+var hall=new THREE.Mesh(new THREE.BoxGeometry(42,22,16),hallGlass);hall.position.set(0,11,3);entG.add(hall);
+var slab=new THREE.Mesh(new THREE.BoxGeometry(47,1.3,20),cream);slab.position.set(0,22.6,3);entG.add(slab);
+for(var mi=-3;mi<=3;mi++){var mu=new THREE.Mesh(new THREE.BoxGeometry(0.6,22,0.6),cream);mu.position.set(mi*6.8,11,11.2);entG.add(mu);}
+var dome=new THREE.Mesh(new THREE.SphereGeometry(12,32,12,0,Math.PI*2,0,Math.PI/2),glass);dome.position.set(0,23.2,3);entG.add(dome);
 (function(){var cv=document.createElement('canvas');cv.width=1024;cv.height=96;var g=cv.getContext('2d');g.fillStyle='#2A2018';g.fillRect(0,0,1024,96);
  g.fillStyle='#F3D9A4';g.font='600 58px Inter,Arial,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('SAMI PARK DISTRICT',512,50);
- var sign=new THREE.Mesh(new THREE.PlaneGeometry(40,3.75),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv)}));sign.position.set(0,22,15.3);entG.add(sign);})();
+ var sign=new THREE.Mesh(new THREE.PlaneGeometry(28,2.6),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv)}));sign.position.set(0,18.5,11.3);entG.add(sign);})();
 // courtyard garden, paths, fountain and small pavilions
-flat(new THREE.CircleGeometry(RI,120),0x7E9B5E,0.45);
-flat(new THREE.RingGeometry(26,34,80,1),0xC4B79F,0.55,-3);
-[0,1,2,3].forEach(function(i){var w=flat(new THREE.PlaneGeometry(7,RI-30),0xD9CDB6,0.55,-3);w.rotation.z=i*Math.PI/2;var a2=i*Math.PI/2;w.position.x=Math.cos(a2)*(RI+30)/2;w.position.z=Math.sin(a2)*(RI+30)/2;w.rotation.z=a2+Math.PI/2;});
+flat(new THREE.CircleGeometry(RI,96),0x7E9B5E,0.45);
+flat(new THREE.RingGeometry(13,17,64,1),0xC4B79F,0.55,-3);
+[0,1,2,3].forEach(function(i){var a2=i*Math.PI/2;var w=flat(new THREE.PlaneGeometry(4,RI-17),0xC4B79F,0.55,-3);w.position.x=Math.cos(a2)*(RI+17)/2;w.position.z=Math.sin(a2)*(RI+17)/2;w.rotation.z=a2+Math.PI/2;});
 var water=new THREE.MeshLambertMaterial({color:0x5FA8D3,emissive:0x1d4f70,emissiveIntensity:0.4});
 var spray=new THREE.MeshLambertMaterial({color:0xFFFFFF,transparent:true,opacity:0.6,emissive:0xBFE4FF,emissiveIntensity:0.5});
 function fountain(x,z,r,jets,hgt){var g=new THREE.Group();g.position.set(x,0,z);
- var rim=new THREE.Mesh(new THREE.CylinderGeometry(r+1,r+1,1.2,40),cream);rim.position.y=0.6;g.add(rim);
- var w=new THREE.Mesh(new THREE.CylinderGeometry(r,r,0.3,40),water);w.position.y=1.25;g.add(w);
- for(var i=0;i<jets;i++){var a=i/jets*Math.PI*2,rr=i===0?0:r*0.55;var j=new THREE.Mesh(new THREE.ConeGeometry(i===0?1.4:0.7,i===0?hgt:hgt*0.6,8),spray);j.position.set(Math.cos(a)*rr,1.3+(i===0?hgt:hgt*0.6)/2,Math.sin(a)*rr);g.add(j);}
+ var rim=new THREE.Mesh(new THREE.CylinderGeometry(r+0.8,r+0.8,1,40),cream);rim.position.y=0.5;g.add(rim);
+ var w=new THREE.Mesh(new THREE.CylinderGeometry(r,r,0.3,40),water);w.position.y=1.05;g.add(w);
+ for(var i=0;i<jets;i++){var a=i/jets*Math.PI*2,rr=i===0?0:r*0.55,hh=i===0?hgt:hgt*0.6;var j=new THREE.Mesh(new THREE.ConeGeometry(i===0?1:0.5,hh,8),spray);j.position.set(Math.cos(a)*rr,1.1+hh/2,Math.sin(a)*rr);g.add(j);}
  proj.add(g);return g;}
-fountain(0,0,22,9,14);
-for(var pi=0;pi<4;pi++){var pa=pi/4*Math.PI*2+Math.PI/4;var pv=new THREE.Mesh(new THREE.BoxGeometry(16,6,10),cream);pv.position.set(Math.cos(pa)*66,3,Math.sin(pa)*66);pv.rotation.y=-pa;proj.add(pv);
- var pr=new THREE.Mesh(new THREE.BoxGeometry(20,0.6,14),new THREE.MeshLambertMaterial({color:0xFFFFFF}));pr.position.set(Math.cos(pa)*66,6.3,Math.sin(pa)*66);pr.rotation.y=-pa;proj.add(pr);}
-// paving, parking ring, ring road and the front plaza
-flat(new THREE.RingGeometry(RO,RO+24,160,1),0xB9AD97,0.42);
-flat(new THREE.RingGeometry(RO+24,RO+38,160,1),0x3E444B,0.4);
-flat(new THREE.RingGeometry(RO+30.6,RO+31.4,160,1),0xE8D9A8,0.5,-3);
-var plaza=flat(new THREE.PlaneGeometry(110,70),0xBFB29A,0.6,-4);plaza.position.z=RO+60;
-flat(new THREE.PlaneGeometry(26,46),0xBFB29A,0.6,-4).position.set(0,0.6,RO+31);
-fountain(0,RO+62,10,7,8);
+fountain(0,0,11,9,10);
+for(var pi=0;pi<4;pi++){var pa=pi/4*Math.PI*2+Math.PI/4;var pv=new THREE.Mesh(new THREE.BoxGeometry(9,4.5,6),cream);pv.position.set(Math.cos(pa)*30,2.25,Math.sin(pa)*30);pv.rotation.y=-pa;proj.add(pv);
+ var pr=new THREE.Mesh(new THREE.BoxGeometry(12,0.5,9),new THREE.MeshLambertMaterial({color:0xFFFFFF}));pr.position.set(Math.cos(pa)*30,4.8,Math.sin(pa)*30);pr.rotation.y=-pa;proj.add(pr);}
+// paving round the mall and the front plaza toward the road
+flat(new THREE.RingGeometry(RO,RO+6,128,1),0xB9AD97,0.42);
+var fp=flat(new THREE.PlaneGeometry(64,24),0xBFB29A,0.6,-4);fp.position.z=RO+18;
+fountain(0,RO+19,5,7,6);
 // palms (one instanced mesh for trunks, one for crowns)
 var palmPos=[];
-for(var i=0;i<64;i++){var a=i/64*Math.PI*2;if(Math.abs(a-Math.PI/2)<0.2)continue;palmPos.push([Math.cos(a)*(RO+15),Math.sin(a)*(RO+15)]);}
-for(var i=0;i<20;i++){var a=i/20*Math.PI*2;palmPos.push([Math.cos(a)*82,Math.sin(a)*82]);}
-for(var i=0;i<12;i++){var a=i/12*Math.PI*2;palmPos.push([Math.cos(a)*44,Math.sin(a)*44]);}
-[-45,-28,28,45].forEach(function(x){[RO+40,RO+58,RO+76,RO+92].forEach(function(z){palmPos.push([x,z]);});});
-var trunkM=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.35,0.55,11,6),new THREE.MeshLambertMaterial({color:0x8B6F4E}),palmPos.length);
-var crownG=new THREE.ConeGeometry(4.2,2.6,7);crownG.rotateX(Math.PI);
+for(var i=0;i<36;i++){var a=i/36*Math.PI*2;if(Math.abs(a-Math.PI/2)<0.38)continue;palmPos.push([Math.cos(a)*(RO+3),Math.sin(a)*(RO+3)]);}
+for(var i=0;i<14;i++){var a=i/14*Math.PI*2;palmPos.push([Math.cos(a)*37,Math.sin(a)*37]);}
+for(var i=0;i<8;i++){var a=i/8*Math.PI*2+0.2;palmPos.push([Math.cos(a)*21,Math.sin(a)*21]);}
+[-28,-18,18,28].forEach(function(x){[RO+10,RO+20,RO+29].forEach(function(z){palmPos.push([x,z]);});});
+var trunkM=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.3,0.45,9,6),new THREE.MeshLambertMaterial({color:0x8B6F4E}),palmPos.length);
+var crownG=new THREE.ConeGeometry(3.4,2.1,7);crownG.rotateX(Math.PI);
 var crownM=new THREE.InstancedMesh(crownG,new THREE.MeshLambertMaterial({color:0x3F6B2E}),palmPos.length);
-var tmp=new THREE.Object3D();palmPos.forEach(function(q,i){tmp.position.set(q[0],5.5+0.5,q[1]);tmp.rotation.set(0,i*1.7,0);tmp.updateMatrix();trunkM.setMatrixAt(i,tmp.matrix);
- tmp.position.set(q[0],12,q[1]);tmp.updateMatrix();crownM.setMatrixAt(i,tmp.matrix);});proj.add(trunkM);proj.add(crownM);
+var tmp=new THREE.Object3D();palmPos.forEach(function(q,i){tmp.position.set(q[0],5,q[1]);tmp.rotation.set(0,i*1.7,0);tmp.updateMatrix();trunkM.setMatrixAt(i,tmp.matrix);
+ tmp.position.set(q[0],10,q[1]);tmp.updateMatrix();crownM.setMatrixAt(i,tmp.matrix);});proj.add(trunkM);proj.add(crownM);
+
+// ---------- the land: 35,000 m² (200 x 175 m), a gold line on its edge ----------
+(function(){var gold=new THREE.MeshLambertMaterial({color:0xE3C78C,emissive:0xC9A45C,emissiveIntensity:0.8,polygonOffset:true,polygonOffsetFactor:-6,polygonOffsetUnits:-6});
+ var fill=new THREE.Mesh(new THREE.PlaneGeometry(LOT_W,LOT_D),new THREE.MeshLambertMaterial({color:0xD8CFBF,transparent:true,opacity:0.35,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1}));
+ fill.rotation.x=-Math.PI/2;fill.position.y=0.25;lot.add(fill);
+ [[0,-LOT_D/2,LOT_W+2,2],[0,LOT_D/2,LOT_W+2,2],[-LOT_W/2,0,2,LOT_D],[LOT_W/2,0,2,LOT_D]].forEach(function(e){var m=new THREE.Mesh(new THREE.PlaneGeometry(e[2],e[3]),gold);m.rotation.x=-Math.PI/2;m.position.set(e[0],0.8,e[1]);lot.add(m);});})();
 
 // ---------- map ----------
-var map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/liberty',center:[site.lng+0.0016,site.lat-0.0019],zoom:15.9,pitch:60,bearing:-24,maxPitch:85,antialias:true,attributionControl:{compact:true}});
+var map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/liberty',center:[site.lng+0.0005,site.lat-0.0013],zoom:16.5,pitch:60,bearing:-24,maxPitch:85,antialias:true,attributionControl:{compact:true}});
 var merc,scale;
 function placeModel(){merc=maplibregl.MercatorCoordinate.fromLngLat([site.lng,site.lat],0);scale=merc.meterInMercatorCoordinateUnits();}
 placeModel();
@@ -320,11 +326,12 @@ function startRide(){riding=true;paused=false;orbit=false;rideCab=bottomCabin();
  $('cab').classList.add('on');$('hud').classList.add('on');$('rowMain').style.display='none';$('rowRide').style.display='flex';$('view').classList.remove('on');
  $('sheet').classList.add('min');var h=$('hint');h.classList.add('on');setTimeout(function(){h.classList.remove('on');},2600);paintText();}
 function stopRide(){riding=false;cabins[rideCab].visible=true;$('cab').classList.remove('on');$('hud').classList.remove('on');$('rowMain').style.display='flex';$('rowRide').style.display='none';
- map.easeTo({center:[site.lng+0.0016,site.lat-0.0019],zoom:15.9,pitch:60,bearing:-24,duration:1200});}
+ home();}
 $('ride').onclick=startRide;$('exit').onclick=stopRide;
 $('pause').onclick=function(){paused=!paused;paintText();};
 $('look').onclick=function(){look.bearing=bearingTo(site,CITADEL);look.down=8;};
-$('view').onclick=function(){orbit=!orbit;this.classList.toggle('on',orbit);if(orbit)map.easeTo({center:[site.lng+0.0015,site.lat],zoom:15.6,pitch:62,duration:900});};
+$('view').onclick=function(){orbit=!orbit;this.classList.toggle('on',orbit);if(orbit)map.easeTo({center:[site.lng,site.lat],zoom:16.2,pitch:62,duration:900});};
+function home(){map.easeTo({center:[site.lng+0.0005,site.lat-0.0013],zoom:16.5,pitch:60,bearing:-24,duration:1200});}
 // Satellite (default): the photo underneath, with the 3D buildings, road names and place names on top.
 // Map: the drawn street map. The flat drawn layers are hidden over the photo so it is not covered.
 var satOn=false;
@@ -346,7 +353,9 @@ $('lang').onclick=function(){L=1-L;try{localStorage.setItem('wheel_lang',L?'en':
 // move the site: next tap on the map sets the new spot
 var moving=false;
 $('move').onclick=function(){moving=!moving;paintText();};
-map.on('click',function(e){if(!moving)return;moving=false;site={lng:+e.lngLat.lng.toFixed(6),lat:+e.lngLat.lat.toFixed(6)};placeModel();try{localStorage.setItem('wheel_site',JSON.stringify(site));}catch(x){}paintText();});
+map.on('click',function(e){if(!moving)return;moving=false;site={lng:+e.lngLat.lng.toFixed(6),lat:+e.lngLat.lat.toFixed(6)};placeModel();try{localStorage.setItem('wheel_site2',JSON.stringify(site));}catch(x){}paintText();home();});
+$('turn').onclick=function(){rot=(rot+15)%360;lot.rotation.y=rot*Math.PI/180;try{localStorage.setItem('wheel_rot2',String(rot));}catch(x){}};
+$('reset').onclick=function(){site=DEF;rot=40;lot.rotation.y=rot*Math.PI/180;placeModel();try{localStorage.removeItem('wheel_site2');localStorage.removeItem('wheel_rot2');}catch(x){}home();};
 paintText();
 // Inside the website (an iframe) there is nothing to go back to.
 try{if(window.top!==window.self)$('back').style.display='none';}catch(e){}
